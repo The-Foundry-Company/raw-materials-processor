@@ -715,23 +715,6 @@ describe('Fake Project: Medieval Village', () => {
         { ResultItem: 'minecraft:lantern', ResultTotal: 48 },
       ],
     },
-    // Farming
-    {
-      RawItem: 'minecraft:dirt',
-      TotalEstimate: 300,
-      Steps: [],
-      Results: [
-        { ResultItem: 'minecraft:dirt', ResultTotal: 300 },
-      ],
-    },
-    {
-      RawItem: 'minecraft:grass_block',
-      TotalEstimate: 150,
-      Steps: [],
-      Results: [
-        { ResultItem: 'minecraft:grass_block', ResultTotal: 150 },
-      ],
-    },
   ];
 
   it('resolves spruce wood → spruce_log (via planks + functional)', () => {
@@ -802,8 +785,6 @@ describe('Fake Project: Medieval Village', () => {
 
   it('keeps non-decomposable pass-through items', () => {
     const result = process(input);
-    expect(qty(result, 'dirt')).toBe(300);
-    expect(qty(result, 'grass_block')).toBe(150);
     // stripped items decomposed into base logs (verified above)
     expect(qty(result, 'stripped_spruce_log')).toBeUndefined();
     expect(qty(result, 'stripped_oak_log')).toBeUndefined();

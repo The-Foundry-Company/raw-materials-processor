@@ -31,7 +31,7 @@ function makeInput(
 describe('validateInput', () => {
   it('accepts valid input', () => {
     const input = makeInput([
-      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 10 }] },
+      { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 10 }] },
     ]);
     expect(validateInput(input)).toBe(true);
   });
@@ -465,11 +465,11 @@ describe('pass-through', () => {
   it('keeps items where RawItem == ResultItem (non-decomposable)', () => {
     const input = makeInput([
       { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 30 }] },
-      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 350 }] },
+      { raw: 'minecraft:calcite', results: [{ item: 'minecraft:calcite', total: 350 }] },
     ]);
     const result = process(input);
     expect(result.find((r) => r.Item === 'minecraft:obsidian')?.Quantity).toBe(30);
-    expect(result.find((r) => r.Item === 'minecraft:dirt')?.Quantity).toBe(350);
+    expect(result.find((r) => r.Item === 'minecraft:calcite')?.Quantity).toBe(350);
   });
 
   it('decomposes stripped pass-through items to base form', () => {
@@ -587,7 +587,7 @@ describe('output format', () => {
 
   it('has Item and Quantity fields', () => {
     const input = makeInput([
-      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 10 }] },
+      { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 10 }] },
     ]);
     const result = process(input);
     expect(result[0]).toHaveProperty('Item');
@@ -742,10 +742,6 @@ describe('full integration test - sample data', () => {
       Results: [{ ResultItem: 'minecraft:stripped_warped_stem', ResultTotal: 14 }],
     },
     {
-      RawItem: 'minecraft:grass_block', TotalEstimate: 372, Steps: [],
-      Results: [{ ResultItem: 'minecraft:grass_block', ResultTotal: 372 }],
-    },
-    {
       RawItem: 'minecraft:sand', TotalEstimate: 1640, Steps: [],
       Results: [
         { ResultItem: 'minecraft:sandstone_slab', ResultTotal: 14 },
@@ -865,10 +861,6 @@ describe('full integration test - sample data', () => {
       ],
     },
     {
-      RawItem: 'minecraft:dirt', TotalEstimate: 350, Steps: [],
-      Results: [{ ResultItem: 'minecraft:dirt', ResultTotal: 350 }],
-    },
-    {
       RawItem: 'minecraft:tuff', TotalEstimate: 516, Steps: [],
       Results: [
         { ResultItem: 'minecraft:chiseled_tuff_bricks', ResultTotal: 146 },
@@ -966,9 +958,7 @@ describe('full integration test - sample data', () => {
 
     // Pass-through items
     expect(qty('obsidian')).toBe(30);
-    expect(qty('dirt')).toBe(350);
     expect(qty('calcite')).toBe(160);
-    expect(qty('grass_block')).toBe(372);
     expect(qty('flowering_azalea_leaves')).toBe(18);
     expect(qty('flowering_azalea')).toBe(6);
   });
@@ -1000,10 +990,22 @@ describe('edge cases', () => {
 
   it('handles single-item input', () => {
     const input = makeInput([
-      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 1 }] },
+      { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 1 }] },
     ]);
     const result = process(input);
-    expect(result).toEqual([{ Item: 'minecraft:dirt', Quantity: 1 }]);
+    expect(result).toEqual([{ Item: 'minecraft:obsidian', Quantity: 1 }]);
+  });
+
+  it('excludes dirt and grass_block from output', () => {
+    const input = makeInput([
+      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 500 }] },
+      { raw: 'minecraft:grass_block', results: [{ item: 'minecraft:grass_block', total: 200 }] },
+      { raw: 'minecraft:stone', results: [{ item: 'minecraft:stone', total: 100 }] },
+    ]);
+    const result = process(input);
+    expect(result.find(r => r.Item === 'minecraft:dirt')).toBeUndefined();
+    expect(result.find(r => r.Item === 'minecraft:grass_block')).toBeUndefined();
+    expect(result.find(r => r.Item === 'minecraft:stone')?.Quantity).toBe(100);
   });
 
   it('handles item with no namespace prefix', () => {

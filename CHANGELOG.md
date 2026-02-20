@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.0] - 2026-02-20
+
+### Changed
+
+#### Excluded Items
+- `dirt` and `grass_block` are now silently excluded from processing output
+- The material source provider does not collect these blocks, so they are dropped before classification
+- Exclusion happens immediately after Phase 1 (flatten & deduplicate), preventing these items from entering any downstream processing
+
+#### Testing
+- 175 total tests across 3 test files (was 174)
+- Added dedicated exclusion test verifying dirt and grass_block are dropped while other items process normally
+- Updated all tests that previously used dirt as a pass-through example to use obsidian or calcite instead
+- Removed dirt and grass_block from large integration test input and assertions
+- Removed dirt and grass_block from Medieval Village fake project input and assertions
+
 ## [1.4.0] - 2026-02-20
 
 ### Changed

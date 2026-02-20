@@ -28,11 +28,11 @@ describe('empty and minimal inputs', () => {
 
   it('handles single pass-through item', () => {
     const input: RawInput = [
-      makeGroup('minecraft:dirt', [{ item: 'minecraft:dirt', total: 1 }]),
+      makeGroup('minecraft:obsidian', [{ item: 'minecraft:obsidian', total: 1 }]),
     ];
     const result = process(input);
     expect(result).toHaveLength(1);
-    expect(result[0]).toEqual({ Item: 'minecraft:dirt', Quantity: 1 });
+    expect(result[0]).toEqual({ Item: 'minecraft:obsidian', Quantity: 1 });
   });
 
   it('handles single generic wood item (chest → oak_log)', () => {
@@ -535,7 +535,6 @@ describe('large mixed fake list', () => {
     const input: RawInput = [
       // Pass-through
       makeGroup('minecraft:obsidian', [{ item: 'minecraft:obsidian', total: 100 }]),
-      makeGroup('minecraft:dirt', [{ item: 'minecraft:dirt', total: 500 }]),
       makeGroup('minecraft:netherrack', [{ item: 'minecraft:netherrack', total: 200 }]),
 
       // Functional items from various raw sources
@@ -603,7 +602,6 @@ describe('large mixed fake list', () => {
 
     // Pass-through
     expect(qty(result, 'minecraft:obsidian')).toBe(100);
-    expect(qty(result, 'minecraft:dirt')).toBe(500);
     expect(qty(result, 'minecraft:netherrack')).toBe(200);
 
     // Functional (deduplicated)
@@ -709,7 +707,7 @@ describe('unknown items', () => {
 describe('input validation', () => {
   it('validates correct input', () => {
     const input: RawInput = [
-      makeGroup('minecraft:dirt', [{ item: 'minecraft:dirt', total: 10 }]),
+      makeGroup('minecraft:obsidian', [{ item: 'minecraft:obsidian', total: 10 }]),
     ];
     expect(validateInput(input)).toBe(true);
   });

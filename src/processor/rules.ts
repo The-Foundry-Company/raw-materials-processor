@@ -1,3 +1,14 @@
+// ── Excluded items: silently dropped from output (not collected by material provider) ──
+
+export const EXCLUDED_ITEMS: Set<string> = new Set([
+  'dirt',
+  'grass_block',
+]);
+
+export function isExcluded(name: string): boolean {
+  return EXCLUDED_ITEMS.has(name);
+}
+
 // ── Functional items: keep as-is (crafted items that shouldn't be decomposed) ──
 
 export const FUNCTIONAL_EXACT: Set<string> = new Set([

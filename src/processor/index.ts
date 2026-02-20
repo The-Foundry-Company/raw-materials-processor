@@ -3,6 +3,7 @@ import {
   stripNamespace,
   addNamespace,
   isFunctional,
+  isExcluded,
   PROCESSED_BLOCKS,
   resolveVariant,
   GENERIC_WOOD_ITEMS,
@@ -106,6 +107,14 @@ function buildPassThroughSet(input: RawInput): Set<string> {
 export function process(input: RawInput): ProcessedItem[] {
   // Phase 1: Flatten & deduplicate
   const deduplicated = flattenAndDeduplicate(input);
+
+  // Remove excluded items (dirt, grass_block — not collected by material provider)
+  for (const item of [...deduplicated.keys()]) {
+    if (isExcluded(stripNamespace(item))) {
+      deduplicated.delete(item);
+    }
+  }
+
   const passThroughSet = buildPassThroughSet(input);
 
   // Remove items from pass-through if they can be decomposed (e.g., stripped logs → logs)
