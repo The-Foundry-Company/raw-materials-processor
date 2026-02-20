@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.1.0] - 2026-02-20
+
+### Changed
+
+#### Single-Material Decomposition
+- Items whose entire crafting chain uses only ONE unique base raw material are now collapsed to that base material instead of being kept as functional items
+- Doors, trapdoors, fences, fence gates, signs, wall signs, buttons, and pressure plates made from a single material now resolve to their base (e.g., `oak_door` → `oak_log`, `iron_door` → `iron_ingot`)
+- Programmatic resolution via wood-type lookup table and suffix-based crafting ratios (no static map bloat)
+- 12 wood types supported with correct standard and bamboo ratios
+- 10 non-wood items supported (iron/copper doors & trapdoors, stone/polished_blackstone buttons & pressure plates, weighted pressure plates)
+- `nether_brick_fence` now correctly consolidates into `nether_bricks` (previously blocked by functional classification)
+- `_hanging_sign` remains functional (uses chains = iron + stripped logs = multiple materials)
+- All `waxed_`/`oxidized_`/`weathered_`/`exposed_` prefixed items remain functional
+
+#### Branding
+- Replaced favicon with new logo (`logo1.png`)
+
+#### Testing
+- Updated to 167 total tests across 3 test files (was 160)
+- Updated isFunctional, resolveVariant, and integration tests for decomposition behavior
+- Updated all 5 fake project test suites with correct decomposed quantities
+
 ## [1.0.0] - 2026-02-20
 
 ### Added
