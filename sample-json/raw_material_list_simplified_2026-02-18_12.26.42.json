@@ -1,0 +1,768 @@
+[
+  {
+    "RawItem": "minecraft:cobbled_deepslate",
+    "TotalEstimate": 176,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:deepslate_tile_slab",
+        "ResultTotal": 8
+      },
+      {
+        "ResultItem": "minecraft:deepslate_tile_stairs",
+        "ResultTotal": 172
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:red_sand",
+    "TotalEstimate": 3644,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:red_sandstone",
+        "ResultTotal": 42
+      },
+      {
+        "ResultItem": "minecraft:red_sandstone_stairs",
+        "ResultTotal": 1
+      },
+      {
+        "ResultItem": "minecraft:chiseled_red_sandstone",
+        "ResultTotal": 836
+      },
+      {
+        "ResultItem": "minecraft:cut_red_sandstone",
+        "ResultTotal": 32
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:obsidian",
+    "TotalEstimate": 30,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:obsidian",
+        "ResultTotal": 30
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:prismarine_shard",
+    "TotalEstimate": 280,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:sea_lantern",
+        "ResultTotal": 70
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:prismarine_crystals",
+    "TotalEstimate": 350,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:sea_lantern",
+        "ResultTotal": 70
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:glowstone_dust",
+    "TotalEstimate": 224,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:glowstone",
+        "ResultTotal": 56
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:spruce_log",
+    "TotalEstimate": 3,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:spruce_door",
+        "ResultTotal": 4
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:stripped_spruce_log",
+    "TotalEstimate": 187,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:stripped_spruce_log",
+        "ResultTotal": 187
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:dark_oak_log",
+    "TotalEstimate": 38,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:dark_oak_trapdoor",
+        "ResultTotal": 50
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:iron_block",
+    "TotalEstimate": 7,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:iron_bars",
+        "ResultTotal": 46
+      },
+      {
+        "ResultItem": "minecraft:lodestone",
+        "ResultTotal": 16
+      },
+      {
+        "ResultItem": "minecraft:lantern",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:iron_ingot",
+    "TotalEstimate": 11,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:iron_bars",
+        "ResultTotal": 46
+      },
+      {
+        "ResultItem": "minecraft:lodestone",
+        "ResultTotal": 16
+      },
+      {
+        "ResultItem": "minecraft:lantern",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:iron_nugget",
+    "TotalEstimate": 8,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:lantern",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:oak_log",
+    "TotalEstimate": 61,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:chest",
+        "ResultTotal": 8
+      },
+      {
+        "ResultItem": "minecraft:torch",
+        "ResultTotal": 1
+      },
+      {
+        "ResultItem": "minecraft:birch_fence",
+        "ResultTotal": 8
+      },
+      {
+        "ResultItem": "minecraft:crafting_table",
+        "ResultTotal": 5
+      },
+      {
+        "ResultItem": "minecraft:lectern",
+        "ResultTotal": 28
+      },
+      {
+        "ResultItem": "minecraft:oak_sign",
+        "ResultTotal": 22
+      },
+      {
+        "ResultItem": "minecraft:lantern",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:coal_block",
+    "TotalEstimate": 1,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:torch",
+        "ResultTotal": 1
+      },
+      {
+        "ResultItem": "minecraft:lantern",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:coal",
+    "TotalEstimate": 4,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:torch",
+        "ResultTotal": 1
+      },
+      {
+        "ResultItem": "minecraft:lantern",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:calcite",
+    "TotalEstimate": 160,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:calcite",
+        "ResultTotal": 160
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:cobblestone",
+    "TotalEstimate": 1009,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:stone_bricks",
+        "ResultTotal": 213
+      },
+      {
+        "ResultItem": "minecraft:polished_diorite_stairs",
+        "ResultTotal": 84
+      },
+      {
+        "ResultItem": "minecraft:furnace",
+        "ResultTotal": 5
+      },
+      {
+        "ResultItem": "minecraft:diorite_wall",
+        "ResultTotal": 92
+      },
+      {
+        "ResultItem": "minecraft:smooth_stone",
+        "ResultTotal": 56
+      },
+      {
+        "ResultItem": "minecraft:lodestone",
+        "ResultTotal": 16
+      },
+      {
+        "ResultItem": "minecraft:cracked_stone_bricks",
+        "ResultTotal": 396
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:cactus",
+    "TotalEstimate": 20,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:cyan_terracotta",
+        "ResultTotal": 246
+      },
+      {
+        "ResultItem": "minecraft:green_glazed_terracotta",
+        "ResultTotal": 32
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:clay",
+    "TotalEstimate": 1534,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:brick_stairs",
+        "ResultTotal": 284
+      },
+      {
+        "ResultItem": "minecraft:terracotta",
+        "ResultTotal": 20
+      },
+      {
+        "ResultItem": "minecraft:white_terracotta",
+        "ResultTotal": 217
+      },
+      {
+        "ResultItem": "minecraft:orange_glazed_terracotta",
+        "ResultTotal": 47
+      },
+      {
+        "ResultItem": "minecraft:yellow_terracotta",
+        "ResultTotal": 229
+      },
+      {
+        "ResultItem": "minecraft:cyan_terracotta",
+        "ResultTotal": 246
+      },
+      {
+        "ResultItem": "minecraft:bricks",
+        "ResultTotal": 22
+      },
+      {
+        "ResultItem": "minecraft:purple_glazed_terracotta",
+        "ResultTotal": 46
+      },
+      {
+        "ResultItem": "minecraft:red_glazed_terracotta",
+        "ResultTotal": 20
+      },
+      {
+        "ResultItem": "minecraft:yellow_glazed_terracotta",
+        "ResultTotal": 45
+      },
+      {
+        "ResultItem": "minecraft:brown_terracotta",
+        "ResultTotal": 44
+      },
+      {
+        "ResultItem": "minecraft:light_blue_terracotta",
+        "ResultTotal": 256
+      },
+      {
+        "ResultItem": "minecraft:green_glazed_terracotta",
+        "ResultTotal": 32
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:flowering_azalea_leaves",
+    "TotalEstimate": 18,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:flowering_azalea_leaves",
+        "ResultTotal": 18
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:stripped_warped_stem",
+    "TotalEstimate": 14,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:stripped_warped_stem",
+        "ResultTotal": 14
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:grass_block",
+    "TotalEstimate": 372,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:grass_block",
+        "ResultTotal": 372
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:sand",
+    "TotalEstimate": 1640,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:sandstone_slab",
+        "ResultTotal": 14
+      },
+      {
+        "ResultItem": "minecraft:smooth_sandstone_stairs",
+        "ResultTotal": 88
+      },
+      {
+        "ResultItem": "minecraft:sandstone",
+        "ResultTotal": 217
+      },
+      {
+        "ResultItem": "minecraft:smooth_sandstone",
+        "ResultTotal": 92
+      },
+      {
+        "ResultItem": "minecraft:black_stained_glass_pane",
+        "ResultTotal": 62
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:ink_sac",
+    "TotalEstimate": 3,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:black_stained_glass_pane",
+        "ResultTotal": 62
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:flowering_azalea",
+    "TotalEstimate": 6,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:flowering_azalea",
+        "ResultTotal": 6
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:stripped_pale_oak_log",
+    "TotalEstimate": 38,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:stripped_pale_oak_log",
+        "ResultTotal": 38
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:blue_orchid",
+    "TotalEstimate": 32,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:light_blue_terracotta",
+        "ResultTotal": 256
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:warped_stem",
+    "TotalEstimate": 59,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:warped_stairs",
+        "ResultTotal": 155
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:cocoa_beans",
+    "TotalEstimate": 6,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:brown_terracotta",
+        "ResultTotal": 44
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:chorus_fruit",
+    "TotalEstimate": 4,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:end_rod",
+        "ResultTotal": 16
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:blaze_rod",
+    "TotalEstimate": 4,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:end_rod",
+        "ResultTotal": 16
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:dandelion",
+    "TotalEstimate": 35,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:yellow_terracotta",
+        "ResultTotal": 229
+      },
+      {
+        "ResultItem": "minecraft:yellow_glazed_terracotta",
+        "ResultTotal": 45
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:beetroot",
+    "TotalEstimate": 6,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:purple_glazed_terracotta",
+        "ResultTotal": 46
+      },
+      {
+        "ResultItem": "minecraft:red_glazed_terracotta",
+        "ResultTotal": 20
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:rabbit_hide",
+    "TotalEstimate": 168,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:lectern",
+        "ResultTotal": 14
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:sugar_cane",
+    "TotalEstimate": 126,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:lectern",
+        "ResultTotal": 14
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:copper_block",
+    "TotalEstimate": 89,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:waxed_copper_block",
+        "ResultTotal": 78
+      },
+      {
+        "ResultItem": "minecraft:oxidized_copper_trapdoor",
+        "ResultTotal": 12
+      },
+      {
+        "ResultItem": "minecraft:lightning_rod",
+        "ResultTotal": 23
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:copper_ingot",
+    "TotalEstimate": 6,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:waxed_copper_block",
+        "ResultTotal": 78
+      },
+      {
+        "ResultItem": "minecraft:oxidized_copper_trapdoor",
+        "ResultTotal": 12
+      },
+      {
+        "ResultItem": "minecraft:lightning_rod",
+        "ResultTotal": 23
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:stripped_birch_log",
+    "TotalEstimate": 476,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:stripped_birch_log",
+        "ResultTotal": 476
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:birch_log",
+    "TotalEstimate": 81,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:birch_slab",
+        "ResultTotal": 16
+      },
+      {
+        "ResultItem": "minecraft:birch_door",
+        "ResultTotal": 4
+      },
+      {
+        "ResultItem": "minecraft:birch_trapdoor",
+        "ResultTotal": 92
+      },
+      {
+        "ResultItem": "minecraft:birch_fence",
+        "ResultTotal": 8
+      },
+      {
+        "ResultItem": "minecraft:birch_stairs",
+        "ResultTotal": 8
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:lapis_block",
+    "TotalEstimate": 2,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:cyan_terracotta",
+        "ResultTotal": 246
+      },
+      {
+        "ResultItem": "minecraft:purple_glazed_terracotta",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:lapis_lazuli",
+    "TotalEstimate": 1,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:cyan_terracotta",
+        "ResultTotal": 246
+      },
+      {
+        "ResultItem": "minecraft:purple_glazed_terracotta",
+        "ResultTotal": 46
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:stripped_dark_oak_log",
+    "TotalEstimate": 522,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:stripped_dark_oak_log",
+        "ResultTotal": 522
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:nether_quartz_ore",
+    "TotalEstimate": 176,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:polished_diorite_stairs",
+        "ResultTotal": 84
+      },
+      {
+        "ResultItem": "minecraft:diorite_wall",
+        "ResultTotal": 92
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:dirt",
+    "TotalEstimate": 350,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:dirt",
+        "ResultTotal": 350
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:tuff",
+    "TotalEstimate": 516,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:chiseled_tuff_bricks",
+        "ResultTotal": 146
+      },
+      {
+        "ResultItem": "minecraft:tuff_brick_slab",
+        "ResultTotal": 56
+      },
+      {
+        "ResultItem": "minecraft:tuff_brick_stairs",
+        "ResultTotal": 342
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:blackstone",
+    "TotalEstimate": 208,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:polished_blackstone_bricks",
+        "ResultTotal": 208
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:open_eyeblossom",
+    "TotalEstimate": 6,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:orange_glazed_terracotta",
+        "ResultTotal": 47
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:honeycomb",
+    "TotalEstimate": 78,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:waxed_copper_block",
+        "ResultTotal": 78
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:bone",
+    "TotalEstimate": 10,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:white_terracotta",
+        "ResultTotal": 217
+      }
+    ]
+  },
+  {
+    "RawItem": "minecraft:bell",
+    "TotalEstimate": 2,
+    "Steps": [],
+    "Results": [
+      {
+        "ResultItem": "minecraft:bell",
+        "ResultTotal": 2
+      }
+    ]
+  }
+]
