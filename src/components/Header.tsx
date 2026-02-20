@@ -4,7 +4,7 @@ export default function Header() {
       <img
         src="/foundry-logo.png"
         alt="Foundry Company"
-        className="h-10"
+        className="h-16 rounded-lg"
       />
       <div>
         <h1 className="text-2xl sm:text-3xl font-black text-foundry-dark tracking-tight leading-none">
