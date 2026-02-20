@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.2.1] - 2026-02-20
+
+### Changed
+
+#### Branding
+- Increased header logo size from 40px to 64px for better legibility
+- Added subtle rounded corners to the header logo
+
 ## [1.2.0] - 2026-02-20
 
 ### Changed
