@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.4.0] - 2026-02-20
+
+### Changed
+
+#### Generic Wood Item Decomposition
+- Chest, crafting table, composter, and ladder now decompose to logs instead of appearing as standalone line items
+- These items have no wood-type prefix, so they merge into the **dominant log type** already in the output (highest quantity of `*_log`, `*_stem`, or `bamboo_block`)
+- If no logs exist in the output, defaults to `oak_log`
+- Bamboo-dominant builds use the correct 2:1 planks-per-block ratio; all others use 4:1
+- Plank costs per item: chest (8), crafting_table (4), composter (3.5), ladder (3.5)
+
+#### Furnace Decomposition
+- Furnace now decomposes to 8 cobblestone (single-material recipe, added to `NON_WOOD_DECOMPOSITION`)
+- Resolves through the existing variant system like iron doors and pressure plates
+
+#### Processing Screen
+- New "RESOLVING GENERIC WOOD ITEMS..." step appears in the processing animation when generic wood items are present
+- Shows count of generic wood items converted to logs
+
+#### Testing
+- 174 total tests across 3 test files (was 160)
+- Added 8 new tests: chest, crafting_table, composter, ladder decomposition, dominant log merging, bamboo ratio, and furnace decomposition
+- Updated deduplication test (chest → oak_log), full integration test (dark_oak_log 560→581, furnace→cobblestone), and functional items list
+- Updated extensive test suite (single item test, large mixed list oak_log 26→50)
+- Updated fake project tests: Desert Temple (+oak_log:8), Modern Office (birch_log 889→903, count 12→10), Medieval Village (spruce_log 472→502, +cobblestone:64)
+
 ## [1.3.0] - 2026-02-20
 
 ### Changed
