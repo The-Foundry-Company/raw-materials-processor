@@ -1,0 +1,842 @@
+import { describe, it, expect } from 'vitest';
+import { process, validateInput } from '../index';
+import {
+  isFunctional,
+  resolveVariant,
+  stripNamespace,
+  PROCESSED_BLOCKS,
+} from '../rules';
+import type { RawInput } from '../types';
+
+// ── Helper to build a simple RawInput ──
+
+function makeInput(
+  entries: { raw: string; results: { item: string; total: number }[] }[]
+): RawInput {
+  return entries.map((e) => ({
+    RawItem: e.raw,
+    TotalEstimate: 0,
+    Steps: [],
+    Results: e.results.map((r) => ({
+      ResultItem: r.item,
+      ResultTotal: r.total,
+    })),
+  }));
+}
+
+// ═══════════════════════════════════════════════════════════
+// Validation
+// ═══════════════════════════════════════════════════════════
+
+describe('validateInput', () => {
+  it('accepts valid input', () => {
+    const input = makeInput([
+      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 10 }] },
+    ]);
+    expect(validateInput(input)).toBe(true);
+  });
+
+  it('rejects non-array input', () => {
+    expect(validateInput({})).toBe(false);
+    expect(validateInput('hello')).toBe(false);
+    expect(validateInput(null)).toBe(false);
+  });
+
+  it('rejects array with invalid items', () => {
+    expect(validateInput([{ foo: 'bar' }])).toBe(false);
+    expect(validateInput([{ RawItem: 'x' }])).toBe(false);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Classification: Functional items
+// ═══════════════════════════════════════════════════════════
+
+describe('isFunctional', () => {
+  it('matches exact functional items', () => {
+    expect(isFunctional('torch')).toBe(true);
+    expect(isFunctional('lantern')).toBe(true);
+    expect(isFunctional('sea_lantern')).toBe(true);
+    expect(isFunctional('glowstone')).toBe(true);
+    expect(isFunctional('iron_bars')).toBe(true);
+    expect(isFunctional('lodestone')).toBe(true);
+    expect(isFunctional('bell')).toBe(true);
+    expect(isFunctional('glass')).toBe(true);
+    expect(isFunctional('glass_pane')).toBe(true);
+    expect(isFunctional('tinted_glass')).toBe(true);
+  });
+
+  it('matches door/trapdoor/fence/sign patterns', () => {
+    expect(isFunctional('spruce_door')).toBe(true);
+    expect(isFunctional('dark_oak_trapdoor')).toBe(true);
+    expect(isFunctional('birch_fence')).toBe(true);
+    expect(isFunctional('birch_fence_gate')).toBe(true);
+    expect(isFunctional('oak_sign')).toBe(true);
+  });
+
+  it('matches terracotta patterns', () => {
+    expect(isFunctional('cyan_terracotta')).toBe(true);
+    expect(isFunctional('white_terracotta')).toBe(true);
+    expect(isFunctional('terracotta')).toBe(true);
+    expect(isFunctional('orange_glazed_terracotta')).toBe(true);
+  });
+
+  it('matches stained glass pane patterns', () => {
+    expect(isFunctional('black_stained_glass_pane')).toBe(true);
+    expect(isFunctional('red_stained_glass_pane')).toBe(true);
+  });
+
+  it('matches waxed/oxidized items', () => {
+    expect(isFunctional('waxed_copper_block')).toBe(true);
+    expect(isFunctional('oxidized_copper_trapdoor')).toBe(true);
+  });
+
+  it('does not match non-functional items', () => {
+    expect(isFunctional('dirt')).toBe(false);
+    expect(isFunctional('sandstone')).toBe(false);
+    expect(isFunctional('stone_bricks')).toBe(false);
+    expect(isFunctional('red_sandstone_stairs')).toBe(false);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Classification: Processed blocks
+// ═══════════════════════════════════════════════════════════
+
+describe('PROCESSED_BLOCKS', () => {
+  it('includes known processed blocks', () => {
+    expect(PROCESSED_BLOCKS.has('stone_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('cracked_stone_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('smooth_sandstone')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('polished_diorite')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('polished_blackstone_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('smooth_stone')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('deepslate_tiles')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('tuff_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('bricks')).toBe(true);
+  });
+
+  it('does not include raw blocks', () => {
+    expect(PROCESSED_BLOCKS.has('dirt')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('sandstone')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('cobblestone')).toBe(false);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Variant resolution
+// ═══════════════════════════════════════════════════════════
+
+describe('resolveVariant', () => {
+  it('resolves generic suffix variants', () => {
+    expect(resolveVariant('sandstone_stairs')).toEqual({ base: 'sandstone', ratio: 1 });
+    expect(resolveVariant('sandstone_slab')).toEqual({ base: 'sandstone', ratio: 2 });
+    expect(resolveVariant('diorite_wall')).toEqual({ base: 'diorite', ratio: 1 });
+  });
+
+  it('resolves generic prefix variants', () => {
+    expect(resolveVariant('chiseled_red_sandstone')).toEqual({ base: 'red_sandstone', ratio: 1 });
+    expect(resolveVariant('cut_red_sandstone')).toEqual({ base: 'red_sandstone', ratio: 1 });
+  });
+
+  it('resolves special mappings for pluralization', () => {
+    expect(resolveVariant('deepslate_tile_stairs')).toEqual({ base: 'deepslate_tiles', ratio: 1 });
+    expect(resolveVariant('deepslate_tile_slab')).toEqual({ base: 'deepslate_tiles', ratio: 2 });
+    expect(resolveVariant('tuff_brick_stairs')).toEqual({ base: 'tuff_bricks', ratio: 1 });
+    expect(resolveVariant('tuff_brick_slab')).toEqual({ base: 'tuff_bricks', ratio: 2 });
+    expect(resolveVariant('chiseled_tuff_bricks')).toEqual({ base: 'tuff_bricks', ratio: 1 });
+    expect(resolveVariant('brick_stairs')).toEqual({ base: 'bricks', ratio: 1 });
+    expect(resolveVariant('brick_slab')).toEqual({ base: 'bricks', ratio: 2 });
+    expect(resolveVariant('brick_wall')).toEqual({ base: 'bricks', ratio: 1 });
+  });
+
+  it('resolves wood → planks mappings', () => {
+    expect(resolveVariant('birch_slab')).toEqual({ base: 'birch_planks', ratio: 2 });
+    expect(resolveVariant('birch_stairs')).toEqual({ base: 'birch_planks', ratio: 1 });
+    expect(resolveVariant('warped_stairs')).toEqual({ base: 'warped_planks', ratio: 1 });
+    expect(resolveVariant('warped_slab')).toEqual({ base: 'warped_planks', ratio: 2 });
+    expect(resolveVariant('dark_oak_stairs')).toEqual({ base: 'dark_oak_planks', ratio: 1 });
+  });
+
+  it('returns null for non-variant items', () => {
+    expect(resolveVariant('dirt')).toBeNull();
+    expect(resolveVariant('obsidian')).toBeNull();
+    expect(resolveVariant('torch')).toBeNull();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Phase 1: Deduplication (same item from multiple RawItem groups → MAX)
+// ═══════════════════════════════════════════════════════════
+
+describe('deduplication', () => {
+  it('takes MAX when same ResultItem appears in multiple groups', () => {
+    const input = makeInput([
+      {
+        raw: 'minecraft:iron_block',
+        results: [
+          { item: 'minecraft:iron_bars', total: 46 },
+          { item: 'minecraft:lantern', total: 46 },
+        ],
+      },
+      {
+        raw: 'minecraft:iron_ingot',
+        results: [
+          { item: 'minecraft:iron_bars', total: 46 },
+          { item: 'minecraft:lantern', total: 46 },
+        ],
+      },
+      {
+        raw: 'minecraft:iron_nugget',
+        results: [{ item: 'minecraft:lantern', total: 46 }],
+      },
+    ]);
+
+    const result = process(input);
+    const ironBars = result.find((r) => r.Item === 'minecraft:iron_bars');
+    const lantern = result.find((r) => r.Item === 'minecraft:lantern');
+
+    // Should be MAX(46, 46) = 46, not 46+46 = 92
+    expect(ironBars?.Quantity).toBe(46);
+    expect(lantern?.Quantity).toBe(46);
+  });
+
+  it('takes MAX when quantities differ', () => {
+    const input = makeInput([
+      { raw: 'minecraft:a', results: [{ item: 'minecraft:chest', total: 8 }] },
+      { raw: 'minecraft:b', results: [{ item: 'minecraft:chest', total: 5 }] },
+    ]);
+    const result = process(input);
+    expect(result.find((r) => r.Item === 'minecraft:chest')?.Quantity).toBe(8);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Phase 3: Variant consolidation with ratios
+// ═══════════════════════════════════════════════════════════
+
+describe('variant consolidation', () => {
+  it('stairs consolidate 1:1', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:sandstone_stairs', total: 88 }] },
+    ]);
+    const result = process(input);
+    // 88 stairs → 88 sandstone (1:1)
+    expect(result.find((r) => r.Item === 'minecraft:sandstone')?.Quantity).toBe(88);
+  });
+
+  it('slabs consolidate 1:2 with ceil', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:sandstone_slab', total: 14 }] },
+    ]);
+    const result = process(input);
+    // 14 slabs → ceil(14/2) = 7 sandstone
+    expect(result.find((r) => r.Item === 'minecraft:sandstone')?.Quantity).toBe(7);
+  });
+
+  it('slabs consolidate 1:2 with ceil on odd numbers', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:sandstone_slab', total: 15 }] },
+    ]);
+    const result = process(input);
+    // 15 slabs → ceil(15/2) = 8 sandstone
+    expect(result.find((r) => r.Item === 'minecraft:sandstone')?.Quantity).toBe(8);
+  });
+
+  it('walls consolidate 1:1', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:diorite_wall', total: 92 }] },
+    ]);
+    const result = process(input);
+    expect(result.find((r) => r.Item === 'minecraft:diorite')?.Quantity).toBe(92);
+  });
+
+  it('chiseled_ prefix consolidates 1:1', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:chiseled_red_sandstone', total: 836 }] },
+    ]);
+    const result = process(input);
+    expect(result.find((r) => r.Item === 'minecraft:red_sandstone')?.Quantity).toBe(836);
+  });
+
+  it('cut_ prefix consolidates 1:1', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:cut_red_sandstone', total: 32 }] },
+    ]);
+    const result = process(input);
+    expect(result.find((r) => r.Item === 'minecraft:red_sandstone')?.Quantity).toBe(32);
+  });
+
+  it('accumulates multiple variants of the same base', () => {
+    const input = makeInput([
+      {
+        raw: 'minecraft:x',
+        results: [
+          { item: 'minecraft:red_sandstone', total: 42 },
+          { item: 'minecraft:red_sandstone_stairs', total: 1 },
+          { item: 'minecraft:chiseled_red_sandstone', total: 836 },
+          { item: 'minecraft:cut_red_sandstone', total: 32 },
+        ],
+      },
+    ]);
+    const result = process(input);
+    // red_sandstone is PASS_THROUGH here because RawItem != ResultItem, but it's not functional/processed
+    // Actually, red_sandstone has no special classification, it'll be PASS_THROUGH since it's not in functional/processed
+    // Wait - let me re-check. red_sandstone is not in PROCESSED_BLOCKS, not functional, and resolveVariant returns null.
+    // So it falls through to PASS_THROUGH.
+    // stairs: 1 (1:1), chiseled_: 836 (1:1), cut_: 32 (1:1) all → red_sandstone
+    // direct red_sandstone: 42 as PASS_THROUGH
+    // Total: 42 + 1 + 836 + 32 = 911
+    expect(result.find((r) => r.Item === 'minecraft:red_sandstone')?.Quantity).toBe(911);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Special mapping tests
+// ═══════════════════════════════════════════════════════════
+
+describe('special mappings', () => {
+  it('tuff_brick variants → tuff_bricks', () => {
+    const input = makeInput([
+      {
+        raw: 'minecraft:tuff',
+        results: [
+          { item: 'minecraft:chiseled_tuff_bricks', total: 146 },
+          { item: 'minecraft:tuff_brick_slab', total: 56 },
+          { item: 'minecraft:tuff_brick_stairs', total: 342 },
+        ],
+      },
+    ]);
+    const result = process(input);
+    // chiseled_tuff_bricks → tuff_bricks: 146 (1:1)
+    // tuff_brick_slab → tuff_bricks: ceil(56/2) = 28
+    // tuff_brick_stairs → tuff_bricks: 342 (1:1)
+    // Total: 146 + 28 + 342 = 516
+    expect(result.find((r) => r.Item === 'minecraft:tuff_bricks')?.Quantity).toBe(516);
+  });
+
+  it('brick variants → bricks', () => {
+    const input = makeInput([
+      {
+        raw: 'minecraft:clay',
+        results: [
+          { item: 'minecraft:brick_stairs', total: 284 },
+          { item: 'minecraft:bricks', total: 22 },
+        ],
+      },
+    ]);
+    const result = process(input);
+    // brick_stairs → bricks: 284 (1:1)
+    // bricks: 22 (PROCESSED_BLOCK, kept as-is)
+    // Total: 284 + 22 = 306
+    expect(result.find((r) => r.Item === 'minecraft:bricks')?.Quantity).toBe(306);
+  });
+
+  it('deepslate_tile variants → deepslate_tiles', () => {
+    const input = makeInput([
+      {
+        raw: 'minecraft:cobbled_deepslate',
+        results: [
+          { item: 'minecraft:deepslate_tile_slab', total: 8 },
+          { item: 'minecraft:deepslate_tile_stairs', total: 172 },
+        ],
+      },
+    ]);
+    const result = process(input);
+    // slab: ceil(8/2) = 4, stairs: 172
+    // Total: 4 + 172 = 176
+    expect(result.find((r) => r.Item === 'minecraft:deepslate_tiles')?.Quantity).toBe(176);
+  });
+
+  it('birch wood variants → birch_planks', () => {
+    const input = makeInput([
+      {
+        raw: 'minecraft:birch_log',
+        results: [
+          { item: 'minecraft:birch_slab', total: 16 },
+          { item: 'minecraft:birch_stairs', total: 8 },
+        ],
+      },
+    ]);
+    const result = process(input);
+    // slab: ceil(16/2) = 8, stairs: 8 (1:1)
+    // Total: 8 + 8 = 16
+    expect(result.find((r) => r.Item === 'minecraft:birch_planks')?.Quantity).toBe(16);
+  });
+
+  it('warped_stairs → warped_planks', () => {
+    const input = makeInput([
+      {
+        raw: 'minecraft:warped_stem',
+        results: [{ item: 'minecraft:warped_stairs', total: 155 }],
+      },
+    ]);
+    const result = process(input);
+    expect(result.find((r) => r.Item === 'minecraft:warped_planks')?.Quantity).toBe(155);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Pass-through items
+// ═══════════════════════════════════════════════════════════
+
+describe('pass-through', () => {
+  it('keeps items where RawItem == ResultItem', () => {
+    const input = makeInput([
+      { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 30 }] },
+      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 350 }] },
+      {
+        raw: 'minecraft:stripped_spruce_log',
+        results: [{ item: 'minecraft:stripped_spruce_log', total: 187 }],
+      },
+    ]);
+    const result = process(input);
+    expect(result.find((r) => r.Item === 'minecraft:obsidian')?.Quantity).toBe(30);
+    expect(result.find((r) => r.Item === 'minecraft:dirt')?.Quantity).toBe(350);
+    expect(result.find((r) => r.Item === 'minecraft:stripped_spruce_log')?.Quantity).toBe(187);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Output format
+// ═══════════════════════════════════════════════════════════
+
+describe('output format', () => {
+  it('sorts alphabetically by Item', () => {
+    const input = makeInput([
+      { raw: 'minecraft:z', results: [{ item: 'minecraft:z', total: 1 }] },
+      { raw: 'minecraft:a', results: [{ item: 'minecraft:a', total: 1 }] },
+      { raw: 'minecraft:m', results: [{ item: 'minecraft:m', total: 1 }] },
+    ]);
+    const result = process(input);
+    const items = result.map((r) => r.Item);
+    expect(items).toEqual([...items].sort());
+  });
+
+  it('has Item and Quantity fields', () => {
+    const input = makeInput([
+      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 10 }] },
+    ]);
+    const result = process(input);
+    expect(result[0]).toHaveProperty('Item');
+    expect(result[0]).toHaveProperty('Quantity');
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Full integration test against sample data
+// ═══════════════════════════════════════════════════════════
+
+describe('full integration test - sample data', () => {
+  // Reconstruct the sample data inline for test independence
+  const sampleInput: RawInput = [
+    {
+      RawItem: 'minecraft:cobbled_deepslate', TotalEstimate: 176, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:deepslate_tile_slab', ResultTotal: 8 },
+        { ResultItem: 'minecraft:deepslate_tile_stairs', ResultTotal: 172 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:red_sand', TotalEstimate: 3644, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:red_sandstone', ResultTotal: 42 },
+        { ResultItem: 'minecraft:red_sandstone_stairs', ResultTotal: 1 },
+        { ResultItem: 'minecraft:chiseled_red_sandstone', ResultTotal: 836 },
+        { ResultItem: 'minecraft:cut_red_sandstone', ResultTotal: 32 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:obsidian', TotalEstimate: 30, Steps: [],
+      Results: [{ ResultItem: 'minecraft:obsidian', ResultTotal: 30 }],
+    },
+    {
+      RawItem: 'minecraft:prismarine_shard', TotalEstimate: 280, Steps: [],
+      Results: [{ ResultItem: 'minecraft:sea_lantern', ResultTotal: 70 }],
+    },
+    {
+      RawItem: 'minecraft:prismarine_crystals', TotalEstimate: 350, Steps: [],
+      Results: [{ ResultItem: 'minecraft:sea_lantern', ResultTotal: 70 }],
+    },
+    {
+      RawItem: 'minecraft:glowstone_dust', TotalEstimate: 224, Steps: [],
+      Results: [{ ResultItem: 'minecraft:glowstone', ResultTotal: 56 }],
+    },
+    {
+      RawItem: 'minecraft:spruce_log', TotalEstimate: 3, Steps: [],
+      Results: [{ ResultItem: 'minecraft:spruce_door', ResultTotal: 4 }],
+    },
+    {
+      RawItem: 'minecraft:stripped_spruce_log', TotalEstimate: 187, Steps: [],
+      Results: [{ ResultItem: 'minecraft:stripped_spruce_log', ResultTotal: 187 }],
+    },
+    {
+      RawItem: 'minecraft:dark_oak_log', TotalEstimate: 38, Steps: [],
+      Results: [{ ResultItem: 'minecraft:dark_oak_trapdoor', ResultTotal: 50 }],
+    },
+    {
+      RawItem: 'minecraft:iron_block', TotalEstimate: 7, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:iron_bars', ResultTotal: 46 },
+        { ResultItem: 'minecraft:lodestone', ResultTotal: 16 },
+        { ResultItem: 'minecraft:lantern', ResultTotal: 46 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:iron_ingot', TotalEstimate: 11, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:iron_bars', ResultTotal: 46 },
+        { ResultItem: 'minecraft:lodestone', ResultTotal: 16 },
+        { ResultItem: 'minecraft:lantern', ResultTotal: 46 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:iron_nugget', TotalEstimate: 8, Steps: [],
+      Results: [{ ResultItem: 'minecraft:lantern', ResultTotal: 46 }],
+    },
+    {
+      RawItem: 'minecraft:oak_log', TotalEstimate: 61, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:chest', ResultTotal: 8 },
+        { ResultItem: 'minecraft:torch', ResultTotal: 1 },
+        { ResultItem: 'minecraft:birch_fence', ResultTotal: 8 },
+        { ResultItem: 'minecraft:crafting_table', ResultTotal: 5 },
+        { ResultItem: 'minecraft:lectern', ResultTotal: 28 },
+        { ResultItem: 'minecraft:oak_sign', ResultTotal: 22 },
+        { ResultItem: 'minecraft:lantern', ResultTotal: 46 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:coal_block', TotalEstimate: 1, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:torch', ResultTotal: 1 },
+        { ResultItem: 'minecraft:lantern', ResultTotal: 46 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:coal', TotalEstimate: 4, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:torch', ResultTotal: 1 },
+        { ResultItem: 'minecraft:lantern', ResultTotal: 46 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:calcite', TotalEstimate: 160, Steps: [],
+      Results: [{ ResultItem: 'minecraft:calcite', ResultTotal: 160 }],
+    },
+    {
+      RawItem: 'minecraft:cobblestone', TotalEstimate: 1009, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:stone_bricks', ResultTotal: 213 },
+        { ResultItem: 'minecraft:polished_diorite_stairs', ResultTotal: 84 },
+        { ResultItem: 'minecraft:furnace', ResultTotal: 5 },
+        { ResultItem: 'minecraft:diorite_wall', ResultTotal: 92 },
+        { ResultItem: 'minecraft:smooth_stone', ResultTotal: 56 },
+        { ResultItem: 'minecraft:lodestone', ResultTotal: 16 },
+        { ResultItem: 'minecraft:cracked_stone_bricks', ResultTotal: 396 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:cactus', TotalEstimate: 20, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:cyan_terracotta', ResultTotal: 246 },
+        { ResultItem: 'minecraft:green_glazed_terracotta', ResultTotal: 32 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:clay', TotalEstimate: 1534, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:brick_stairs', ResultTotal: 284 },
+        { ResultItem: 'minecraft:terracotta', ResultTotal: 20 },
+        { ResultItem: 'minecraft:white_terracotta', ResultTotal: 217 },
+        { ResultItem: 'minecraft:orange_glazed_terracotta', ResultTotal: 47 },
+        { ResultItem: 'minecraft:yellow_terracotta', ResultTotal: 229 },
+        { ResultItem: 'minecraft:cyan_terracotta', ResultTotal: 246 },
+        { ResultItem: 'minecraft:bricks', ResultTotal: 22 },
+        { ResultItem: 'minecraft:purple_glazed_terracotta', ResultTotal: 46 },
+        { ResultItem: 'minecraft:red_glazed_terracotta', ResultTotal: 20 },
+        { ResultItem: 'minecraft:yellow_glazed_terracotta', ResultTotal: 45 },
+        { ResultItem: 'minecraft:brown_terracotta', ResultTotal: 44 },
+        { ResultItem: 'minecraft:light_blue_terracotta', ResultTotal: 256 },
+        { ResultItem: 'minecraft:green_glazed_terracotta', ResultTotal: 32 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:flowering_azalea_leaves', TotalEstimate: 18, Steps: [],
+      Results: [{ ResultItem: 'minecraft:flowering_azalea_leaves', ResultTotal: 18 }],
+    },
+    {
+      RawItem: 'minecraft:stripped_warped_stem', TotalEstimate: 14, Steps: [],
+      Results: [{ ResultItem: 'minecraft:stripped_warped_stem', ResultTotal: 14 }],
+    },
+    {
+      RawItem: 'minecraft:grass_block', TotalEstimate: 372, Steps: [],
+      Results: [{ ResultItem: 'minecraft:grass_block', ResultTotal: 372 }],
+    },
+    {
+      RawItem: 'minecraft:sand', TotalEstimate: 1640, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:sandstone_slab', ResultTotal: 14 },
+        { ResultItem: 'minecraft:smooth_sandstone_stairs', ResultTotal: 88 },
+        { ResultItem: 'minecraft:sandstone', ResultTotal: 217 },
+        { ResultItem: 'minecraft:smooth_sandstone', ResultTotal: 92 },
+        { ResultItem: 'minecraft:black_stained_glass_pane', ResultTotal: 62 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:ink_sac', TotalEstimate: 3, Steps: [],
+      Results: [{ ResultItem: 'minecraft:black_stained_glass_pane', ResultTotal: 62 }],
+    },
+    {
+      RawItem: 'minecraft:flowering_azalea', TotalEstimate: 6, Steps: [],
+      Results: [{ ResultItem: 'minecraft:flowering_azalea', ResultTotal: 6 }],
+    },
+    {
+      RawItem: 'minecraft:stripped_pale_oak_log', TotalEstimate: 38, Steps: [],
+      Results: [{ ResultItem: 'minecraft:stripped_pale_oak_log', ResultTotal: 38 }],
+    },
+    {
+      RawItem: 'minecraft:blue_orchid', TotalEstimate: 32, Steps: [],
+      Results: [{ ResultItem: 'minecraft:light_blue_terracotta', ResultTotal: 256 }],
+    },
+    {
+      RawItem: 'minecraft:warped_stem', TotalEstimate: 59, Steps: [],
+      Results: [{ ResultItem: 'minecraft:warped_stairs', ResultTotal: 155 }],
+    },
+    {
+      RawItem: 'minecraft:cocoa_beans', TotalEstimate: 6, Steps: [],
+      Results: [{ ResultItem: 'minecraft:brown_terracotta', ResultTotal: 44 }],
+    },
+    {
+      RawItem: 'minecraft:chorus_fruit', TotalEstimate: 4, Steps: [],
+      Results: [{ ResultItem: 'minecraft:end_rod', ResultTotal: 16 }],
+    },
+    {
+      RawItem: 'minecraft:blaze_rod', TotalEstimate: 4, Steps: [],
+      Results: [{ ResultItem: 'minecraft:end_rod', ResultTotal: 16 }],
+    },
+    {
+      RawItem: 'minecraft:dandelion', TotalEstimate: 35, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:yellow_terracotta', ResultTotal: 229 },
+        { ResultItem: 'minecraft:yellow_glazed_terracotta', ResultTotal: 45 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:beetroot', TotalEstimate: 6, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:purple_glazed_terracotta', ResultTotal: 46 },
+        { ResultItem: 'minecraft:red_glazed_terracotta', ResultTotal: 20 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:rabbit_hide', TotalEstimate: 168, Steps: [],
+      Results: [{ ResultItem: 'minecraft:lectern', ResultTotal: 14 }],
+    },
+    {
+      RawItem: 'minecraft:sugar_cane', TotalEstimate: 126, Steps: [],
+      Results: [{ ResultItem: 'minecraft:lectern', ResultTotal: 14 }],
+    },
+    {
+      RawItem: 'minecraft:copper_block', TotalEstimate: 89, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:waxed_copper_block', ResultTotal: 78 },
+        { ResultItem: 'minecraft:oxidized_copper_trapdoor', ResultTotal: 12 },
+        { ResultItem: 'minecraft:lightning_rod', ResultTotal: 23 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:copper_ingot', TotalEstimate: 6, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:waxed_copper_block', ResultTotal: 78 },
+        { ResultItem: 'minecraft:oxidized_copper_trapdoor', ResultTotal: 12 },
+        { ResultItem: 'minecraft:lightning_rod', ResultTotal: 23 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:stripped_birch_log', TotalEstimate: 476, Steps: [],
+      Results: [{ ResultItem: 'minecraft:stripped_birch_log', ResultTotal: 476 }],
+    },
+    {
+      RawItem: 'minecraft:birch_log', TotalEstimate: 81, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:birch_slab', ResultTotal: 16 },
+        { ResultItem: 'minecraft:birch_door', ResultTotal: 4 },
+        { ResultItem: 'minecraft:birch_trapdoor', ResultTotal: 92 },
+        { ResultItem: 'minecraft:birch_fence', ResultTotal: 8 },
+        { ResultItem: 'minecraft:birch_stairs', ResultTotal: 8 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:lapis_block', TotalEstimate: 2, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:cyan_terracotta', ResultTotal: 246 },
+        { ResultItem: 'minecraft:purple_glazed_terracotta', ResultTotal: 46 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:lapis_lazuli', TotalEstimate: 1, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:cyan_terracotta', ResultTotal: 246 },
+        { ResultItem: 'minecraft:purple_glazed_terracotta', ResultTotal: 46 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:stripped_dark_oak_log', TotalEstimate: 522, Steps: [],
+      Results: [{ ResultItem: 'minecraft:stripped_dark_oak_log', ResultTotal: 522 }],
+    },
+    {
+      RawItem: 'minecraft:nether_quartz_ore', TotalEstimate: 176, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:polished_diorite_stairs', ResultTotal: 84 },
+        { ResultItem: 'minecraft:diorite_wall', ResultTotal: 92 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:dirt', TotalEstimate: 350, Steps: [],
+      Results: [{ ResultItem: 'minecraft:dirt', ResultTotal: 350 }],
+    },
+    {
+      RawItem: 'minecraft:tuff', TotalEstimate: 516, Steps: [],
+      Results: [
+        { ResultItem: 'minecraft:chiseled_tuff_bricks', ResultTotal: 146 },
+        { ResultItem: 'minecraft:tuff_brick_slab', ResultTotal: 56 },
+        { ResultItem: 'minecraft:tuff_brick_stairs', ResultTotal: 342 },
+      ],
+    },
+    {
+      RawItem: 'minecraft:blackstone', TotalEstimate: 208, Steps: [],
+      Results: [{ ResultItem: 'minecraft:polished_blackstone_bricks', ResultTotal: 208 }],
+    },
+    {
+      RawItem: 'minecraft:open_eyeblossom', TotalEstimate: 6, Steps: [],
+      Results: [{ ResultItem: 'minecraft:orange_glazed_terracotta', ResultTotal: 47 }],
+    },
+    {
+      RawItem: 'minecraft:honeycomb', TotalEstimate: 78, Steps: [],
+      Results: [{ ResultItem: 'minecraft:waxed_copper_block', ResultTotal: 78 }],
+    },
+    {
+      RawItem: 'minecraft:bone', TotalEstimate: 10, Steps: [],
+      Results: [{ ResultItem: 'minecraft:white_terracotta', ResultTotal: 217 }],
+    },
+    {
+      RawItem: 'minecraft:bell', TotalEstimate: 2, Steps: [],
+      Results: [{ ResultItem: 'minecraft:bell', ResultTotal: 2 }],
+    },
+  ];
+
+  it('processes sample data correctly', () => {
+    const result = process(sampleInput);
+
+    // Helper to look up result
+    const qty = (item: string) =>
+      result.find((r) => r.Item === `minecraft:${item}`)?.Quantity;
+
+    // Key consolidated items from plan
+    expect(qty('red_sandstone')).toBe(911);
+    expect(qty('tuff_bricks')).toBe(516);
+    expect(qty('bricks')).toBe(306);
+    expect(qty('sandstone')).toBe(224);
+    expect(qty('smooth_sandstone')).toBe(180);
+    expect(qty('deepslate_tiles')).toBe(176);
+    expect(qty('birch_planks')).toBe(16);
+    expect(qty('warped_planks')).toBe(155);
+    expect(qty('polished_diorite')).toBe(84);
+    expect(qty('diorite')).toBe(92);
+
+    // Functional items kept as-is
+    expect(qty('sea_lantern')).toBe(70);
+    expect(qty('glowstone')).toBe(56);
+    expect(qty('torch')).toBe(1);
+    expect(qty('lantern')).toBe(46);
+    expect(qty('iron_bars')).toBe(46);
+    expect(qty('lodestone')).toBe(16);
+    expect(qty('bell')).toBe(2);
+    expect(qty('chest')).toBe(8);
+    expect(qty('crafting_table')).toBe(5);
+    expect(qty('lectern')).toBe(28);
+    expect(qty('furnace')).toBe(5);
+    expect(qty('end_rod')).toBe(16);
+    expect(qty('lightning_rod')).toBe(23);
+    expect(qty('spruce_door')).toBe(4);
+    expect(qty('dark_oak_trapdoor')).toBe(50);
+    expect(qty('birch_door')).toBe(4);
+    expect(qty('birch_trapdoor')).toBe(92);
+    expect(qty('birch_fence')).toBe(8);
+    expect(qty('oak_sign')).toBe(22);
+    expect(qty('waxed_copper_block')).toBe(78);
+    expect(qty('oxidized_copper_trapdoor')).toBe(12);
+    expect(qty('black_stained_glass_pane')).toBe(62);
+
+    // Terracotta items
+    expect(qty('terracotta')).toBe(20);
+    expect(qty('white_terracotta')).toBe(217);
+    expect(qty('yellow_terracotta')).toBe(229);
+    expect(qty('cyan_terracotta')).toBe(246);
+    expect(qty('brown_terracotta')).toBe(44);
+    expect(qty('light_blue_terracotta')).toBe(256);
+    expect(qty('orange_glazed_terracotta')).toBe(47);
+    expect(qty('purple_glazed_terracotta')).toBe(46);
+    expect(qty('red_glazed_terracotta')).toBe(20);
+    expect(qty('yellow_glazed_terracotta')).toBe(45);
+    expect(qty('green_glazed_terracotta')).toBe(32);
+
+    // Processed blocks
+    expect(qty('stone_bricks')).toBe(213);
+    expect(qty('cracked_stone_bricks')).toBe(396);
+    expect(qty('smooth_stone')).toBe(56);
+    expect(qty('polished_blackstone_bricks')).toBe(208);
+
+    // Pass-through items
+    expect(qty('obsidian')).toBe(30);
+    expect(qty('dirt')).toBe(350);
+    expect(qty('calcite')).toBe(160);
+    expect(qty('grass_block')).toBe(372);
+    expect(qty('stripped_spruce_log')).toBe(187);
+    expect(qty('stripped_dark_oak_log')).toBe(522);
+    expect(qty('stripped_birch_log')).toBe(476);
+    expect(qty('stripped_pale_oak_log')).toBe(38);
+    expect(qty('stripped_warped_stem')).toBe(14);
+    expect(qty('flowering_azalea_leaves')).toBe(18);
+    expect(qty('flowering_azalea')).toBe(6);
+  });
+
+  it('produces alphabetically sorted output', () => {
+    const result = process(sampleInput);
+    const items = result.map((r) => r.Item);
+    const sorted = [...items].sort();
+    expect(items).toEqual(sorted);
+  });
+
+  it('has no duplicate items in output', () => {
+    const result = process(sampleInput);
+    const items = result.map((r) => r.Item);
+    const unique = new Set(items);
+    expect(unique.size).toBe(items.length);
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Edge cases
+// ═══════════════════════════════════════════════════════════
+
+describe('edge cases', () => {
+  it('handles empty input', () => {
+    const result = process([]);
+    expect(result).toEqual([]);
+  });
+
+  it('handles single-item input', () => {
+    const input = makeInput([
+      { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 1 }] },
+    ]);
+    const result = process(input);
+    expect(result).toEqual([{ Item: 'minecraft:dirt', Quantity: 1 }]);
+  });
+
+  it('handles item with no namespace prefix', () => {
+    expect(stripNamespace('dirt')).toBe('dirt');
+    expect(stripNamespace('minecraft:dirt')).toBe('dirt');
+  });
+});
