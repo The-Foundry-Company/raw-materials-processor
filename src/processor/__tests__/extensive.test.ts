@@ -35,13 +35,14 @@ describe('empty and minimal inputs', () => {
     expect(result[0]).toEqual({ Item: 'minecraft:dirt', Quantity: 1 });
   });
 
-  it('handles single functional item', () => {
+  it('handles single generic wood item (chest → oak_log)', () => {
     const input: RawInput = [
       makeGroup('minecraft:oak_log', [{ item: 'minecraft:chest', total: 3 }]),
     ];
     const result = process(input);
+    // 3 chests × 8 planks = 24 → ceil(24/4) = 6 oak_log (default, no other logs)
     expect(result).toHaveLength(1);
-    expect(qty(result, 'minecraft:chest')).toBe(3);
+    expect(qty(result, 'minecraft:oak_log')).toBe(6);
   });
 
   it('handles single variant item', () => {
@@ -379,8 +380,8 @@ describe('functional item categories', () => {
   it('keeps all exact functional items as-is', () => {
     const functionals = [
       'torch', 'soul_torch', 'lantern', 'soul_lantern', 'sea_lantern',
-      'glowstone', 'end_rod', 'lightning_rod', 'chest', 'crafting_table',
-      'furnace', 'lectern', 'bell', 'lodestone', 'iron_bars',
+      'glowstone', 'end_rod', 'lightning_rod',
+      'lectern', 'bell', 'lodestone', 'iron_bars',
       'glass', 'glass_pane', 'tinted_glass',
     ];
 
@@ -608,13 +609,14 @@ describe('large mixed fake list', () => {
     // Functional (deduplicated)
     expect(qty(result, 'minecraft:iron_bars')).toBe(64);
     expect(qty(result, 'minecraft:lantern')).toBe(32);
-    expect(qty(result, 'minecraft:chest')).toBe(12);
     expect(qty(result, 'minecraft:lightning_rod')).toBe(16);
     expect(qty(result, 'minecraft:waxed_copper_block')).toBe(32);
     // oak_door:6 → 3 oak_log, oak_sign:10 → 6 oak_log = 9
     // + oak_planks:65 → ceil(65/4)=17 oak_log (Phase 3b)
-    // Total oak_log: 9+17 = 26
-    expect(qty(result, 'minecraft:oak_log')).toBe(26);
+    // + Phase 3c: chest:12 → 96 planks → ceil(96/4) = 24 (oak_log is only log type)
+    // Total oak_log: 9+17+24 = 50
+    expect(qty(result, 'minecraft:oak_log')).toBe(50);
+    expect(qty(result, 'minecraft:chest')).toBeUndefined();
     expect(qty(result, 'minecraft:white_terracotta')).toBe(128);
     expect(qty(result, 'minecraft:cyan_terracotta')).toBe(64);
     expect(qty(result, 'minecraft:orange_glazed_terracotta')).toBe(32);

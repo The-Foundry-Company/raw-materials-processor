@@ -5,6 +5,8 @@ import {
   isFunctional,
   PROCESSED_BLOCKS,
   resolveVariant,
+  GENERIC_WOOD_ITEMS,
+  isLogType,
 } from './rules';
 
 /**
@@ -153,6 +155,34 @@ export function process(input: RawInput): ProcessedItem[] {
         resolvedAny = true;
       }
     }
+  }
+
+  // Phase 3c: Resolve generic wood items (chest, crafting_table, etc.) → dominant log type
+  let totalGenericPlanks = 0;
+  for (const [item] of [...output]) {
+    const name = stripNamespace(item);
+    if (name in GENERIC_WOOD_ITEMS) {
+      totalGenericPlanks += output.get(item)! * GENERIC_WOOD_ITEMS[name];
+      output.delete(item);
+    }
+  }
+
+  if (totalGenericPlanks > 0) {
+    // Find dominant log type in output (highest quantity)
+    let dominantLog = 'oak_log';
+    let maxLogQty = 0;
+    for (const [item, qty] of output) {
+      const name = stripNamespace(item);
+      if (isLogType(name) && qty > maxLogQty) {
+        maxLogQty = qty;
+        dominantLog = name;
+      }
+    }
+
+    const planksPerLog = dominantLog === 'bamboo_block' ? 2 : 4;
+    const logsNeeded = Math.ceil(totalGenericPlanks / planksPerLog);
+    const logKey = addNamespace(dominantLog);
+    output.set(logKey, (output.get(logKey) ?? 0) + logsNeeded);
   }
 
   // Phase 4: Format & sort alphabetically

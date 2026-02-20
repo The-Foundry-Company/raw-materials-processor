@@ -283,13 +283,15 @@ describe('deduplication', () => {
     expect(lantern?.Quantity).toBe(46);
   });
 
-  it('takes MAX when quantities differ', () => {
+  it('takes MAX when quantities differ (generic wood item → logs)', () => {
     const input = makeInput([
       { raw: 'minecraft:a', results: [{ item: 'minecraft:chest', total: 8 }] },
       { raw: 'minecraft:b', results: [{ item: 'minecraft:chest', total: 5 }] },
     ]);
     const result = process(input);
-    expect(result.find((r) => r.Item === 'minecraft:chest')?.Quantity).toBe(8);
+    // MAX(8, 5) = 8 chests → 8 × 8 planks = 64 → ceil(64/4) = 16 oak_log (default)
+    expect(result.find((r) => r.Item === 'minecraft:oak_log')?.Quantity).toBe(16);
+    expect(result.find((r) => r.Item === 'minecraft:chest')).toBeUndefined();
   });
 });
 
@@ -480,6 +482,90 @@ describe('pass-through', () => {
     const result = process(input);
     expect(result.find((r) => r.Item === 'minecraft:spruce_log')?.Quantity).toBe(187);
     expect(result.find((r) => r.Item === 'minecraft:stripped_spruce_log')).toBeUndefined();
+  });
+});
+
+// ═══════════════════════════════════════════════════════════
+// Generic wood items → dominant log type (Phase 3c)
+// ═══════════════════════════════════════════════════════════
+
+describe('generic wood item decomposition', () => {
+  it('chest decomposes to default oak_log when no other logs present', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:chest', total: 4 }] },
+    ]);
+    const result = process(input);
+    // 4 chests × 8 planks = 32 → ceil(32/4) = 8 oak_log
+    expect(result.find((r) => r.Item === 'minecraft:oak_log')?.Quantity).toBe(8);
+    expect(result.find((r) => r.Item === 'minecraft:chest')).toBeUndefined();
+  });
+
+  it('crafting_table decomposes to default oak_log', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:crafting_table', total: 3 }] },
+    ]);
+    const result = process(input);
+    // 3 tables × 4 planks = 12 → ceil(12/4) = 3 oak_log
+    expect(result.find((r) => r.Item === 'minecraft:oak_log')?.Quantity).toBe(3);
+  });
+
+  it('composter decomposes to default oak_log', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:composter', total: 2 }] },
+    ]);
+    const result = process(input);
+    // 2 composters × 3.5 planks = 7 → ceil(7/4) = 2 oak_log
+    expect(result.find((r) => r.Item === 'minecraft:oak_log')?.Quantity).toBe(2);
+  });
+
+  it('ladder decomposes to default oak_log', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:ladder', total: 4 }] },
+    ]);
+    const result = process(input);
+    // 4 ladders × 3.5 planks = 14 → ceil(14/4) = 4 oak_log
+    expect(result.find((r) => r.Item === 'minecraft:oak_log')?.Quantity).toBe(4);
+  });
+
+  it('merges into dominant log type (spruce_log)', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [
+        { item: 'minecraft:chest', total: 4 },
+        { item: 'minecraft:spruce_door', total: 10 },
+      ]},
+    ]);
+    const result = process(input);
+    // spruce_door:10 → ceil(10/2)=5 spruce_log (Phase 3a/3b)
+    // chest:4 → 32 planks → ceil(32/4)=8 → merge into spruce_log (dominant)
+    // Total spruce_log: 5 + 8 = 13
+    expect(result.find((r) => r.Item === 'minecraft:spruce_log')?.Quantity).toBe(13);
+    expect(result.find((r) => r.Item === 'minecraft:chest')).toBeUndefined();
+  });
+
+  it('merges into bamboo_block with correct ratio when dominant', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [
+        { item: 'minecraft:chest', total: 2 },
+        { item: 'minecraft:bamboo_stairs', total: 40 },
+      ]},
+    ]);
+    const result = process(input);
+    // bamboo_stairs:40 → 40 bamboo_planks → ceil(40/2)=20 bamboo_block (Phase 3b)
+    // chest:2 → 16 planks → ceil(16/2)=8 bamboo_block (bamboo ratio)
+    // Total bamboo_block: 20 + 8 = 28
+    expect(result.find((r) => r.Item === 'minecraft:bamboo_block')?.Quantity).toBe(28);
+  });
+});
+
+describe('furnace decomposition', () => {
+  it('furnace decomposes to cobblestone', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [{ item: 'minecraft:furnace', total: 5 }] },
+    ]);
+    const result = process(input);
+    // 5 furnaces × 8 cobblestone = 40
+    expect(result.find((r) => r.Item === 'minecraft:cobblestone')?.Quantity).toBe(40);
+    expect(result.find((r) => r.Item === 'minecraft:furnace')).toBeUndefined();
   });
 });
 
@@ -841,21 +927,21 @@ describe('full integration test - sample data', () => {
     expect(qty('iron_bars')).toBe(46);
     expect(qty('lodestone')).toBe(16);
     expect(qty('bell')).toBe(2);
-    expect(qty('chest')).toBe(8);
-    expect(qty('crafting_table')).toBe(5);
     expect(qty('lectern')).toBe(28);
-    expect(qty('furnace')).toBe(5);
     expect(qty('end_rod')).toBe(16);
+    // furnace:5 → cobblestone: ceil(5/(1/8)) = 40
+    expect(qty('cobblestone')).toBe(40);
     expect(qty('lightning_rod')).toBe(23);
     // Decomposed items → logs (including planks→logs from Phase 3b)
     // spruce_door:4 → ceil(4/2) = 2 spruce_log + 187 stripped_spruce_log = 189
     expect(qty('spruce_log')).toBe(189);
     // dark_oak_trapdoor:50 → ceil(50/(4/3)) = ceil(37.5) = 38 dark_oak_log + 522 stripped = 560
-    expect(qty('dark_oak_log')).toBe(560);
+    // + Phase 3c: chest:8 + crafting_table:5 → 8×8+5×4 = 84 planks → ceil(84/4) = 21 (dark_oak is dominant)
+    expect(qty('dark_oak_log')).toBe(581);
     // birch_door:4→2, birch_trapdoor:92→69, birch_fence:8→4 = 75 birch_log
     // + birch_planks:16 → ceil(16/4)=4 birch_log (Phase 3b)
     // Total: 75+4 = 79
-    // oak_sign:22 → 12 oak_log
+    // oak_sign:22 → 12 oak_log (generic wood goes to dominant dark_oak_log)
     expect(qty('oak_log')).toBe(12);
     expect(qty('waxed_copper_block')).toBe(78);
     expect(qty('oxidized_copper_trapdoor')).toBe(12);

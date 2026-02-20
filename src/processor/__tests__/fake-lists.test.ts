@@ -130,6 +130,13 @@ describe('Fake Project: Desert Temple Expansion', () => {
     expect(qty(result, 'torch')).toBe(48);
   });
 
+  it('decomposes chest to oak_log (default, no other log types)', () => {
+    const result = process(input);
+    // chest:4 → 4 × 8 = 32 planks → ceil(32/4) = 8 oak_log
+    expect(qty(result, 'chest')).toBeUndefined();
+    expect(qty(result, 'oak_log')).toBe(8);
+  });
+
   it('resolves stone_bricks and smooth_stone to stone', () => {
     const result = process(input);
     // stone_bricks:100 + smooth_stone:48 → stone: 148
@@ -301,11 +308,15 @@ describe('Fake Project: Modern Office Building', () => {
     // + doors/trapdoors/fences: 16+18+20 = 54 birch_log
     // Total birch_log: 54 + 35 = 89
     // birch_log: 89 (from planks+doors+etc) + 800 (stripped_birch_log) = 889
-    expect(qty(result, 'birch_log')).toBe(889);
+    // + Phase 3c: crafting_table:2 + chest:6 → 2×4+6×8 = 56 planks → ceil(56/4) = 14
+    // Total: 889 + 14 = 903
+    expect(qty(result, 'birch_log')).toBe(903);
     expect(qty(result, 'birch_door')).toBeUndefined();
     expect(qty(result, 'birch_trapdoor')).toBeUndefined();
     expect(qty(result, 'birch_fence')).toBeUndefined();
     expect(qty(result, 'stripped_birch_log')).toBeUndefined();
+    expect(qty(result, 'crafting_table')).toBeUndefined();
+    expect(qty(result, 'chest')).toBeUndefined();
   });
 
   it('deduplicates waxed_copper_block across 3 sources', () => {
@@ -329,9 +340,9 @@ describe('Fake Project: Modern Office Building', () => {
     const result = process(input);
     // black_stained_glass_pane, white_stained_glass_pane, sandstone (was smooth_sandstone),
     // diorite (was polished_diorite), stone (was smooth_stone+stone_bricks),
-    // birch_log (was birch_planks+birch_log+stripped_birch_log),
-    // waxed_copper_block, lightning_rod, iron_bars, crafting_table, lectern, chest = 12
-    expect(result.length).toBe(12);
+    // birch_log (was birch_planks+birch_log+stripped_birch_log+chest+crafting_table),
+    // waxed_copper_block, lightning_rod, iron_bars, lectern = 10
+    expect(result.length).toBe(10);
   });
 });
 
@@ -729,11 +740,15 @@ describe('Fake Project: Medieval Village', () => {
     // + spruce_door:12→6, trapdoor:20→15, fence:36→15, fence_gate:8→8 = 44 spruce_log
     // Total spruce_log: 28+44 = 72
     // spruce_log: 72 (from planks+functional) + 400 (stripped_spruce_log) = 472
-    expect(qty(result, 'spruce_log')).toBe(472);
+    // + Phase 3c: chest:12+crafting_table:6 → 12×8+6×4=120 planks → ceil(120/4)=30 (spruce is dominant)
+    // Total: 472 + 30 = 502
+    expect(qty(result, 'spruce_log')).toBe(502);
     expect(qty(result, 'spruce_door')).toBeUndefined();
     expect(qty(result, 'spruce_trapdoor')).toBeUndefined();
     expect(qty(result, 'spruce_fence')).toBeUndefined();
     expect(qty(result, 'spruce_fence_gate')).toBeUndefined();
+    expect(qty(result, 'chest')).toBeUndefined();
+    expect(qty(result, 'crafting_table')).toBeUndefined();
   });
 
   it('resolves oak wood → oak_log (via planks + functional)', () => {
@@ -753,6 +768,13 @@ describe('Fake Project: Medieval Village', () => {
     // + smooth_stone: 100 → stone
     // Total stone: 1050
     expect(qty(result, 'stone')).toBe(1050);
+  });
+
+  it('decomposes furnace to cobblestone', () => {
+    const result = process(input);
+    // furnace:8 → ceil(8/(1/8)) = 64 cobblestone
+    expect(qty(result, 'furnace')).toBeUndefined();
+    expect(qty(result, 'cobblestone')).toBe(64);
   });
 
   it('keeps mossy_stone_bricks as processed (multi-material)', () => {

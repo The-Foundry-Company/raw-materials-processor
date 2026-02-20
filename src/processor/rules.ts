@@ -9,11 +9,8 @@ export const FUNCTIONAL_EXACT: Set<string> = new Set([
   'glowstone',
   'end_rod',
   'lightning_rod',
-  'chest',
   'trapped_chest',
   'ender_chest',
-  'crafting_table',
-  'furnace',
   'blast_furnace',
   'smoker',
   'lectern',
@@ -38,7 +35,6 @@ export const FUNCTIONAL_EXACT: Set<string> = new Set([
   'painting',
   'bed',
   'barrel',
-  'composter',
   'grindstone',
   'smithing_table',
   'stonecutter',
@@ -55,7 +51,6 @@ export const FUNCTIONAL_EXACT: Set<string> = new Set([
   'daylight_detector',
   'target',
   'tnt',
-  'ladder',
   'scaffolding',
   'glass',
   'glass_pane',
@@ -280,6 +275,7 @@ const SINGLE_CHAIN_DECOMPOSITION: Record<string, { base: string; ratio: number }
 };
 
 const NON_WOOD_DECOMPOSITION: Record<string, { base: string; ratio: number }> = {
+  furnace: { base: 'cobblestone', ratio: 1 / 8 },
   iron_door: { base: 'iron_ingot', ratio: 0.5 },
   iron_trapdoor: { base: 'iron_ingot', ratio: 0.25 },
   copper_door: { base: 'copper_ingot', ratio: 0.5 },
@@ -291,6 +287,19 @@ const NON_WOOD_DECOMPOSITION: Record<string, { base: string; ratio: number }> = 
   heavy_weighted_pressure_plate: { base: 'iron_ingot', ratio: 0.5 },
   light_weighted_pressure_plate: { base: 'gold_ingot', ratio: 0.5 },
 };
+
+// ── Generic wood items: no wood-type prefix, decompose to dominant log type ──
+
+export const GENERIC_WOOD_ITEMS: Record<string, number> = {
+  chest: 8,           // 8 planks
+  crafting_table: 4,  // 4 planks
+  composter: 3.5,     // 7 slabs = 3.5 planks
+  ladder: 3.5,        // 7 sticks = 3.5 planks
+};
+
+export function isLogType(name: string): boolean {
+  return name.endsWith('_log') || name.endsWith('_stem') || name === 'bamboo_block';
+}
 
 /**
  * Resolves single-material functional items to their base material.

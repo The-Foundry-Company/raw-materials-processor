@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { process, validateInput } from '../processor';
-import { stripNamespace, isFunctional, resolveVariant } from '../processor/rules';
+import { stripNamespace, isFunctional, resolveVariant, GENERIC_WOOD_ITEMS } from '../processor/rules';
 import type { RawInput, ProcessedItem } from '../processor/types';
 
 // ── Step types ──
@@ -54,12 +54,15 @@ function processAndBuildSteps(rawJson: string): ProcessingResult | null {
     let strippedCount = 0;
     let functionalCount = 0;
     let variantCount = 0;
+    let genericWoodCount = 0;
     for (const item of uniqueItems) {
       const name = stripNamespace(item);
       if (name.startsWith('stripped_') && resolveVariant(name)) {
         strippedCount++;
       } else if (isFunctional(name)) {
         functionalCount++;
+      } else if (name in GENERIC_WOOD_ITEMS) {
+        genericWoodCount++;
       } else if (resolveVariant(name)) {
         variantCount++;
       }
@@ -90,6 +93,12 @@ function processAndBuildSteps(rawJson: string): ProcessingResult | null {
 
     steps.push({ text: 'CONSOLIDATING VARIANTS...', type: 'action' });
     steps.push({ text: 'RESOLVING DECOMPOSITION CHAINS...', type: 'action' });
+
+    if (genericWoodCount > 0) {
+      steps.push({ text: 'RESOLVING GENERIC WOOD ITEMS...', type: 'action' });
+      steps.push({ text: `${genericWoodCount} GENERIC WOOD ITEMS \u2192 LOGS`, type: 'stat' });
+    }
+
     steps.push({ text: 'VERIFYING OUTPUT INTEGRITY...', type: 'action' });
     steps.push({ text: 'GENERATING OUTPUT...', type: 'action' });
     steps.push({ text: `${result.length} UNIQUE MATERIALS IN FINAL OUTPUT`, type: 'stat' });
