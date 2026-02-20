@@ -303,7 +303,7 @@ describe('pluralization special mappings', () => {
     expect(qty(result, 'minecraft:stone_bricks')).toBe(100);
   });
 
-  it('all nether_brick variants → nether_bricks', () => {
+  it('all nether_brick variants → nether_bricks (including fence)', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:nether_brick_stairs', total: 40 },
@@ -314,15 +314,11 @@ describe('pluralization special mappings', () => {
     ];
     const result = process(input);
     // stairs: 40, slab: ceil(10/2)=5, wall: 15 = 60
-    // nether_brick_fence → nether_bricks (via special map, it has _fence suffix)
-    // Actually nether_brick_fence is in the SPECIAL_VARIANT_MAP, and _fence is a FUNCTIONAL suffix.
-    // Let me check: _fence is in FUNCTIONAL_SUFFIXES. So nether_brick_fence is FUNCTIONAL.
-    // But we also have it in SPECIAL_VARIANT_MAP. The isFunctional check runs first in classifyItem.
-    // So nether_brick_fence would be classified as FUNCTIONAL, not VARIANT.
-    // Let me just check stairs + slab + wall = 40 + 5 + 15 = 60
-    // nether_brick_fence = 8 (functional, kept as-is)
-    expect(qty(result, 'minecraft:nether_bricks')).toBe(60);
-    expect(qty(result, 'minecraft:nether_brick_fence')).toBe(8);
+    // nether_brick_fence → nether_bricks via SPECIAL_VARIANT_MAP (no longer blocked by FUNCTIONAL)
+    // fence: 8 (ratio 1 from special map)
+    // Total: 40 + 5 + 15 + 8 = 68
+    expect(qty(result, 'minecraft:nether_bricks')).toBe(68);
+    expect(qty(result, 'minecraft:nether_brick_fence')).toBeUndefined();
   });
 
   it('polished_blackstone_brick variants → polished_blackstone_bricks', () => {
@@ -418,9 +414,13 @@ describe('functional item categories', () => {
     expect(qty(result, 'minecraft:waxed_oxidized_copper')).toBe(10);
   });
 
-  it('keeps doors/trapdoors for all wood types as functional', () => {
-    const woods = ['oak', 'spruce', 'birch', 'jungle', 'acacia', 'dark_oak', 'crimson', 'warped'];
-    for (const wood of woods) {
+  it('decomposes wood doors/trapdoors to logs', () => {
+    const woodToLog: Record<string, string> = {
+      oak: 'oak_log', spruce: 'spruce_log', birch: 'birch_log',
+      jungle: 'jungle_log', acacia: 'acacia_log', dark_oak: 'dark_oak_log',
+      crimson: 'crimson_stem', warped: 'warped_stem',
+    };
+    for (const [wood, log] of Object.entries(woodToLog)) {
       const input: RawInput = [
         makeGroup('minecraft:x', [
           { item: `minecraft:${wood}_door`, total: 4 },
@@ -428,8 +428,10 @@ describe('functional item categories', () => {
         ]),
       ];
       const result = process(input);
-      expect(qty(result, `minecraft:${wood}_door`)).toBe(4);
-      expect(qty(result, `minecraft:${wood}_trapdoor`)).toBe(8);
+      // door:4 → ceil(4/2)=2, trapdoor:8 → ceil(8/(4/3))=ceil(6)=6 → total 8 logs
+      expect(qty(result, `minecraft:${log}`)).toBe(8);
+      expect(qty(result, `minecraft:${wood}_door`)).toBeUndefined();
+      expect(qty(result, `minecraft:${wood}_trapdoor`)).toBeUndefined();
     }
   });
 });
@@ -570,8 +572,9 @@ describe('large mixed fake list', () => {
     expect(qty(result, 'minecraft:chest')).toBe(12);
     expect(qty(result, 'minecraft:lightning_rod')).toBe(16);
     expect(qty(result, 'minecraft:waxed_copper_block')).toBe(32);
-    expect(qty(result, 'minecraft:oak_door')).toBe(6);
-    expect(qty(result, 'minecraft:oak_sign')).toBe(10);
+    // oak_door:6 → ceil(6/2)=3 oak_log, oak_sign:10 → ceil(10/(24/13))=ceil(5.417)=6 oak_log
+    // Total oak_log: 3+6 = 9
+    expect(qty(result, 'minecraft:oak_log')).toBe(9);
     expect(qty(result, 'minecraft:white_terracotta')).toBe(128);
     expect(qty(result, 'minecraft:cyan_terracotta')).toBe(64);
     expect(qty(result, 'minecraft:orange_glazed_terracotta')).toBe(32);

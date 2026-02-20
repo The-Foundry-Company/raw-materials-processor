@@ -63,15 +63,7 @@ export const FUNCTIONAL_EXACT: Set<string> = new Set([
 ]);
 
 const FUNCTIONAL_SUFFIXES: string[] = [
-  '_door',
-  '_trapdoor',
-  '_fence',
-  '_fence_gate',
-  '_sign',
   '_hanging_sign',
-  '_wall_sign',
-  '_pressure_plate',
-  '_button',
 ];
 
 const FUNCTIONAL_PATTERNS: string[] = [
@@ -248,11 +240,84 @@ export function addNamespace(name: string): string {
   return name.startsWith('minecraft:') ? name : `minecraft:${name}`;
 }
 
+// ── Decomposition: single-material functional items → base material ──
+
+const WOOD_TO_LOG: Record<string, string> = {
+  oak: 'oak_log',
+  spruce: 'spruce_log',
+  birch: 'birch_log',
+  jungle: 'jungle_log',
+  acacia: 'acacia_log',
+  dark_oak: 'dark_oak_log',
+  mangrove: 'mangrove_log',
+  cherry: 'cherry_log',
+  pale_oak: 'pale_oak_log',
+  bamboo: 'bamboo_block',
+  crimson: 'crimson_stem',
+  warped: 'warped_stem',
+};
+
+const DECOMPOSABLE_SUFFIXES: {
+  suffix: string;
+  stdRatio: number;
+  bambooRatio: number;
+}[] = [
+  { suffix: '_door', stdRatio: 2, bambooRatio: 1 },
+  { suffix: '_trapdoor', stdRatio: 4 / 3, bambooRatio: 2 / 3 },
+  { suffix: '_fence', stdRatio: 12 / 5, bambooRatio: 6 / 5 },
+  { suffix: '_fence_gate', stdRatio: 1, bambooRatio: 1 / 2 },
+  { suffix: '_sign', stdRatio: 24 / 13, bambooRatio: 12 / 13 },
+  { suffix: '_wall_sign', stdRatio: 24 / 13, bambooRatio: 12 / 13 },
+  { suffix: '_button', stdRatio: 4, bambooRatio: 2 },
+  { suffix: '_pressure_plate', stdRatio: 2, bambooRatio: 1 },
+];
+
+const NON_WOOD_DECOMPOSITION: Record<string, { base: string; ratio: number }> = {
+  iron_door: { base: 'iron_ingot', ratio: 0.5 },
+  iron_trapdoor: { base: 'iron_ingot', ratio: 0.25 },
+  copper_door: { base: 'copper_ingot', ratio: 0.5 },
+  copper_trapdoor: { base: 'copper_ingot', ratio: 0.5 },
+  stone_button: { base: 'stone', ratio: 1 },
+  stone_pressure_plate: { base: 'stone', ratio: 0.5 },
+  polished_blackstone_button: { base: 'polished_blackstone', ratio: 1 },
+  polished_blackstone_pressure_plate: { base: 'polished_blackstone', ratio: 0.5 },
+  heavy_weighted_pressure_plate: { base: 'iron_ingot', ratio: 0.5 },
+  light_weighted_pressure_plate: { base: 'gold_ingot', ratio: 0.5 },
+};
+
+/**
+ * Resolves single-material functional items to their base material.
+ * Returns { base, ratio } or null if not decomposable.
+ */
+function resolveDecomposition(name: string): { base: string; ratio: number } | null {
+  // Check non-wood items first (exact match)
+  if (NON_WOOD_DECOMPOSITION[name]) {
+    return NON_WOOD_DECOMPOSITION[name];
+  }
+
+  // Check wood-based items by suffix
+  for (const { suffix, stdRatio, bambooRatio } of DECOMPOSABLE_SUFFIXES) {
+    if (name.endsWith(suffix)) {
+      const woodPrefix = name.slice(0, -suffix.length);
+      const log = WOOD_TO_LOG[woodPrefix];
+      if (log) {
+        const ratio = woodPrefix === 'bamboo' ? bambooRatio : stdRatio;
+        return { base: log, ratio };
+      }
+    }
+  }
+
+  return null;
+}
+
 /**
  * Determines the base block for a variant item.
  * Returns [baseBlock, ratio] or null if not a variant.
  */
 export function resolveVariant(name: string): { base: string; ratio: number } | null {
+  // Check decomposable items first (single-material functional items → base)
+  const decomp = resolveDecomposition(name);
+  if (decomp) return decomp;
   // Check special mappings first
   if (SPECIAL_VARIANT_MAP[name]) {
     // Determine ratio from suffix

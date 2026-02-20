@@ -302,11 +302,15 @@ describe('Fake Project: Modern Office Building', () => {
     expect(qty(result, 'birch_planks')).toBe(140);
   });
 
-  it('keeps birch functional items as-is', () => {
+  it('decomposes birch doors/trapdoors/fences to birch_log', () => {
     const result = process(input);
-    expect(qty(result, 'birch_door')).toBe(32);
-    expect(qty(result, 'birch_trapdoor')).toBe(24);
-    expect(qty(result, 'birch_fence')).toBe(48);
+    // birch_door:32 → ceil(32/2)=16, birch_trapdoor:24 → ceil(24/(4/3))=ceil(18)=18
+    // birch_fence:48 → ceil(48/(12/5))=ceil(20)=20
+    // Total birch_log: 16+18+20 = 54
+    expect(qty(result, 'birch_log')).toBe(54);
+    expect(qty(result, 'birch_door')).toBeUndefined();
+    expect(qty(result, 'birch_trapdoor')).toBeUndefined();
+    expect(qty(result, 'birch_fence')).toBeUndefined();
   });
 
   it('keeps stripped_birch_log as pass-through', () => {
@@ -327,13 +331,12 @@ describe('Fake Project: Modern Office Building', () => {
 
   it('has correct total unique items', () => {
     const result = process(input);
-    // Let's count expected items:
     // black_stained_glass_pane, white_stained_glass_pane, smooth_sandstone,
     // polished_diorite, smooth_stone, stone_bricks,
-    // birch_planks, birch_door, birch_trapdoor, birch_fence,
+    // birch_planks, birch_log (from door+trapdoor+fence),
     // stripped_birch_log, waxed_copper_block, lightning_rod,
-    // iron_bars, crafting_table, lectern, chest = 17
-    expect(result.length).toBe(17);
+    // iron_bars, crafting_table, lectern, chest = 15
+    expect(result.length).toBe(15);
   });
 });
 
@@ -429,12 +432,11 @@ describe('Fake Project: Nether Fortress Rebuild', () => {
     },
   ];
 
-  it('consolidates nether_brick variants', () => {
+  it('consolidates nether_brick variants (including fence)', () => {
     const result = process(input);
-    // nether_bricks: 300 (processed) + 400 (stairs) + ceil(100/2)=50 (slabs) + 200 (walls) = 950
-    // nether_brick_fence: 64 (functional - kept as-is)
-    expect(qty(result, 'nether_bricks')).toBe(950);
-    expect(qty(result, 'nether_brick_fence')).toBe(64);
+    // nether_bricks: 300 (processed) + 400 (stairs) + ceil(100/2)=50 (slabs) + 200 (walls) + 64 (fence via special map) = 1014
+    expect(qty(result, 'nether_bricks')).toBe(1014);
+    expect(qty(result, 'nether_brick_fence')).toBeUndefined();
   });
 
   it('consolidates red_nether_brick variants', () => {
@@ -584,11 +586,16 @@ describe('Fake Project: Tuff & Copper Modern House', () => {
     expect(qty(result, 'lightning_rod')).toBe(16);
   });
 
-  it('keeps door/trapdoor items', () => {
+  it('decomposes door/trapdoor items to logs', () => {
     const result = process(input);
-    expect(qty(result, 'dark_oak_door')).toBe(8);
-    expect(qty(result, 'dark_oak_trapdoor')).toBe(16);
-    expect(qty(result, 'cherry_door')).toBe(6);
+    // dark_oak_door:8 → ceil(8/2)=4, dark_oak_trapdoor:16 → ceil(16/(4/3))=ceil(12)=12
+    // Total dark_oak_log: 4+12 = 16
+    expect(qty(result, 'dark_oak_log')).toBe(16);
+    // cherry_door:6 → ceil(6/2)=3 cherry_log
+    expect(qty(result, 'cherry_log')).toBe(3);
+    expect(qty(result, 'dark_oak_door')).toBeUndefined();
+    expect(qty(result, 'dark_oak_trapdoor')).toBeUndefined();
+    expect(qty(result, 'cherry_door')).toBeUndefined();
   });
 
   it('keeps pass-through items', () => {
@@ -744,12 +751,27 @@ describe('Fake Project: Medieval Village', () => {
     expect(qty(result, 'oak_planks')).toBe(80);
   });
 
-  it('keeps all spruce functional items', () => {
+  it('decomposes oak door + sign to oak_log', () => {
     const result = process(input);
-    expect(qty(result, 'spruce_door')).toBe(12);
-    expect(qty(result, 'spruce_trapdoor')).toBe(20);
-    expect(qty(result, 'spruce_fence')).toBe(36);
-    expect(qty(result, 'spruce_fence_gate')).toBe(8);
+    // oak_door:10 → ceil(10/2)=5, oak_sign:16 → ceil(16/(24/13))=ceil(8.667)=9
+    // Total oak_log: 5+9 = 14
+    expect(qty(result, 'oak_log')).toBe(14);
+    expect(qty(result, 'oak_door')).toBeUndefined();
+    expect(qty(result, 'oak_sign')).toBeUndefined();
+  });
+
+  it('decomposes spruce functional items to spruce_log', () => {
+    const result = process(input);
+    // spruce_door:12 → ceil(12/2)=6
+    // spruce_trapdoor:20 → ceil(20/(4/3))=ceil(15)=15
+    // spruce_fence:36 → ceil(36/(12/5))=ceil(15)=15
+    // spruce_fence_gate:8 → ceil(8/1)=8
+    // Total spruce_log: 6+15+15+8 = 44
+    expect(qty(result, 'spruce_log')).toBe(44);
+    expect(qty(result, 'spruce_door')).toBeUndefined();
+    expect(qty(result, 'spruce_trapdoor')).toBeUndefined();
+    expect(qty(result, 'spruce_fence')).toBeUndefined();
+    expect(qty(result, 'spruce_fence_gate')).toBeUndefined();
   });
 
   it('consolidates stone_brick variants', () => {

@@ -66,12 +66,25 @@ describe('isFunctional', () => {
     expect(isFunctional('tinted_glass')).toBe(true);
   });
 
-  it('matches door/trapdoor/fence/sign patterns', () => {
-    expect(isFunctional('spruce_door')).toBe(true);
-    expect(isFunctional('dark_oak_trapdoor')).toBe(true);
-    expect(isFunctional('birch_fence')).toBe(true);
-    expect(isFunctional('birch_fence_gate')).toBe(true);
-    expect(isFunctional('oak_sign')).toBe(true);
+  it('doors/fences/signs are no longer functional (decomposed to base)', () => {
+    expect(isFunctional('spruce_door')).toBe(false);
+    expect(isFunctional('dark_oak_trapdoor')).toBe(false);
+    expect(isFunctional('birch_fence')).toBe(false);
+    expect(isFunctional('birch_fence_gate')).toBe(false);
+    expect(isFunctional('oak_sign')).toBe(false);
+    expect(isFunctional('oak_button')).toBe(false);
+    expect(isFunctional('stone_pressure_plate')).toBe(false);
+  });
+
+  it('hanging signs remain functional', () => {
+    expect(isFunctional('oak_hanging_sign')).toBe(true);
+    expect(isFunctional('spruce_hanging_sign')).toBe(true);
+  });
+
+  it('iron/copper doors remain functional via waxed/oxidized prefix', () => {
+    // oxidized_copper_trapdoor starts with 'oxidized_' → functional
+    expect(isFunctional('oxidized_copper_trapdoor')).toBe(true);
+    expect(isFunctional('waxed_copper_block')).toBe(true);
   });
 
   it('matches terracotta patterns', () => {
@@ -156,6 +169,31 @@ describe('resolveVariant', () => {
     expect(resolveVariant('warped_stairs')).toEqual({ base: 'warped_planks', ratio: 1 });
     expect(resolveVariant('warped_slab')).toEqual({ base: 'warped_planks', ratio: 2 });
     expect(resolveVariant('dark_oak_stairs')).toEqual({ base: 'dark_oak_planks', ratio: 1 });
+  });
+
+  it('decomposes wood doors to logs', () => {
+    expect(resolveVariant('oak_door')).toEqual({ base: 'oak_log', ratio: 2 });
+    expect(resolveVariant('spruce_door')).toEqual({ base: 'spruce_log', ratio: 2 });
+    expect(resolveVariant('bamboo_door')).toEqual({ base: 'bamboo_block', ratio: 1 });
+  });
+
+  it('decomposes wood signs to logs', () => {
+    expect(resolveVariant('oak_sign')).toEqual({ base: 'oak_log', ratio: 24 / 13 });
+    expect(resolveVariant('birch_wall_sign')).toEqual({ base: 'birch_log', ratio: 24 / 13 });
+  });
+
+  it('decomposes wood buttons and pressure plates to logs', () => {
+    expect(resolveVariant('oak_button')).toEqual({ base: 'oak_log', ratio: 4 });
+    expect(resolveVariant('spruce_pressure_plate')).toEqual({ base: 'spruce_log', ratio: 2 });
+  });
+
+  it('decomposes non-wood items', () => {
+    expect(resolveVariant('iron_door')).toEqual({ base: 'iron_ingot', ratio: 0.5 });
+    expect(resolveVariant('iron_trapdoor')).toEqual({ base: 'iron_ingot', ratio: 0.25 });
+    expect(resolveVariant('stone_button')).toEqual({ base: 'stone', ratio: 1 });
+    expect(resolveVariant('stone_pressure_plate')).toEqual({ base: 'stone', ratio: 0.5 });
+    expect(resolveVariant('heavy_weighted_pressure_plate')).toEqual({ base: 'iron_ingot', ratio: 0.5 });
+    expect(resolveVariant('light_weighted_pressure_plate')).toEqual({ base: 'gold_ingot', ratio: 0.5 });
   });
 
   it('returns null for non-variant items', () => {
@@ -759,12 +797,17 @@ describe('full integration test - sample data', () => {
     expect(qty('furnace')).toBe(5);
     expect(qty('end_rod')).toBe(16);
     expect(qty('lightning_rod')).toBe(23);
-    expect(qty('spruce_door')).toBe(4);
-    expect(qty('dark_oak_trapdoor')).toBe(50);
-    expect(qty('birch_door')).toBe(4);
-    expect(qty('birch_trapdoor')).toBe(92);
-    expect(qty('birch_fence')).toBe(8);
-    expect(qty('oak_sign')).toBe(22);
+    // Decomposed items → logs
+    // spruce_door:4 → ceil(4/2) = 2 spruce_log
+    expect(qty('spruce_log')).toBe(2);
+    // dark_oak_trapdoor:50 → ceil(50/(4/3)) = ceil(37.5) = 38 dark_oak_log
+    expect(qty('dark_oak_log')).toBe(38);
+    // birch_door:4 → ceil(4/2)=2, birch_trapdoor:92 → ceil(92/(4/3))=ceil(69)=69, birch_fence:8 → ceil(8/(12/5))=ceil(3.33)=4
+    // birch_planks: 16 (from slabs+stairs)
+    // birch_log: 2+69+4 = 75
+    expect(qty('birch_log')).toBe(75);
+    // oak_sign:22 → ceil(22/(24/13)) = ceil(22*13/24) = ceil(11.917) = 12 oak_log
+    expect(qty('oak_log')).toBe(12);
     expect(qty('waxed_copper_block')).toBe(78);
     expect(qty('oxidized_copper_trapdoor')).toBe(12);
     expect(qty('black_stained_glass_pane')).toBe(62);
