@@ -324,6 +324,20 @@ function resolveDecomposition(name: string): { base: string; ratio: number } | n
     }
   }
 
+  // Stripped wood items → non-stripped form (1:1, axe-stripping is free)
+  if (name.startsWith('stripped_')) {
+    const base = name.slice('stripped_'.length);
+    if (
+      base.endsWith('_log') ||
+      base.endsWith('_wood') ||
+      base.endsWith('_stem') ||
+      base.endsWith('_hyphae') ||
+      base === 'bamboo_block'
+    ) {
+      return { base, ratio: 1 };
+    }
+  }
+
   // Check single-chain decomposition (processed → raw base)
   if (SINGLE_CHAIN_DECOMPOSITION[name]) {
     return SINGLE_CHAIN_DECOMPOSITION[name];

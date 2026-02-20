@@ -223,6 +223,14 @@ describe('resolveVariant', () => {
     expect(resolveVariant('purpur_pillar')).toEqual({ base: 'purpur_block', ratio: 1 });
   });
 
+  it('decomposes stripped wood items to non-stripped form', () => {
+    expect(resolveVariant('stripped_oak_log')).toEqual({ base: 'oak_log', ratio: 1 });
+    expect(resolveVariant('stripped_spruce_wood')).toEqual({ base: 'spruce_wood', ratio: 1 });
+    expect(resolveVariant('stripped_crimson_stem')).toEqual({ base: 'crimson_stem', ratio: 1 });
+    expect(resolveVariant('stripped_warped_hyphae')).toEqual({ base: 'warped_hyphae', ratio: 1 });
+    expect(resolveVariant('stripped_bamboo_block')).toEqual({ base: 'bamboo_block', ratio: 1 });
+  });
+
   it('decomposes non-wood items', () => {
     expect(resolveVariant('iron_door')).toEqual({ base: 'iron_ingot', ratio: 0.5 });
     expect(resolveVariant('iron_trapdoor')).toEqual({ base: 'iron_ingot', ratio: 0.25 });
@@ -452,19 +460,26 @@ describe('special mappings', () => {
 // ═══════════════════════════════════════════════════════════
 
 describe('pass-through', () => {
-  it('keeps items where RawItem == ResultItem', () => {
+  it('keeps items where RawItem == ResultItem (non-decomposable)', () => {
     const input = makeInput([
       { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 30 }] },
       { raw: 'minecraft:dirt', results: [{ item: 'minecraft:dirt', total: 350 }] },
+    ]);
+    const result = process(input);
+    expect(result.find((r) => r.Item === 'minecraft:obsidian')?.Quantity).toBe(30);
+    expect(result.find((r) => r.Item === 'minecraft:dirt')?.Quantity).toBe(350);
+  });
+
+  it('decomposes stripped pass-through items to base form', () => {
+    const input = makeInput([
       {
         raw: 'minecraft:stripped_spruce_log',
         results: [{ item: 'minecraft:stripped_spruce_log', total: 187 }],
       },
     ]);
     const result = process(input);
-    expect(result.find((r) => r.Item === 'minecraft:obsidian')?.Quantity).toBe(30);
-    expect(result.find((r) => r.Item === 'minecraft:dirt')?.Quantity).toBe(350);
-    expect(result.find((r) => r.Item === 'minecraft:stripped_spruce_log')?.Quantity).toBe(187);
+    expect(result.find((r) => r.Item === 'minecraft:spruce_log')?.Quantity).toBe(187);
+    expect(result.find((r) => r.Item === 'minecraft:stripped_spruce_log')).toBeUndefined();
   });
 });
 
@@ -813,8 +828,10 @@ describe('full integration test - sample data', () => {
     expect(qty('diorite')).toBe(176);
     expect(qty('stone')).toBe(665);
     expect(qty('blackstone')).toBe(208);
-    expect(qty('warped_stem')).toBe(39);
-    expect(qty('birch_log')).toBe(79);
+    // warped_stem: 39 (from stairs) + 14 (stripped_warped_stem) = 53
+    expect(qty('warped_stem')).toBe(53);
+    // birch_log: 79 (from slabs/doors/etc) + 476 (stripped_birch_log) = 555
+    expect(qty('birch_log')).toBe(555);
 
     // Functional items kept as-is
     expect(qty('sea_lantern')).toBe(70);
@@ -831,10 +848,10 @@ describe('full integration test - sample data', () => {
     expect(qty('end_rod')).toBe(16);
     expect(qty('lightning_rod')).toBe(23);
     // Decomposed items → logs (including planks→logs from Phase 3b)
-    // spruce_door:4 → ceil(4/2) = 2 spruce_log
-    expect(qty('spruce_log')).toBe(2);
-    // dark_oak_trapdoor:50 → ceil(50/(4/3)) = ceil(37.5) = 38 dark_oak_log
-    expect(qty('dark_oak_log')).toBe(38);
+    // spruce_door:4 → ceil(4/2) = 2 spruce_log + 187 stripped_spruce_log = 189
+    expect(qty('spruce_log')).toBe(189);
+    // dark_oak_trapdoor:50 → ceil(50/(4/3)) = ceil(37.5) = 38 dark_oak_log + 522 stripped = 560
+    expect(qty('dark_oak_log')).toBe(560);
     // birch_door:4→2, birch_trapdoor:92→69, birch_fence:8→4 = 75 birch_log
     // + birch_planks:16 → ceil(16/4)=4 birch_log (Phase 3b)
     // Total: 75+4 = 79
@@ -857,16 +874,15 @@ describe('full integration test - sample data', () => {
     expect(qty('yellow_glazed_terracotta')).toBe(45);
     expect(qty('green_glazed_terracotta')).toBe(32);
 
+    // Stripped items decomposed into base logs (verified above)
+    // pale_oak_log: 38 (from stripped_pale_oak_log, no other source)
+    expect(qty('pale_oak_log')).toBe(38);
+
     // Pass-through items
     expect(qty('obsidian')).toBe(30);
     expect(qty('dirt')).toBe(350);
     expect(qty('calcite')).toBe(160);
     expect(qty('grass_block')).toBe(372);
-    expect(qty('stripped_spruce_log')).toBe(187);
-    expect(qty('stripped_dark_oak_log')).toBe(522);
-    expect(qty('stripped_birch_log')).toBe(476);
-    expect(qty('stripped_pale_oak_log')).toBe(38);
-    expect(qty('stripped_warped_stem')).toBe(14);
     expect(qty('flowering_azalea_leaves')).toBe(18);
     expect(qty('flowering_azalea')).toBe(6);
   });

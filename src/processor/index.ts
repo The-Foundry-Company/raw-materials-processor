@@ -106,6 +106,13 @@ export function process(input: RawInput): ProcessedItem[] {
   const deduplicated = flattenAndDeduplicate(input);
   const passThroughSet = buildPassThroughSet(input);
 
+  // Remove items from pass-through if they can be decomposed (e.g., stripped logs → logs)
+  for (const item of [...passThroughSet]) {
+    if (resolveVariant(stripNamespace(item))) {
+      passThroughSet.delete(item);
+    }
+  }
+
   // Phase 2: Classify each item
   const classified: ClassifiedItem[] = [];
   for (const [itemId, quantity] of deduplicated) {

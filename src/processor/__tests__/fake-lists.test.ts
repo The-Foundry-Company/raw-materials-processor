@@ -300,15 +300,12 @@ describe('Fake Project: Modern Office Building', () => {
     // birch_planks: 60(slabs) + 80(stairs) = 140 → ceil(140/4) = 35 birch_log
     // + doors/trapdoors/fences: 16+18+20 = 54 birch_log
     // Total birch_log: 54 + 35 = 89
-    expect(qty(result, 'birch_log')).toBe(89);
+    // birch_log: 89 (from planks+doors+etc) + 800 (stripped_birch_log) = 889
+    expect(qty(result, 'birch_log')).toBe(889);
     expect(qty(result, 'birch_door')).toBeUndefined();
     expect(qty(result, 'birch_trapdoor')).toBeUndefined();
     expect(qty(result, 'birch_fence')).toBeUndefined();
-  });
-
-  it('keeps stripped_birch_log as pass-through', () => {
-    const result = process(input);
-    expect(qty(result, 'stripped_birch_log')).toBe(800);
+    expect(qty(result, 'stripped_birch_log')).toBeUndefined();
   });
 
   it('deduplicates waxed_copper_block across 3 sources', () => {
@@ -332,9 +329,9 @@ describe('Fake Project: Modern Office Building', () => {
     const result = process(input);
     // black_stained_glass_pane, white_stained_glass_pane, sandstone (was smooth_sandstone),
     // diorite (was polished_diorite), stone (was smooth_stone+stone_bricks),
-    // birch_log (was birch_planks+birch_log), stripped_birch_log,
-    // waxed_copper_block, lightning_rod, iron_bars, crafting_table, lectern, chest = 13
-    expect(result.length).toBe(13);
+    // birch_log (was birch_planks+birch_log+stripped_birch_log),
+    // waxed_copper_block, lightning_rod, iron_bars, crafting_table, lectern, chest = 12
+    expect(result.length).toBe(12);
   });
 });
 
@@ -576,8 +573,8 @@ describe('Fake Project: Tuff & Copper Modern House', () => {
 
   it('decomposes door/trapdoor items to logs', () => {
     const result = process(input);
-    // dark_oak_door:8 → 4, dark_oak_trapdoor:16 → 12 = 16 dark_oak_log
-    expect(qty(result, 'dark_oak_log')).toBe(16);
+    // dark_oak_door:8 → 4, dark_oak_trapdoor:16 → 12 = 16 dark_oak_log + 300 stripped = 316
+    expect(qty(result, 'dark_oak_log')).toBe(316);
     expect(qty(result, 'dark_oak_door')).toBeUndefined();
     expect(qty(result, 'dark_oak_trapdoor')).toBeUndefined();
   });
@@ -591,9 +588,9 @@ describe('Fake Project: Tuff & Copper Modern House', () => {
     expect(qty(result, 'cherry_door')).toBeUndefined();
   });
 
-  it('keeps pass-through items', () => {
+  it('decomposes stripped_dark_oak_log into dark_oak_log', () => {
     const result = process(input);
-    expect(qty(result, 'stripped_dark_oak_log')).toBe(300);
+    expect(qty(result, 'stripped_dark_oak_log')).toBeUndefined();
   });
 });
 
@@ -731,7 +728,8 @@ describe('Fake Project: Medieval Village', () => {
     // spruce_planks: 80+30 = 110 → ceil(110/4)=28 spruce_log
     // + spruce_door:12→6, trapdoor:20→15, fence:36→15, fence_gate:8→8 = 44 spruce_log
     // Total spruce_log: 28+44 = 72
-    expect(qty(result, 'spruce_log')).toBe(72);
+    // spruce_log: 72 (from planks+functional) + 400 (stripped_spruce_log) = 472
+    expect(qty(result, 'spruce_log')).toBe(472);
     expect(qty(result, 'spruce_door')).toBeUndefined();
     expect(qty(result, 'spruce_trapdoor')).toBeUndefined();
     expect(qty(result, 'spruce_fence')).toBeUndefined();
@@ -742,8 +740,8 @@ describe('Fake Project: Medieval Village', () => {
     const result = process(input);
     // oak_planks: 60+20 = 80 → ceil(80/4)=20 oak_log
     // + oak_door:10→5, oak_sign:16→9 = 14 oak_log
-    // Total oak_log: 20+14 = 34
-    expect(qty(result, 'oak_log')).toBe(34);
+    // + 200 stripped_oak_log = 234
+    expect(qty(result, 'oak_log')).toBe(234);
     expect(qty(result, 'oak_door')).toBeUndefined();
     expect(qty(result, 'oak_sign')).toBeUndefined();
   });
@@ -780,12 +778,13 @@ describe('Fake Project: Medieval Village', () => {
     expect(qty(result, 'lantern')).toBe(48);
   });
 
-  it('keeps pass-through items', () => {
+  it('keeps non-decomposable pass-through items', () => {
     const result = process(input);
     expect(qty(result, 'dirt')).toBe(300);
     expect(qty(result, 'grass_block')).toBe(150);
-    expect(qty(result, 'stripped_spruce_log')).toBe(400);
-    expect(qty(result, 'stripped_oak_log')).toBe(200);
+    // stripped items decomposed into base logs (verified above)
+    expect(qty(result, 'stripped_spruce_log')).toBeUndefined();
+    expect(qty(result, 'stripped_oak_log')).toBeUndefined();
   });
 
   it('output is sorted and has no duplicates', () => {

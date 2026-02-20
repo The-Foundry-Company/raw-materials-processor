@@ -4,7 +4,6 @@ import Header from './components/Header';
 import InputStage from './components/InputStage';
 import ProcessingStage from './components/ProcessingStage';
 import OutputStage from './components/OutputStage';
-import { process, validateInput } from './processor';
 import type { ProcessedItem } from './processor/types';
 
 type Stage = 'input' | 'processing' | 'output';
@@ -20,22 +19,15 @@ export default function App() {
     setStage('processing');
   }
 
-  const handleProcessingComplete = useCallback(() => {
-    try {
-      const parsed = JSON.parse(rawJson);
-      if (!validateInput(parsed)) {
-        setError('Invalid format. Expected an array of RawItem groups with Results.');
-        setStage('input');
-        return;
-      }
-      const processed = process(parsed);
-      setResult(processed);
-      setStage('output');
-    } catch {
-      setError('Processing failed. Check your JSON format.');
-      setStage('input');
-    }
-  }, [rawJson]);
+  const handleProcessingComplete = useCallback((processed: ProcessedItem[]) => {
+    setResult(processed);
+    setStage('output');
+  }, []);
+
+  const handleProcessingError = useCallback((message: string) => {
+    setError(message);
+    setStage('input');
+  }, []);
 
   function handleReset() {
     setStage('input');
@@ -60,7 +52,7 @@ export default function App() {
             <InputStage key="input" onSubmit={handleSubmit} />
           )}
           {stage === 'processing' && (
-            <ProcessingStage key="processing" onComplete={handleProcessingComplete} />
+            <ProcessingStage key="processing" rawJson={rawJson} onComplete={handleProcessingComplete} onError={handleProcessingError} />
           )}
           {stage === 'output' && (
             <OutputStage key="output" items={result} onReset={handleReset} />

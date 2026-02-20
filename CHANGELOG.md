@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.3.0] - 2026-02-20
+
+### Changed
+
+#### Stripped Wood Decomposition
+- All 23 stripped wood items now decompose 1:1 to their non-stripped base form (axe-stripping is free and lossless)
+- Pattern-based resolution covers all overworld logs (9), overworld wood (9), nether stems (2), nether hyphae (2), and bamboo block (1)
+- Stripped items that appear as pass-through (RawItem == ResultItem) are now correctly removed from the pass-through set and flow through normal variant classification
+- Recursive resolver naturally consolidates stripped items with any existing quantities of the base log
+
+#### Processing Screen
+- Completely redesigned processing animation with dynamic, data-driven steps
+- Steps now display real-time stats from the actual input data (group counts, unique items, classification breakdown, stripped item count, final output count)
+- Action steps (e.g., "CLASSIFYING MATERIALS...") show with `>` prefix, "DONE" badge with scale-in animation
+- Stat sub-steps (e.g., "37 UNIQUE ITEMS IDENTIFIED") appear indented with fade-down animation
+- Variable timing: action steps hold 500ms, stat steps appear quickly at 250ms for a natural terminal-like feel
+- Processing logic moved from App.tsx into ProcessingStage for a cleaner architecture (ProcessingStage now returns the result via `onComplete(result)`)
+- Fallback static steps shown if input parsing fails before animation
+
+#### Testing
+- Added resolveVariant tests for stripped items (5 representative cases)
+- Updated pass-through tests: stripped items now decompose instead of passing through
+- Updated full integration test: stripped items consolidate with base logs
+- Updated fake project tests (Projects 2, 4, 5) with correct merged quantities
+
 ## [1.2.1] - 2026-02-20
 
 ### Changed
