@@ -204,35 +204,75 @@ describe('all variant types', () => {
 });
 
 // ═══════════════════════════════════════════════════════════
-// ALL WOOD TYPES → PLANKS
+// ALL WOOD TYPES → LOGS (via planks, Phase 3b)
 // ═══════════════════════════════════════════════════════════
 
-describe('wood type → planks consolidation', () => {
-  const woodTypes = [
+describe('wood type → log consolidation', () => {
+  const standardWoods = [
     'oak', 'spruce', 'birch', 'jungle', 'acacia',
-    'dark_oak', 'mangrove', 'cherry', 'bamboo',
-    'crimson', 'warped', 'pale_oak',
+    'dark_oak', 'mangrove', 'cherry', 'pale_oak',
   ];
+  const netherWoods = ['crimson', 'warped'];
 
-  for (const wood of woodTypes) {
-    it(`${wood}_stairs → ${wood}_planks`, () => {
+  for (const wood of standardWoods) {
+    it(`${wood}_stairs → ${wood}_log`, () => {
       const input: RawInput = [
         makeGroup('minecraft:x', [{ item: `minecraft:${wood}_stairs`, total: 20 }]),
       ];
       const result = process(input);
-      expect(qty(result, `minecraft:${wood}_planks`)).toBe(20);
+      // 20 stairs → 20 planks → ceil(20/4) = 5 logs
+      expect(qty(result, `minecraft:${wood}_log`)).toBe(5);
     });
 
-    it(`${wood}_slab → ${wood}_planks (1:2)`, () => {
+    it(`${wood}_slab → ${wood}_log (via planks)`, () => {
       const input: RawInput = [
         makeGroup('minecraft:x', [{ item: `minecraft:${wood}_slab`, total: 20 }]),
       ];
       const result = process(input);
-      expect(qty(result, `minecraft:${wood}_planks`)).toBe(10);
+      // 20 slabs → 10 planks → ceil(10/4) = 3 logs
+      expect(qty(result, `minecraft:${wood}_log`)).toBe(3);
     });
   }
 
-  it('accumulates stairs + slabs for birch_planks', () => {
+  for (const wood of netherWoods) {
+    it(`${wood}_stairs → ${wood}_stem`, () => {
+      const input: RawInput = [
+        makeGroup('minecraft:x', [{ item: `minecraft:${wood}_stairs`, total: 20 }]),
+      ];
+      const result = process(input);
+      // 20 stairs → 20 planks → ceil(20/4) = 5 stems
+      expect(qty(result, `minecraft:${wood}_stem`)).toBe(5);
+    });
+
+    it(`${wood}_slab → ${wood}_stem (via planks)`, () => {
+      const input: RawInput = [
+        makeGroup('minecraft:x', [{ item: `minecraft:${wood}_slab`, total: 20 }]),
+      ];
+      const result = process(input);
+      // 20 slabs → 10 planks → ceil(10/4) = 3 stems
+      expect(qty(result, `minecraft:${wood}_stem`)).toBe(3);
+    });
+  }
+
+  it('bamboo_stairs → bamboo_block', () => {
+    const input: RawInput = [
+      makeGroup('minecraft:x', [{ item: 'minecraft:bamboo_stairs', total: 20 }]),
+    ];
+    const result = process(input);
+    // 20 stairs → 20 planks → ceil(20/2) = 10 bamboo_block
+    expect(qty(result, 'minecraft:bamboo_block')).toBe(10);
+  });
+
+  it('bamboo_slab → bamboo_block (via planks)', () => {
+    const input: RawInput = [
+      makeGroup('minecraft:x', [{ item: 'minecraft:bamboo_slab', total: 20 }]),
+    ];
+    const result = process(input);
+    // 20 slabs → 10 planks → ceil(10/2) = 5 bamboo_block
+    expect(qty(result, 'minecraft:bamboo_block')).toBe(5);
+  });
+
+  it('accumulates stairs + slabs for birch → birch_log', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:birch_stairs', total: 30 },
@@ -240,8 +280,8 @@ describe('wood type → planks consolidation', () => {
       ]),
     ];
     const result = process(input);
-    // 30 + ceil(20/2) = 30 + 10 = 40
-    expect(qty(result, 'minecraft:birch_planks')).toBe(40);
+    // 30 + ceil(20/2) = 40 planks → ceil(40/4) = 10 logs
+    expect(qty(result, 'minecraft:birch_log')).toBe(10);
   });
 });
 
@@ -250,7 +290,7 @@ describe('wood type → planks consolidation', () => {
 // ═══════════════════════════════════════════════════════════
 
 describe('pluralization special mappings', () => {
-  it('all deepslate_tile variants → deepslate_tiles', () => {
+  it('all deepslate_tile variants → cobbled_deepslate', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:deepslate_tile_stairs', total: 100 },
@@ -259,11 +299,11 @@ describe('pluralization special mappings', () => {
       ]),
     ];
     const result = process(input);
-    // 100 + ceil(30/2)=15 + 20 = 135
-    expect(qty(result, 'minecraft:deepslate_tiles')).toBe(135);
+    // 100 + 15 + 20 = 135 deepslate_tiles → 135 cobbled_deepslate (Phase 3b)
+    expect(qty(result, 'minecraft:cobbled_deepslate')).toBe(135);
   });
 
-  it('all tuff_brick variants → tuff_bricks', () => {
+  it('all tuff_brick variants → tuff', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:tuff_brick_stairs', total: 50 },
@@ -273,11 +313,11 @@ describe('pluralization special mappings', () => {
       ]),
     ];
     const result = process(input);
-    // 50 + ceil(22/2)=11 + 10 + 40 = 111
-    expect(qty(result, 'minecraft:tuff_bricks')).toBe(111);
+    // 50 + 11 + 10 + 40 = 111 tuff_bricks → 111 tuff (Phase 3b)
+    expect(qty(result, 'minecraft:tuff')).toBe(111);
   });
 
-  it('all brick variants → bricks', () => {
+  it('all brick variants → bricks (stays, non-block base)', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:brick_stairs', total: 200 },
@@ -290,7 +330,7 @@ describe('pluralization special mappings', () => {
     expect(qty(result, 'minecraft:bricks')).toBe(255);
   });
 
-  it('all stone_brick variants → stone_bricks', () => {
+  it('all stone_brick variants → stone', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:stone_brick_stairs', total: 60 },
@@ -299,11 +339,11 @@ describe('pluralization special mappings', () => {
       ]),
     ];
     const result = process(input);
-    // 60 + ceil(40/2)=20 + 20 = 100
-    expect(qty(result, 'minecraft:stone_bricks')).toBe(100);
+    // 60 + 20 + 20 = 100 stone_bricks → 100 stone (Phase 3b)
+    expect(qty(result, 'minecraft:stone')).toBe(100);
   });
 
-  it('all nether_brick variants → nether_bricks (including fence)', () => {
+  it('all nether_brick variants → nether_bricks (stays, non-block base)', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:nether_brick_stairs', total: 40 },
@@ -313,15 +353,12 @@ describe('pluralization special mappings', () => {
       ]),
     ];
     const result = process(input);
-    // stairs: 40, slab: ceil(10/2)=5, wall: 15 = 60
-    // nether_brick_fence → nether_bricks via SPECIAL_VARIANT_MAP (no longer blocked by FUNCTIONAL)
-    // fence: 8 (ratio 1 from special map)
-    // Total: 40 + 5 + 15 + 8 = 68
+    // 40 + 5 + 15 + 8 = 68 nether_bricks (stays as-is)
     expect(qty(result, 'minecraft:nether_bricks')).toBe(68);
     expect(qty(result, 'minecraft:nether_brick_fence')).toBeUndefined();
   });
 
-  it('polished_blackstone_brick variants → polished_blackstone_bricks', () => {
+  it('polished_blackstone_brick variants → blackstone', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [
         { item: 'minecraft:polished_blackstone_brick_stairs', total: 80 },
@@ -329,8 +366,8 @@ describe('pluralization special mappings', () => {
       ]),
     ];
     const result = process(input);
-    // 80 + ceil(24/2)=12 = 92
-    expect(qty(result, 'minecraft:polished_blackstone_bricks')).toBe(92);
+    // 80 + 12 = 92 polished_blackstone_bricks → 92 blackstone (Phase 3b)
+    expect(qty(result, 'minecraft:blackstone')).toBe(92);
   });
 });
 
@@ -440,32 +477,32 @@ describe('functional item categories', () => {
 // PROCESSED BLOCK TESTS
 // ═══════════════════════════════════════════════════════════
 
-describe('processed blocks kept as-is', () => {
-  it('keeps stone_bricks as processed block', () => {
+describe('single-chain processed blocks decompose to raw base', () => {
+  it('resolves stone_bricks to stone', () => {
     const input: RawInput = [
       makeGroup('minecraft:cobblestone', [{ item: 'minecraft:stone_bricks', total: 213 }]),
     ];
     const result = process(input);
-    expect(qty(result, 'minecraft:stone_bricks')).toBe(213);
+    expect(qty(result, 'minecraft:stone')).toBe(213);
   });
 
-  it('keeps smooth_sandstone as processed block', () => {
+  it('resolves smooth_sandstone to sandstone', () => {
     const input: RawInput = [
       makeGroup('minecraft:sand', [{ item: 'minecraft:smooth_sandstone', total: 92 }]),
     ];
     const result = process(input);
-    expect(qty(result, 'minecraft:smooth_sandstone')).toBe(92);
+    expect(qty(result, 'minecraft:sandstone')).toBe(92);
   });
 
-  it('keeps polished_blackstone_bricks as processed block', () => {
+  it('resolves polished_blackstone_bricks to blackstone', () => {
     const input: RawInput = [
       makeGroup('minecraft:blackstone', [{ item: 'minecraft:polished_blackstone_bricks', total: 208 }]),
     ];
     const result = process(input);
-    expect(qty(result, 'minecraft:polished_blackstone_bricks')).toBe(208);
+    expect(qty(result, 'minecraft:blackstone')).toBe(208);
   });
 
-  it('smooth_sandstone_stairs consolidates to smooth_sandstone (processed block as base)', () => {
+  it('smooth_sandstone_stairs chain → sandstone', () => {
     const input: RawInput = [
       makeGroup('minecraft:sand', [
         { item: 'minecraft:smooth_sandstone', total: 92 },
@@ -473,16 +510,18 @@ describe('processed blocks kept as-is', () => {
       ]),
     ];
     const result = process(input);
-    // smooth_sandstone: 92 (processed block) + 88 (stairs → smooth_sandstone) = 180
-    expect(qty(result, 'minecraft:smooth_sandstone')).toBe(180);
+    // smooth_sandstone:92 → sandstone + stairs:88 → smooth_sandstone → sandstone
+    // Total sandstone: 92 + 88 = 180
+    expect(qty(result, 'minecraft:sandstone')).toBe(180);
   });
 
-  it('polished_diorite_stairs consolidates to polished_diorite', () => {
+  it('polished_diorite_stairs chain → diorite', () => {
     const input: RawInput = [
       makeGroup('minecraft:x', [{ item: 'minecraft:polished_diorite_stairs', total: 84 }]),
     ];
     const result = process(input);
-    expect(qty(result, 'minecraft:polished_diorite')).toBe(84);
+    // stairs → polished_diorite → diorite (Phase 3b)
+    expect(qty(result, 'minecraft:diorite')).toBe(84);
   });
 });
 
@@ -572,17 +611,17 @@ describe('large mixed fake list', () => {
     expect(qty(result, 'minecraft:chest')).toBe(12);
     expect(qty(result, 'minecraft:lightning_rod')).toBe(16);
     expect(qty(result, 'minecraft:waxed_copper_block')).toBe(32);
-    // oak_door:6 → ceil(6/2)=3 oak_log, oak_sign:10 → ceil(10/(24/13))=ceil(5.417)=6 oak_log
-    // Total oak_log: 3+6 = 9
-    expect(qty(result, 'minecraft:oak_log')).toBe(9);
+    // oak_door:6 → 3 oak_log, oak_sign:10 → 6 oak_log = 9
+    // + oak_planks:65 → ceil(65/4)=17 oak_log (Phase 3b)
+    // Total oak_log: 9+17 = 26
+    expect(qty(result, 'minecraft:oak_log')).toBe(26);
     expect(qty(result, 'minecraft:white_terracotta')).toBe(128);
     expect(qty(result, 'minecraft:cyan_terracotta')).toBe(64);
     expect(qty(result, 'minecraft:orange_glazed_terracotta')).toBe(32);
 
-    // Processed blocks
-    expect(qty(result, 'minecraft:stone_bricks')).toBe(300);
-    expect(qty(result, 'minecraft:smooth_stone')).toBe(100);
-    expect(qty(result, 'minecraft:cracked_stone_bricks')).toBe(50);
+    // Single-chain processed blocks → raw base (Phase 3b)
+    // stone_bricks:300 + smooth_stone:100 + cracked_stone_bricks:50 → stone: 450
+    expect(qty(result, 'minecraft:stone')).toBe(450);
 
     // Sandstone variants consolidated
     // sandstone: 200 (direct) + ceil(40/2)=20 (slabs) + 60 (stairs) + 30 (chiseled) + 10 (cut) = 320
@@ -592,14 +631,11 @@ describe('large mixed fake list', () => {
     // 150 (direct) + 20 (stairs) + 100 (chiseled) = 270
     expect(qty(result, 'minecraft:red_sandstone')).toBe(270);
 
-    // Oak planks: 50 (stairs) + ceil(30/2)=15 (slabs) = 65
-    expect(qty(result, 'minecraft:oak_planks')).toBe(65);
-
     // Bricks: 48 (processed) + 200 (brick_stairs) = 248
     expect(qty(result, 'minecraft:bricks')).toBe(248);
 
-    // Tuff bricks: 100 (stairs) + ceil(40/2)=20 (slabs) + 60 (chiseled) = 180
-    expect(qty(result, 'minecraft:tuff_bricks')).toBe(180);
+    // Tuff bricks: 100 + 20 + 60 = 180 tuff_bricks → 180 tuff (Phase 3b)
+    expect(qty(result, 'minecraft:tuff')).toBe(180);
 
     // Alphabetically sorted
     const items = result.map((r) => r.Item);

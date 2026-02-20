@@ -99,16 +99,12 @@ describe('Fake Project: Desert Temple Expansion', () => {
     },
   ];
 
-  it('consolidates sandstone variants correctly', () => {
+  it('consolidates sandstone variants + smooth_sandstone chain', () => {
     const result = process(input);
-    // sandstone: 500 + ceil(240/2)=120 + 180 + 96(chiseled) + 64(cut) = 960
-    expect(qty(result, 'sandstone')).toBe(960);
-  });
-
-  it('consolidates smooth_sandstone + its stairs', () => {
-    const result = process(input);
-    // smooth_sandstone: 300 (processed) + 120 (stairs) = 420
-    expect(qty(result, 'smooth_sandstone')).toBe(420);
+    // sandstone: 500 + 120(slabs) + 180(stairs) + 96(chiseled) + 64(cut) = 960
+    // + smooth_sandstone chain: 300 + 120(stairs) = 420 → sandstone
+    // Total: 960 + 420 = 1380
+    expect(qty(result, 'sandstone')).toBe(1380);
   });
 
   it('consolidates red_sandstone variants', () => {
@@ -134,10 +130,10 @@ describe('Fake Project: Desert Temple Expansion', () => {
     expect(qty(result, 'torch')).toBe(48);
   });
 
-  it('keeps processed blocks as-is', () => {
+  it('resolves stone_bricks and smooth_stone to stone', () => {
     const result = process(input);
-    expect(qty(result, 'stone_bricks')).toBe(100);
-    expect(qty(result, 'smooth_stone')).toBe(48);
+    // stone_bricks:100 + smooth_stone:48 → stone: 148
+    expect(qty(result, 'stone')).toBe(148);
   });
 });
 
@@ -284,30 +280,27 @@ describe('Fake Project: Modern Office Building', () => {
     expect(qty(result, 'white_stained_glass_pane')).toBe(256);
   });
 
-  it('consolidates polished_diorite + stairs into polished_diorite', () => {
+  it('resolves polished_diorite chain → diorite', () => {
     const result = process(input);
-    // polished_diorite: 600 (processed block) + 200 (stairs → polished_diorite) = 800
-    expect(qty(result, 'polished_diorite')).toBe(800);
+    // polished_diorite: 600 → diorite + stairs: 200 → polished_diorite → diorite
+    // Total diorite: 800
+    expect(qty(result, 'diorite')).toBe(800);
   });
 
-  it('consolidates stone_brick variants into stone_bricks', () => {
+  it('resolves stone_brick + smooth_stone chains → stone', () => {
     const result = process(input);
-    // stone_bricks: 300 (processed) + 150 (stairs) + ceil(80/2)=40 (slabs) = 490
-    expect(qty(result, 'stone_bricks')).toBe(490);
+    // stone_bricks: 300 + stairs:150 + slabs:40 = 490 stone_bricks → stone
+    // smooth_stone: 400 → stone
+    // Total stone: 490 + 400 = 890
+    expect(qty(result, 'stone')).toBe(890);
   });
 
-  it('consolidates birch variants to birch_planks', () => {
+  it('resolves birch slabs/stairs → birch_log (via planks)', () => {
     const result = process(input);
-    // birch_planks: ceil(120/2)=60 (slabs) + 80 (stairs) = 140
-    expect(qty(result, 'birch_planks')).toBe(140);
-  });
-
-  it('decomposes birch doors/trapdoors/fences to birch_log', () => {
-    const result = process(input);
-    // birch_door:32 → ceil(32/2)=16, birch_trapdoor:24 → ceil(24/(4/3))=ceil(18)=18
-    // birch_fence:48 → ceil(48/(12/5))=ceil(20)=20
-    // Total birch_log: 16+18+20 = 54
-    expect(qty(result, 'birch_log')).toBe(54);
+    // birch_planks: 60(slabs) + 80(stairs) = 140 → ceil(140/4) = 35 birch_log
+    // + doors/trapdoors/fences: 16+18+20 = 54 birch_log
+    // Total birch_log: 54 + 35 = 89
+    expect(qty(result, 'birch_log')).toBe(89);
     expect(qty(result, 'birch_door')).toBeUndefined();
     expect(qty(result, 'birch_trapdoor')).toBeUndefined();
     expect(qty(result, 'birch_fence')).toBeUndefined();
@@ -329,14 +322,19 @@ describe('Fake Project: Modern Office Building', () => {
     expect(qty(result, 'lectern')).toBe(8);
   });
 
+  it('resolves smooth_sandstone to sandstone', () => {
+    const result = process(input);
+    // smooth_sandstone: 40 → sandstone: 40
+    expect(qty(result, 'sandstone')).toBe(40);
+  });
+
   it('has correct total unique items', () => {
     const result = process(input);
-    // black_stained_glass_pane, white_stained_glass_pane, smooth_sandstone,
-    // polished_diorite, smooth_stone, stone_bricks,
-    // birch_planks, birch_log (from door+trapdoor+fence),
-    // stripped_birch_log, waxed_copper_block, lightning_rod,
-    // iron_bars, crafting_table, lectern, chest = 15
-    expect(result.length).toBe(15);
+    // black_stained_glass_pane, white_stained_glass_pane, sandstone (was smooth_sandstone),
+    // diorite (was polished_diorite), stone (was smooth_stone+stone_bricks),
+    // birch_log (was birch_planks+birch_log), stripped_birch_log,
+    // waxed_copper_block, lightning_rod, iron_bars, crafting_table, lectern, chest = 13
+    expect(result.length).toBe(13);
   });
 });
 
@@ -445,21 +443,18 @@ describe('Fake Project: Nether Fortress Rebuild', () => {
     expect(qty(result, 'red_nether_bricks')).toBe(260);
   });
 
-  it('consolidates polished_blackstone_brick variants', () => {
+  it('resolves polished_blackstone_brick chain → blackstone', () => {
     const result = process(input);
-    // polished_blackstone_bricks: 200 (processed) + 150 (stairs) + ceil(60/2)=30 (slabs) = 380
-    expect(qty(result, 'polished_blackstone_bricks')).toBe(380);
+    // polished_blackstone_bricks: 200 → blackstone + stairs:150 + slabs:30 = 380 → blackstone
+    expect(qty(result, 'blackstone')).toBe(380);
   });
 
-  it('consolidates deepslate_tile variants', () => {
+  it('resolves deepslate chains → cobbled_deepslate', () => {
     const result = process(input);
-    // deepslate_tiles: 300 (stairs) + ceil(120/2)=60 (slabs) + 80 (walls) = 440
-    expect(qty(result, 'deepslate_tiles')).toBe(440);
-  });
-
-  it('keeps deepslate_bricks as processed block', () => {
-    const result = process(input);
-    expect(qty(result, 'deepslate_bricks')).toBe(100);
+    // deepslate_tiles: 300+60+80 = 440 → cobbled_deepslate
+    // deepslate_bricks: 100 → cobbled_deepslate
+    // Total cobbled_deepslate: 540
+    expect(qty(result, 'cobbled_deepslate')).toBe(540);
   });
 
   it('deduplicates end_rod across raw sources', () => {
@@ -558,20 +553,13 @@ describe('Fake Project: Tuff & Copper Modern House', () => {
     },
   ];
 
-  it('consolidates tuff_brick variants to tuff_bricks', () => {
+  it('consolidates all tuff variants to tuff', () => {
     const result = process(input);
-    // tuff_bricks: 400 (stairs) + ceil(200/2)=100 (slabs) + 50 (walls) + 120 (chiseled) = 670
-    expect(qty(result, 'tuff_bricks')).toBe(670);
-  });
-
-  it('consolidates chiseled_tuff to tuff', () => {
-    const result = process(input);
-    expect(qty(result, 'tuff')).toBe(30);
-  });
-
-  it('keeps polished_tuff as processed block', () => {
-    const result = process(input);
-    expect(qty(result, 'polished_tuff')).toBe(80);
+    // tuff_bricks: 400+100+50+120 = 670 → tuff (Phase 3b)
+    // + chiseled_tuff: 30 → tuff
+    // + polished_tuff: 80 → tuff (Phase 3b)
+    // Total tuff: 670 + 30 + 80 = 780
+    expect(qty(result, 'tuff')).toBe(780);
   });
 
   it('deduplicates waxed copper across 3 raw sources', () => {
@@ -588,25 +576,24 @@ describe('Fake Project: Tuff & Copper Modern House', () => {
 
   it('decomposes door/trapdoor items to logs', () => {
     const result = process(input);
-    // dark_oak_door:8 → ceil(8/2)=4, dark_oak_trapdoor:16 → ceil(16/(4/3))=ceil(12)=12
-    // Total dark_oak_log: 4+12 = 16
+    // dark_oak_door:8 → 4, dark_oak_trapdoor:16 → 12 = 16 dark_oak_log
     expect(qty(result, 'dark_oak_log')).toBe(16);
-    // cherry_door:6 → ceil(6/2)=3 cherry_log
-    expect(qty(result, 'cherry_log')).toBe(3);
     expect(qty(result, 'dark_oak_door')).toBeUndefined();
     expect(qty(result, 'dark_oak_trapdoor')).toBeUndefined();
+  });
+
+  it('resolves cherry wood → cherry_log (via planks)', () => {
+    const result = process(input);
+    // cherry_planks: 40+15 = 55 → ceil(55/4)=14 cherry_log
+    // + cherry_door:6 → ceil(6/2)=3 cherry_log
+    // Total cherry_log: 14+3 = 17
+    expect(qty(result, 'cherry_log')).toBe(17);
     expect(qty(result, 'cherry_door')).toBeUndefined();
   });
 
   it('keeps pass-through items', () => {
     const result = process(input);
     expect(qty(result, 'stripped_dark_oak_log')).toBe(300);
-  });
-
-  it('consolidates cherry wood → planks', () => {
-    const result = process(input);
-    // cherry_planks: 40 (stairs) + ceil(30/2)=15 (slabs) = 55
-    expect(qty(result, 'cherry_planks')).toBe(55);
   });
 });
 
@@ -739,54 +726,43 @@ describe('Fake Project: Medieval Village', () => {
     },
   ];
 
-  it('consolidates spruce wood → planks', () => {
+  it('resolves spruce wood → spruce_log (via planks + functional)', () => {
     const result = process(input);
-    // spruce_planks: 80 (stairs) + ceil(60/2)=30 (slabs) = 110
-    expect(qty(result, 'spruce_planks')).toBe(110);
-  });
-
-  it('consolidates oak wood → planks', () => {
-    const result = process(input);
-    // oak_planks: 60 (stairs) + ceil(40/2)=20 (slabs) = 80
-    expect(qty(result, 'oak_planks')).toBe(80);
-  });
-
-  it('decomposes oak door + sign to oak_log', () => {
-    const result = process(input);
-    // oak_door:10 → ceil(10/2)=5, oak_sign:16 → ceil(16/(24/13))=ceil(8.667)=9
-    // Total oak_log: 5+9 = 14
-    expect(qty(result, 'oak_log')).toBe(14);
-    expect(qty(result, 'oak_door')).toBeUndefined();
-    expect(qty(result, 'oak_sign')).toBeUndefined();
-  });
-
-  it('decomposes spruce functional items to spruce_log', () => {
-    const result = process(input);
-    // spruce_door:12 → ceil(12/2)=6
-    // spruce_trapdoor:20 → ceil(20/(4/3))=ceil(15)=15
-    // spruce_fence:36 → ceil(36/(12/5))=ceil(15)=15
-    // spruce_fence_gate:8 → ceil(8/1)=8
-    // Total spruce_log: 6+15+15+8 = 44
-    expect(qty(result, 'spruce_log')).toBe(44);
+    // spruce_planks: 80+30 = 110 → ceil(110/4)=28 spruce_log
+    // + spruce_door:12→6, trapdoor:20→15, fence:36→15, fence_gate:8→8 = 44 spruce_log
+    // Total spruce_log: 28+44 = 72
+    expect(qty(result, 'spruce_log')).toBe(72);
     expect(qty(result, 'spruce_door')).toBeUndefined();
     expect(qty(result, 'spruce_trapdoor')).toBeUndefined();
     expect(qty(result, 'spruce_fence')).toBeUndefined();
     expect(qty(result, 'spruce_fence_gate')).toBeUndefined();
   });
 
-  it('consolidates stone_brick variants', () => {
+  it('resolves oak wood → oak_log (via planks + functional)', () => {
     const result = process(input);
-    // stone_bricks: 500 (processed) + 200 (stairs) + ceil(100/2)=50 (slabs) + 80 (walls) = 830
-    expect(qty(result, 'stone_bricks')).toBe(830);
+    // oak_planks: 60+20 = 80 → ceil(80/4)=20 oak_log
+    // + oak_door:10→5, oak_sign:16→9 = 14 oak_log
+    // Total oak_log: 20+14 = 34
+    expect(qty(result, 'oak_log')).toBe(34);
+    expect(qty(result, 'oak_door')).toBeUndefined();
+    expect(qty(result, 'oak_sign')).toBeUndefined();
   });
 
-  it('keeps cracked and mossy stone bricks as processed', () => {
+  it('resolves stone chains → stone', () => {
     const result = process(input);
-    expect(qty(result, 'cracked_stone_bricks')).toBe(120);
+    // stone_bricks: 500+200+50+80 = 830 → stone
+    // + cracked_stone_bricks: 120 → stone
+    // + smooth_stone: 100 → stone
+    // Total stone: 1050
+    expect(qty(result, 'stone')).toBe(1050);
+  });
+
+  it('keeps mossy_stone_bricks as processed (multi-material)', () => {
+    const result = process(input);
     expect(qty(result, 'mossy_stone_bricks')).toBe(60);
   });
 
-  it('consolidates brick variants to bricks', () => {
+  it('consolidates brick variants to bricks (stays, non-block base)', () => {
     const result = process(input);
     // bricks: 100 (processed) + 160 (stairs) + ceil(80/2)=40 (slabs) + 40 (walls) = 340
     expect(qty(result, 'bricks')).toBe(340);

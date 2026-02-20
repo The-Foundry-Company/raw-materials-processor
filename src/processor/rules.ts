@@ -104,37 +104,16 @@ export function isFunctional(name: string): boolean {
 // ── Processed blocks: blocks that are already "processed" and should stay as-is ──
 
 export const PROCESSED_BLOCKS: Set<string> = new Set([
-  'stone_bricks',
-  'cracked_stone_bricks',
+  // Multi-material or non-block base — these stay as processed blocks
   'mossy_stone_bricks',
-  'smooth_stone',
-  'smooth_sandstone',
-  'smooth_red_sandstone',
-  'smooth_quartz',
-  'polished_andesite',
-  'polished_diorite',
-  'polished_granite',
-  'polished_deepslate',
-  'polished_blackstone',
-  'polished_blackstone_bricks',
-  'polished_basalt',
-  'polished_tuff',
-  'deepslate_bricks',
-  'deepslate_tiles',
-  'tuff_bricks',
   'bricks',
   'nether_bricks',
   'red_nether_bricks',
-  'end_stone_bricks',
   'prismarine_bricks',
   'dark_prismarine',
   'purpur_block',
-  'purpur_pillar',
-  'quartz_bricks',
-  'quartz_pillar',
   'mud_bricks',
   'packed_mud',
-  'bamboo_mosaic',
   'bamboo_block',
 ]);
 
@@ -272,6 +251,34 @@ const DECOMPOSABLE_SUFFIXES: {
   { suffix: '_pressure_plate', stdRatio: 2, bambooRatio: 1 },
 ];
 
+// ── Single-chain decomposition: processed blocks → rawest block-form base ──
+// All 1:1 ratios (stonecutter or smelting, single material chain)
+
+const SINGLE_CHAIN_DECOMPOSITION: Record<string, { base: string; ratio: number }> = {
+  stone_bricks: { base: 'stone', ratio: 1 },
+  cracked_stone_bricks: { base: 'stone', ratio: 1 },
+  smooth_stone: { base: 'stone', ratio: 1 },
+  smooth_sandstone: { base: 'sandstone', ratio: 1 },
+  smooth_red_sandstone: { base: 'red_sandstone', ratio: 1 },
+  smooth_quartz: { base: 'quartz_block', ratio: 1 },
+  polished_andesite: { base: 'andesite', ratio: 1 },
+  polished_diorite: { base: 'diorite', ratio: 1 },
+  polished_granite: { base: 'granite', ratio: 1 },
+  polished_basalt: { base: 'basalt', ratio: 1 },
+  polished_tuff: { base: 'tuff', ratio: 1 },
+  polished_deepslate: { base: 'cobbled_deepslate', ratio: 1 },
+  deepslate_bricks: { base: 'cobbled_deepslate', ratio: 1 },
+  deepslate_tiles: { base: 'cobbled_deepslate', ratio: 1 },
+  polished_blackstone: { base: 'blackstone', ratio: 1 },
+  polished_blackstone_bricks: { base: 'blackstone', ratio: 1 },
+  tuff_bricks: { base: 'tuff', ratio: 1 },
+  end_stone_bricks: { base: 'end_stone', ratio: 1 },
+  quartz_bricks: { base: 'quartz_block', ratio: 1 },
+  quartz_pillar: { base: 'quartz_block', ratio: 1 },
+  purpur_pillar: { base: 'purpur_block', ratio: 1 },
+  bamboo_mosaic: { base: 'bamboo_planks', ratio: 1 },
+};
+
 const NON_WOOD_DECOMPOSITION: Record<string, { base: string; ratio: number }> = {
   iron_door: { base: 'iron_ingot', ratio: 0.5 },
   iron_trapdoor: { base: 'iron_ingot', ratio: 0.25 },
@@ -305,6 +312,21 @@ function resolveDecomposition(name: string): { base: string; ratio: number } | n
         return { base: log, ratio };
       }
     }
+  }
+
+  // Check planks → logs
+  if (name.endsWith('_planks')) {
+    const woodPrefix = name.slice(0, -'_planks'.length);
+    const log = WOOD_TO_LOG[woodPrefix];
+    if (log) {
+      const ratio = woodPrefix === 'bamboo' ? 2 : 4;
+      return { base: log, ratio };
+    }
+  }
+
+  // Check single-chain decomposition (processed → raw base)
+  if (SINGLE_CHAIN_DECOMPOSITION[name]) {
+    return SINGLE_CHAIN_DECOMPOSITION[name];
   }
 
   return null;

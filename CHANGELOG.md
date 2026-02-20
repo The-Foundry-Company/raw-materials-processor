@@ -1,5 +1,35 @@
 # Changelog
 
+## [1.2.0] - 2026-02-20
+
+### Changed
+
+#### Full Single-Chain Decomposition
+- If an item's entire crafting chain uses only ONE unique base raw material, it is now collapsed all the way to that base block
+- **Planks → logs**: All 12 wood types' planks now decompose to their log/stem/bamboo_block (4:1 ratio, bamboo 2:1)
+- **Processed blocks → raw base**: 22 single-chain processed blocks now decompose to their rawest block form:
+  - Stone chain: stone_bricks, cracked_stone_bricks, smooth_stone → stone
+  - Sandstone chain: smooth_sandstone → sandstone, smooth_red_sandstone → red_sandstone
+  - Polished stones: polished_andesite → andesite, polished_diorite → diorite, polished_granite → granite, polished_basalt → basalt
+  - Deepslate chain: polished_deepslate, deepslate_bricks, deepslate_tiles → cobbled_deepslate
+  - Blackstone chain: polished_blackstone, polished_blackstone_bricks → blackstone
+  - Tuff chain: polished_tuff, tuff_bricks → tuff
+  - Others: end_stone_bricks → end_stone, quartz_bricks/quartz_pillar → quartz_block, purpur_pillar → purpur_block, bamboo_mosaic → bamboo_planks, smooth_quartz → quartz_block
+- **Recursive resolution** (Phase 3b): Multi-level chains resolve automatically (e.g., stone_brick_slab → stone_bricks → stone, bamboo_mosaic → bamboo_planks → bamboo_block)
+- Items that stay as processed blocks (multi-material or non-block base): mossy_stone_bricks, bricks, nether_bricks, red_nether_bricks, prismarine_bricks, dark_prismarine, purpur_block, mud_bricks, packed_mud, bamboo_block
+
+#### JSON File Upload
+- Added "Upload JSON" button on the input screen for loading `.json` files directly from disk
+- Client-side only (FileReader API), no server interaction required
+- Populates the textarea so the user can review before processing
+
+#### Branding
+- Changed browser tab title to "Foundry RMP"
+
+#### Testing
+- Updated all 3 test files for new decomposition behavior
+- Added resolveVariant tests for planks and single-chain processed blocks
+
 ## [1.1.0] - 2026-02-20
 
 ### Changed

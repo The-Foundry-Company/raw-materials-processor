@@ -117,16 +117,27 @@ describe('isFunctional', () => {
 // ═══════════════════════════════════════════════════════════
 
 describe('PROCESSED_BLOCKS', () => {
-  it('includes known processed blocks', () => {
-    expect(PROCESSED_BLOCKS.has('stone_bricks')).toBe(true);
-    expect(PROCESSED_BLOCKS.has('cracked_stone_bricks')).toBe(true);
-    expect(PROCESSED_BLOCKS.has('smooth_sandstone')).toBe(true);
-    expect(PROCESSED_BLOCKS.has('polished_diorite')).toBe(true);
-    expect(PROCESSED_BLOCKS.has('polished_blackstone_bricks')).toBe(true);
-    expect(PROCESSED_BLOCKS.has('smooth_stone')).toBe(true);
-    expect(PROCESSED_BLOCKS.has('deepslate_tiles')).toBe(true);
-    expect(PROCESSED_BLOCKS.has('tuff_bricks')).toBe(true);
+  it('includes multi-material and non-block-base processed blocks', () => {
+    expect(PROCESSED_BLOCKS.has('mossy_stone_bricks')).toBe(true);
     expect(PROCESSED_BLOCKS.has('bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('nether_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('red_nether_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('prismarine_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('dark_prismarine')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('purpur_block')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('mud_bricks')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('packed_mud')).toBe(true);
+    expect(PROCESSED_BLOCKS.has('bamboo_block')).toBe(true);
+  });
+
+  it('does not include single-chain decomposable blocks', () => {
+    expect(PROCESSED_BLOCKS.has('stone_bricks')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('polished_diorite')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('deepslate_tiles')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('tuff_bricks')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('smooth_sandstone')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('smooth_stone')).toBe(false);
+    expect(PROCESSED_BLOCKS.has('polished_blackstone_bricks')).toBe(false);
   });
 
   it('does not include raw blocks', () => {
@@ -185,6 +196,31 @@ describe('resolveVariant', () => {
   it('decomposes wood buttons and pressure plates to logs', () => {
     expect(resolveVariant('oak_button')).toEqual({ base: 'oak_log', ratio: 4 });
     expect(resolveVariant('spruce_pressure_plate')).toEqual({ base: 'spruce_log', ratio: 2 });
+  });
+
+  it('decomposes planks to logs', () => {
+    expect(resolveVariant('oak_planks')).toEqual({ base: 'oak_log', ratio: 4 });
+    expect(resolveVariant('spruce_planks')).toEqual({ base: 'spruce_log', ratio: 4 });
+    expect(resolveVariant('bamboo_planks')).toEqual({ base: 'bamboo_block', ratio: 2 });
+    expect(resolveVariant('crimson_planks')).toEqual({ base: 'crimson_stem', ratio: 4 });
+    expect(resolveVariant('warped_planks')).toEqual({ base: 'warped_stem', ratio: 4 });
+  });
+
+  it('decomposes single-chain processed blocks to raw base', () => {
+    expect(resolveVariant('stone_bricks')).toEqual({ base: 'stone', ratio: 1 });
+    expect(resolveVariant('cracked_stone_bricks')).toEqual({ base: 'stone', ratio: 1 });
+    expect(resolveVariant('smooth_stone')).toEqual({ base: 'stone', ratio: 1 });
+    expect(resolveVariant('polished_diorite')).toEqual({ base: 'diorite', ratio: 1 });
+    expect(resolveVariant('polished_granite')).toEqual({ base: 'granite', ratio: 1 });
+    expect(resolveVariant('deepslate_tiles')).toEqual({ base: 'cobbled_deepslate', ratio: 1 });
+    expect(resolveVariant('deepslate_bricks')).toEqual({ base: 'cobbled_deepslate', ratio: 1 });
+    expect(resolveVariant('tuff_bricks')).toEqual({ base: 'tuff', ratio: 1 });
+    expect(resolveVariant('polished_blackstone_bricks')).toEqual({ base: 'blackstone', ratio: 1 });
+    expect(resolveVariant('polished_blackstone')).toEqual({ base: 'blackstone', ratio: 1 });
+    expect(resolveVariant('smooth_sandstone')).toEqual({ base: 'sandstone', ratio: 1 });
+    expect(resolveVariant('end_stone_bricks')).toEqual({ base: 'end_stone', ratio: 1 });
+    expect(resolveVariant('bamboo_mosaic')).toEqual({ base: 'bamboo_planks', ratio: 1 });
+    expect(resolveVariant('purpur_pillar')).toEqual({ base: 'purpur_block', ratio: 1 });
   });
 
   it('decomposes non-wood items', () => {
@@ -334,7 +370,7 @@ describe('variant consolidation', () => {
 // ═══════════════════════════════════════════════════════════
 
 describe('special mappings', () => {
-  it('tuff_brick variants → tuff_bricks', () => {
+  it('tuff_brick variants → tuff (via tuff_bricks)', () => {
     const input = makeInput([
       {
         raw: 'minecraft:tuff',
@@ -346,11 +382,9 @@ describe('special mappings', () => {
       },
     ]);
     const result = process(input);
-    // chiseled_tuff_bricks → tuff_bricks: 146 (1:1)
-    // tuff_brick_slab → tuff_bricks: ceil(56/2) = 28
-    // tuff_brick_stairs → tuff_bricks: 342 (1:1)
-    // Total: 146 + 28 + 342 = 516
-    expect(result.find((r) => r.Item === 'minecraft:tuff_bricks')?.Quantity).toBe(516);
+    // chiseled_tuff_bricks → tuff_bricks: 146, tuff_brick_slab → tuff_bricks: 28, tuff_brick_stairs → tuff_bricks: 342
+    // tuff_bricks: 516 → tuff: 516 (Phase 3b)
+    expect(result.find((r) => r.Item === 'minecraft:tuff')?.Quantity).toBe(516);
   });
 
   it('brick variants → bricks', () => {
@@ -370,7 +404,7 @@ describe('special mappings', () => {
     expect(result.find((r) => r.Item === 'minecraft:bricks')?.Quantity).toBe(306);
   });
 
-  it('deepslate_tile variants → deepslate_tiles', () => {
+  it('deepslate_tile variants → cobbled_deepslate (via deepslate_tiles)', () => {
     const input = makeInput([
       {
         raw: 'minecraft:cobbled_deepslate',
@@ -381,12 +415,11 @@ describe('special mappings', () => {
       },
     ]);
     const result = process(input);
-    // slab: ceil(8/2) = 4, stairs: 172
-    // Total: 4 + 172 = 176
-    expect(result.find((r) => r.Item === 'minecraft:deepslate_tiles')?.Quantity).toBe(176);
+    // slab: 4 + stairs: 172 = 176 deepslate_tiles → 176 cobbled_deepslate (Phase 3b)
+    expect(result.find((r) => r.Item === 'minecraft:cobbled_deepslate')?.Quantity).toBe(176);
   });
 
-  it('birch wood variants → birch_planks', () => {
+  it('birch wood variants → birch_log (via birch_planks)', () => {
     const input = makeInput([
       {
         raw: 'minecraft:birch_log',
@@ -397,12 +430,11 @@ describe('special mappings', () => {
       },
     ]);
     const result = process(input);
-    // slab: ceil(16/2) = 8, stairs: 8 (1:1)
-    // Total: 8 + 8 = 16
-    expect(result.find((r) => r.Item === 'minecraft:birch_planks')?.Quantity).toBe(16);
+    // slab: 8 + stairs: 8 = 16 birch_planks → ceil(16/4) = 4 birch_log (Phase 3b)
+    expect(result.find((r) => r.Item === 'minecraft:birch_log')?.Quantity).toBe(4);
   });
 
-  it('warped_stairs → warped_planks', () => {
+  it('warped_stairs → warped_stem (via warped_planks)', () => {
     const input = makeInput([
       {
         raw: 'minecraft:warped_stem',
@@ -410,7 +442,8 @@ describe('special mappings', () => {
       },
     ]);
     const result = process(input);
-    expect(result.find((r) => r.Item === 'minecraft:warped_planks')?.Quantity).toBe(155);
+    // 155 warped_planks → ceil(155/4) = 39 warped_stem (Phase 3b)
+    expect(result.find((r) => r.Item === 'minecraft:warped_stem')?.Quantity).toBe(39);
   });
 });
 
@@ -771,17 +804,17 @@ describe('full integration test - sample data', () => {
     const qty = (item: string) =>
       result.find((r) => r.Item === `minecraft:${item}`)?.Quantity;
 
-    // Key consolidated items from plan
+    // Key consolidated items — single-chain decomposition resolves to raw base
     expect(qty('red_sandstone')).toBe(911);
-    expect(qty('tuff_bricks')).toBe(516);
+    expect(qty('tuff')).toBe(516);
     expect(qty('bricks')).toBe(306);
-    expect(qty('sandstone')).toBe(224);
-    expect(qty('smooth_sandstone')).toBe(180);
-    expect(qty('deepslate_tiles')).toBe(176);
-    expect(qty('birch_planks')).toBe(16);
-    expect(qty('warped_planks')).toBe(155);
-    expect(qty('polished_diorite')).toBe(84);
-    expect(qty('diorite')).toBe(92);
+    expect(qty('sandstone')).toBe(404);
+    expect(qty('cobbled_deepslate')).toBe(176);
+    expect(qty('diorite')).toBe(176);
+    expect(qty('stone')).toBe(665);
+    expect(qty('blackstone')).toBe(208);
+    expect(qty('warped_stem')).toBe(39);
+    expect(qty('birch_log')).toBe(79);
 
     // Functional items kept as-is
     expect(qty('sea_lantern')).toBe(70);
@@ -797,16 +830,15 @@ describe('full integration test - sample data', () => {
     expect(qty('furnace')).toBe(5);
     expect(qty('end_rod')).toBe(16);
     expect(qty('lightning_rod')).toBe(23);
-    // Decomposed items → logs
+    // Decomposed items → logs (including planks→logs from Phase 3b)
     // spruce_door:4 → ceil(4/2) = 2 spruce_log
     expect(qty('spruce_log')).toBe(2);
     // dark_oak_trapdoor:50 → ceil(50/(4/3)) = ceil(37.5) = 38 dark_oak_log
     expect(qty('dark_oak_log')).toBe(38);
-    // birch_door:4 → ceil(4/2)=2, birch_trapdoor:92 → ceil(92/(4/3))=ceil(69)=69, birch_fence:8 → ceil(8/(12/5))=ceil(3.33)=4
-    // birch_planks: 16 (from slabs+stairs)
-    // birch_log: 2+69+4 = 75
-    expect(qty('birch_log')).toBe(75);
-    // oak_sign:22 → ceil(22/(24/13)) = ceil(22*13/24) = ceil(11.917) = 12 oak_log
+    // birch_door:4→2, birch_trapdoor:92→69, birch_fence:8→4 = 75 birch_log
+    // + birch_planks:16 → ceil(16/4)=4 birch_log (Phase 3b)
+    // Total: 75+4 = 79
+    // oak_sign:22 → 12 oak_log
     expect(qty('oak_log')).toBe(12);
     expect(qty('waxed_copper_block')).toBe(78);
     expect(qty('oxidized_copper_trapdoor')).toBe(12);
@@ -824,12 +856,6 @@ describe('full integration test - sample data', () => {
     expect(qty('red_glazed_terracotta')).toBe(20);
     expect(qty('yellow_glazed_terracotta')).toBe(45);
     expect(qty('green_glazed_terracotta')).toBe(32);
-
-    // Processed blocks
-    expect(qty('stone_bricks')).toBe(213);
-    expect(qty('cracked_stone_bricks')).toBe(396);
-    expect(qty('smooth_stone')).toBe(56);
-    expect(qty('polished_blackstone_bricks')).toBe(208);
 
     // Pass-through items
     expect(qty('obsidian')).toBe(30);

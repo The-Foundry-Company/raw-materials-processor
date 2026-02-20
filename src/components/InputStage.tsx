@@ -23,6 +23,19 @@ export default function InputStage({ onSubmit }: Props) {
     }
   }
 
+  function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const content = event.target?.result as string;
+        setValue(content);
+        if (error) setError('');
+      };
+      reader.readAsText(file);
+    }
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -40 }}
@@ -55,16 +68,35 @@ export default function InputStage({ onSubmit }: Props) {
         </motion.p>
       )}
 
-      <button
-        onClick={handleSubmit}
-        className="w-full mt-4 py-3 bg-foundry-yellow text-foundry-dark
-          font-black text-lg tracking-wider border-[3px] border-foundry-dark
-          hover:bg-foundry-dark hover:text-foundry-yellow
-          active:scale-[0.98] transition-none
-          hover:transition-none"
-      >
-        PROCESS
-      </button>
+      <div className="flex gap-3 mt-4">
+        <label
+          className="py-3 px-5 bg-foundry-dark text-foundry-yellow
+            font-bold text-sm tracking-wider border-[3px] border-foundry-dark
+            cursor-pointer select-none
+            hover:bg-foundry-yellow hover:text-foundry-dark
+            active:scale-[0.98] transition-none
+            hover:transition-none"
+        >
+          UPLOAD JSON
+          <input
+            type="file"
+            accept=".json"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
+        </label>
+
+        <button
+          onClick={handleSubmit}
+          className="flex-1 py-3 bg-foundry-yellow text-foundry-dark
+            font-black text-lg tracking-wider border-[3px] border-foundry-dark
+            hover:bg-foundry-dark hover:text-foundry-yellow
+            active:scale-[0.98] transition-none
+            hover:transition-none"
+        >
+          PROCESS
+        </button>
+      </div>
     </motion.div>
   );
 }

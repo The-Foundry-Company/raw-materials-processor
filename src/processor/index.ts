@@ -130,6 +130,24 @@ export function process(input: RawInput): ProcessedItem[] {
     }
   }
 
+  // Phase 3b: Recursively resolve intermediate items (planks → logs, processed → raw)
+  let resolvedAny = true;
+  while (resolvedAny) {
+    resolvedAny = false;
+    for (const [item, qty] of [...output]) {
+      if (passThroughSet.has(item)) continue;
+      const name = stripNamespace(item);
+      const variant = resolveVariant(name);
+      if (variant) {
+        output.delete(item);
+        const baseKey = addNamespace(variant.base);
+        const baseNeeded = Math.ceil(qty / variant.ratio);
+        output.set(baseKey, (output.get(baseKey) ?? 0) + baseNeeded);
+        resolvedAny = true;
+      }
+    }
+  }
+
   // Phase 4: Format & sort alphabetically
   const result: ProcessedItem[] = [];
   for (const [item, quantity] of output) {
