@@ -12,3 +12,11 @@ body {
 #root {
   min-height: 100vh;
 }
+
+@keyframes border-pulse {
+  0%, 100% { border-color: #ef4444; }
+  50% { border-color: #fca5a5; }
+}
+.animate-border-pulse {
+  animation: border-pulse 1s ease-in-out 2;
+}

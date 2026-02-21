@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.6.0] - 2026-02-21
+
+### Changed
+
+#### Animated Error Messages
+- Input validation errors now display with spring-animated error cards that pop in with scale and fade transitions
+- Textarea shakes horizontally on invalid input using a Framer Motion keyframe sequence
+- Error border pulses red twice using a new `border-pulse` CSS keyframe animation
+- Format errors returned from the processing stage now show in a spring-animated banner in App.tsx with `!!` prefix
+
+#### Funny Rotating Error Messages
+- Empty input, invalid JSON, and wrong-format errors each pull from a pool of randomized humorous messages
+- Empty input pool (4 messages): e.g., "The textarea is emptier than a stripped chunk."
+- Invalid JSON pool (9 messages): e.g., "This JSON is more broken than a wooden pickaxe on obsidian."
+- Wrong format pool (4 messages): e.g., "Nice JSON. Wrong format. We need Litematica output."
+
+#### Styling
+- Added `border-pulse` CSS keyframe animation to `src/index.css` for pulsing red borders on error state
+- Error cards use consistent `border-[3px] border-red-500 bg-red-50` styling with bold `!!` prefix
+
 ## [1.5.0] - 2026-02-20
 
 ### Changed

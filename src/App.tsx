@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from './components/Header';
 import InputStage from './components/InputStage';
 import ProcessingStage from './components/ProcessingStage';
@@ -7,6 +7,17 @@ import OutputStage from './components/OutputStage';
 import type { ProcessedItem } from './processor/types';
 
 type Stage = 'input' | 'processing' | 'output';
+
+const FORMAT_ERROR_MESSAGES = [
+  "That JSON is valid, but it's not a materials list.",
+  "Nice JSON. Wrong format. We need Litematica output.",
+  "JSON's fine — but we don't know what to do with it.",
+  "That's JSON alright, just not the JSON we're looking for.",
+];
+
+function pickRandom(messages: string[]): string {
+  return messages[Math.floor(Math.random() * messages.length)];
+}
 
 export default function App() {
   const [stage, setStage] = useState<Stage>('input');
@@ -16,6 +27,7 @@ export default function App() {
 
   function handleSubmit(json: string) {
     setRawJson(json);
+    setError('');
     setStage('processing');
   }
 
@@ -24,8 +36,8 @@ export default function App() {
     setStage('output');
   }, []);
 
-  const handleProcessingError = useCallback((message: string) => {
-    setError(message);
+  const handleProcessingError = useCallback((_message: string) => {
+    setError(pickRandom(FORMAT_ERROR_MESSAGES));
     setStage('input');
   }, []);
 
@@ -41,11 +53,20 @@ export default function App() {
       <div className="max-w-2xl mx-auto">
         <Header />
 
-        {error && stage === 'input' && (
-          <div className="border-[3px] border-red-500 bg-red-50 px-4 py-3 mb-4">
-            <p className="text-red-600 font-bold text-sm">{error}</p>
-          </div>
-        )}
+        <AnimatePresence>
+          {error && stage === 'input' && (
+            <motion.div
+              initial={{ opacity: 0, y: -8, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.97 }}
+              transition={{ type: "spring", stiffness: 500, damping: 25, mass: 0.8 }}
+              className="border-[3px] border-red-500 bg-red-50 px-4 py-3 mb-4"
+            >
+              <span className="text-red-500 font-mono font-bold text-lg">!! </span>
+              <p className="text-red-600 font-bold text-sm inline">{error}</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <AnimatePresence mode="wait">
           {stage === 'input' && (
