@@ -31,16 +31,26 @@ export function downloadTXT(items: ProcessedItem[]) {
     `  Items: ${items.length}`,
     '',
     '───────────────────────────────────────────────────────',
-    '',
-    ...items.map(
-      (i) => `  ${i.Item.padEnd(maxNameLen + 2)} × ${String(i.Quantity).padStart(5)}`
-    ),
-    '',
-    '───────────────────────────────────────────────────────',
-    `  TOTAL UNIQUE ITEMS: ${items.length}`,
-    '═══════════════════════════════════════════════════════',
-    '',
   ];
+
+  let currentCategory = '';
+  for (const item of items) {
+    if (item.Category !== currentCategory) {
+      currentCategory = item.Category;
+      lines.push('');
+      lines.push(`  ── ${currentCategory.toUpperCase()} ──`);
+      lines.push('');
+    }
+    lines.push(
+      `  ${item.Item.padEnd(maxNameLen + 2)} × ${String(item.Quantity).padStart(5)}`
+    );
+  }
+
+  lines.push('');
+  lines.push('───────────────────────────────────────────────────────');
+  lines.push(`  TOTAL UNIQUE ITEMS: ${items.length}`);
+  lines.push('═══════════════════════════════════════════════════════');
+  lines.push('');
 
   triggerDownload(lines.join('\n'), `processed_materials_${date}.txt`, 'text/plain');
 }

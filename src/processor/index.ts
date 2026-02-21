@@ -9,6 +9,7 @@ import {
   GENERIC_WOOD_ITEMS,
   isLogType,
 } from './rules';
+import { categorizeItem, CATEGORY_ORDER, type ItemCategory } from './categories';
 
 /**
  * Validates that the input is a valid raw materials JSON array.
@@ -194,13 +195,19 @@ export function process(input: RawInput): ProcessedItem[] {
     output.set(logKey, (output.get(logKey) ?? 0) + logsNeeded);
   }
 
-  // Phase 4: Format & sort alphabetically
+  // Phase 4: Categorize, format & sort by category then alphabetically
   const result: ProcessedItem[] = [];
   for (const [item, quantity] of output) {
-    result.push({ Item: item, Quantity: quantity });
+    const name = stripNamespace(item);
+    result.push({ Item: item, Quantity: quantity, Category: categorizeItem(name) });
   }
 
-  result.sort((a, b) => a.Item.localeCompare(b.Item));
+  result.sort((a, b) => {
+    const catA = CATEGORY_ORDER.indexOf(a.Category as ItemCategory);
+    const catB = CATEGORY_ORDER.indexOf(b.Category as ItemCategory);
+    if (catA !== catB) return catA - catB;
+    return a.Item.localeCompare(b.Item);
+  });
 
   return result;
 }

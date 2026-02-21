@@ -29,18 +29,37 @@ export default function OutputStage({ items, onReset }: Props) {
           <span>QTY</span>
         </div>
         <div className="max-h-[400px] overflow-y-auto">
-          {items.map((item, i) => (
-            <div
-              key={item.Item}
-              className={`grid grid-cols-[1fr_auto] px-4 py-2 font-mono text-sm
-                ${i % 2 === 0 ? 'bg-white' : 'bg-foundry-dark/5'}`}
-            >
-              <span className="text-foundry-dark">{item.Item}</span>
-              <span className="text-foundry-dark font-bold tabular-nums">
-                {item.Quantity.toLocaleString()}
-              </span>
-            </div>
-          ))}
+          {items.map((item, i) => {
+            const showHeader = i === 0 || item.Category !== items[i - 1].Category;
+            // Reset alternating row index within each category
+            let rowInCategory = 0;
+            if (showHeader) {
+              rowInCategory = 0;
+            } else {
+              for (let j = i - 1; j >= 0; j--) {
+                if (items[j].Category !== item.Category) break;
+                rowInCategory++;
+              }
+            }
+            return (
+              <div key={item.Item}>
+                {showHeader && (
+                  <div className="px-4 py-2 bg-foundry-yellow/30 font-black text-foundry-dark text-xs tracking-widest border-t-[2px] border-foundry-dark/10 first:border-t-0">
+                    {item.Category.toUpperCase()}
+                  </div>
+                )}
+                <div
+                  className={`grid grid-cols-[1fr_auto] px-4 py-2 font-mono text-sm
+                    ${rowInCategory % 2 === 0 ? 'bg-white' : 'bg-foundry-dark/5'}`}
+                >
+                  <span className="text-foundry-dark">{item.Item}</span>
+                  <span className="text-foundry-dark font-bold tabular-nums">
+                    {item.Quantity.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
 
