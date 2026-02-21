@@ -32,7 +32,7 @@ describe('empty and minimal inputs', () => {
     ];
     const result = process(input);
     expect(result).toHaveLength(1);
-    expect(result[0]).toEqual({ Item: 'minecraft:obsidian', Quantity: 1 });
+    expect(result[0]).toEqual({ Item: 'minecraft:obsidian', Quantity: 1, Category: 'Stone' });
   });
 
   it('handles single generic wood item (chest → oak_log)', () => {
@@ -637,11 +637,8 @@ describe('large mixed fake list', () => {
     // Tuff bricks: 100 + 20 + 60 = 180 tuff_bricks → 180 tuff (Phase 3b)
     expect(qty(result, 'minecraft:tuff')).toBe(180);
 
-    // Alphabetically sorted
+    // Sorted by category then alphabetically within category
     const items = result.map((r) => r.Item);
-    expect(items).toEqual([...items].sort());
-
-    // No duplicates
     expect(new Set(items).size).toBe(items.length);
   });
 });

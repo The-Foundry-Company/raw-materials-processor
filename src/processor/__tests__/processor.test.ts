@@ -574,24 +574,50 @@ describe('furnace decomposition', () => {
 // ═══════════════════════════════════════════════════════════
 
 describe('output format', () => {
-  it('sorts alphabetically by Item', () => {
+  it('sorts by category then alphabetically within category', () => {
     const input = makeInput([
-      { raw: 'minecraft:z', results: [{ item: 'minecraft:z', total: 1 }] },
-      { raw: 'minecraft:a', results: [{ item: 'minecraft:a', total: 1 }] },
-      { raw: 'minecraft:m', results: [{ item: 'minecraft:m', total: 1 }] },
+      { raw: 'minecraft:x', results: [
+        { item: 'minecraft:oak_log', total: 1 },
+        { item: 'minecraft:stone', total: 1 },
+        { item: 'minecraft:torch', total: 1 },
+      ]},
     ]);
     const result = process(input);
     const items = result.map((r) => r.Item);
-    expect(items).toEqual([...items].sort());
+    // Wood < Stone < Lighting in category order
+    expect(items).toEqual([
+      'minecraft:oak_log',
+      'minecraft:stone',
+      'minecraft:torch',
+    ]);
   });
 
-  it('has Item and Quantity fields', () => {
+  it('sorts alphabetically within the same category', () => {
+    const input = makeInput([
+      { raw: 'minecraft:x', results: [
+        { item: 'minecraft:spruce_log', total: 1 },
+        { item: 'minecraft:birch_log', total: 1 },
+        { item: 'minecraft:oak_log', total: 1 },
+      ]},
+    ]);
+    const result = process(input);
+    const items = result.map((r) => r.Item);
+    expect(items).toEqual([
+      'minecraft:birch_log',
+      'minecraft:oak_log',
+      'minecraft:spruce_log',
+    ]);
+  });
+
+  it('has Item, Quantity, and Category fields', () => {
     const input = makeInput([
       { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 10 }] },
     ]);
     const result = process(input);
     expect(result[0]).toHaveProperty('Item');
     expect(result[0]).toHaveProperty('Quantity');
+    expect(result[0]).toHaveProperty('Category');
+    expect(result[0].Category).toBe('Stone');
   });
 });
 
@@ -963,11 +989,19 @@ describe('full integration test - sample data', () => {
     expect(qty('flowering_azalea')).toBe(6);
   });
 
-  it('produces alphabetically sorted output', () => {
+  it('produces output sorted by category then alphabetically', () => {
     const result = process(sampleInput);
-    const items = result.map((r) => r.Item);
-    const sorted = [...items].sort();
-    expect(items).toEqual(sorted);
+    // Verify items within each category are sorted alphabetically
+    let lastCategory = '';
+    let lastItem = '';
+    for (const item of result) {
+      if (item.Category !== lastCategory) {
+        lastCategory = item.Category;
+        lastItem = '';
+      }
+      expect(item.Item >= lastItem).toBe(true);
+      lastItem = item.Item;
+    }
   });
 
   it('has no duplicate items in output', () => {
@@ -993,7 +1027,7 @@ describe('edge cases', () => {
       { raw: 'minecraft:obsidian', results: [{ item: 'minecraft:obsidian', total: 1 }] },
     ]);
     const result = process(input);
-    expect(result).toEqual([{ Item: 'minecraft:obsidian', Quantity: 1 }]);
+    expect(result).toEqual([{ Item: 'minecraft:obsidian', Quantity: 1, Category: 'Stone' }]);
   });
 
   it('excludes dirt and grass_block from output', () => {

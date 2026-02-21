@@ -1,5 +1,39 @@
 # Changelog
 
+## [1.7.0] - 2026-02-21
+
+### Changed
+
+#### Category-Based Sorting
+- Output is now grouped by material category instead of pure alphabetical sort
+- 13 categories in fixed display order: Wood, Stone, Brick, Terracotta, Concrete, Glass, Wool & Fabric, Copper, Metal, Lighting, Redstone, Functional, Other
+- Items are sorted alphabetically within each category
+- Categorization uses pattern matching on item names: exact sets, prefix patterns (`waxed_`, `oxidized_`, etc.), and suffix patterns (`_terracotta`, `_concrete`, `_wool`, etc.)
+- Reuses `isLogType()` from `rules.ts` for wood detection
+
+#### New File: `src/processor/categories.ts`
+- `ItemCategory` type union defining all 13 categories
+- `CATEGORY_ORDER` array defining the fixed display order
+- `categorizeItem(name: string)` function for assigning items to categories
+
+#### ProcessedItem Type
+- `ProcessedItem` interface extended with `Category: string` field
+- Phase 4 of the processing engine now assigns categories before sorting
+
+#### UI
+- Category header rows appear in the output table with yellow background (`bg-foundry-yellow/30`) and uppercase bold labels
+- Alternating row colors (white / dark/5%) reset within each category group
+
+#### Downloads
+- TXT export now includes `── CATEGORY ──` headers between material groups
+- JSON export naturally includes the `Category` field on each item
+
+#### Testing
+- 176 total tests across 3 test files (was 175)
+- Replaced "sorts alphabetically" tests with "sorts by category then alphabetically" tests
+- Added `Category` field to exact-shape assertions (`toEqual` checks)
+- New tests verify cross-category ordering and within-category alphabetical sorting
+
 ## [1.6.0] - 2026-02-21
 
 ### Changed

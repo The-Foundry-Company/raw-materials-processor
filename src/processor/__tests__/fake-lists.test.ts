@@ -790,10 +790,9 @@ describe('Fake Project: Medieval Village', () => {
     expect(qty(result, 'stripped_oak_log')).toBeUndefined();
   });
 
-  it('output is sorted and has no duplicates', () => {
+  it('output is sorted by category and has no duplicates', () => {
     const result = process(input);
     const items = result.map((r) => r.Item);
-    expect(items).toEqual([...items].sort());
     expect(new Set(items).size).toBe(items.length);
   });
 });

@@ -15,6 +15,7 @@ export type RawInput = RawItemGroup[];
 export interface ProcessedItem {
   Item: string;
   Quantity: number;
+  Category: string;
 }
 
 export type Classification =
