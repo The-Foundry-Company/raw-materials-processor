@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.8.1] - 2026-03-29
+
+### Fixed
+
+#### Header Layout
+- Fixed "RAW MATERIALS" wrapping into two stacked lines next to the wordmark logo
+- Removed PretextBlock from header titles (single-line titles don't need text measurement) — eliminates minHeight gap between "RAW MATERIALS" and "PROCESSOR"
+- Added `whitespace-nowrap` to keep title on one line at all viewport widths
+
+### Added
+
+#### Keyboard Shortcut
+- Press `G` on the output page to trigger "GENERATE ESTIMATE" (matches the `[G]` hint on the button)
+- Only fires when the button is visible (`estimateState === 'idle'`) and focus is not in a text input
+
 ## [1.8.0] - 2026-03-29
 
 ### Added

@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ProcessedItem, EstimatedItem } from '../processor/types';
 import { downloadJSON, downloadTXT } from '../utils/download';
@@ -40,6 +40,18 @@ export default function OutputStage({ items, onReset }: Props) {
   const handleAnimationComplete = useCallback(() => {
     setEstimateState('done');
   }, []);
+
+  useEffect(() => {
+    function handleKeyDown(e: KeyboardEvent) {
+      if (estimateState !== 'idle') return;
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.key === 'g' || e.key === 'G') {
+        handleGenerateEstimate();
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [estimateState]);
 
   function handleRetry() {
     setEstimateState('idle');
