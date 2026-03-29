@@ -1,46 +1,61 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 /**
- * Observes the **parent** element's width to avoid ResizeObserver loops
- * when the measured element's own width is modified (e.g., via max-width).
+ * Measures container width synchronously on mount and window resize.
+ * Follows the Pretext demo pattern: no ResizeObserver, just direct DOM reads
+ * with a single-RAF gate to coalesce resize events.
+ *
+ * When the element has a max-width applied (e.g., from shrinkwrap), we
+ * temporarily clear it before reading to get the unconstrained available width.
  */
 export function useContainerWidth(): [React.RefCallback<HTMLElement>, number | null] {
   const [width, setWidth] = useState<number | null>(null);
-  const observerRef = useRef<ResizeObserver | null>(null);
+  const elementRef = useRef<HTMLElement | null>(null);
+  const rafRef = useRef<number | null>(null);
+
+  const measure = useCallback(() => {
+    const el = elementRef.current;
+    if (!el) return;
+
+    // Temporarily clear max-width to measure unconstrained available width.
+    // Reading clientWidth forces a sync reflow, but the browser won't paint
+    // until JS yields — so there's no visible flash.
+    const saved = el.style.maxWidth;
+    el.style.maxWidth = 'none';
+    const w = el.clientWidth;
+    el.style.maxWidth = saved;
+
+    setWidth((prev) => (prev === w ? prev : w));
+  }, []);
 
   useEffect(() => {
-    return () => {
-      observerRef.current?.disconnect();
+    const handleResize = () => {
+      if (rafRef.current != null) return; // coalesce: one RAF per cycle
+      rafRef.current = requestAnimationFrame(() => {
+        rafRef.current = null;
+        measure();
+      });
     };
-  }, []);
 
-  const refCallback = useCallback((node: HTMLElement | null) => {
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current);
+    };
+  }, [measure]);
 
-    if (!node) {
-      setWidth(null);
-      return;
-    }
-
-    // Observe the parent element, not the element itself.
-    // This prevents loops when we set max-width on the element.
-    const target = node.parentElement ?? node;
-
-    observerRef.current = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        const boxSize = entry.contentBoxSize?.[0];
-        if (boxSize) {
-          setWidth(boxSize.inlineSize);
-        } else {
-          setWidth(entry.contentRect.width);
-        }
+  const refCallback = useCallback(
+    (node: HTMLElement | null) => {
+      elementRef.current = node;
+      if (node) {
+        // Initial measurement — no max-width applied yet at this point
+        setWidth(node.clientWidth);
+      } else {
+        setWidth(null);
       }
-    });
-
-    observerRef.current.observe(target);
-  }, []);
+    },
+    [],
+  );
 
   return [refCallback, width];
 }
