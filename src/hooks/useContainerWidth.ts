@@ -1,9 +1,12 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
+/**
+ * Observes the **parent** element's width to avoid ResizeObserver loops
+ * when the measured element's own width is modified (e.g., via max-width).
+ */
 export function useContainerWidth(): [React.RefCallback<HTMLElement>, number | null] {
   const [width, setWidth] = useState<number | null>(null);
   const observerRef = useRef<ResizeObserver | null>(null);
-  const elementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     return () => {
@@ -12,17 +15,18 @@ export function useContainerWidth(): [React.RefCallback<HTMLElement>, number | n
   }, []);
 
   const refCallback = useCallback((node: HTMLElement | null) => {
-    // Disconnect previous observer
     if (observerRef.current) {
       observerRef.current.disconnect();
     }
-
-    elementRef.current = node;
 
     if (!node) {
       setWidth(null);
       return;
     }
+
+    // Observe the parent element, not the element itself.
+    // This prevents loops when we set max-width on the element.
+    const target = node.parentElement ?? node;
 
     observerRef.current = new ResizeObserver((entries) => {
       for (const entry of entries) {
@@ -35,7 +39,7 @@ export function useContainerWidth(): [React.RefCallback<HTMLElement>, number | n
       }
     });
 
-    observerRef.current.observe(node);
+    observerRef.current.observe(target);
   }, []);
 
   return [refCallback, width];
