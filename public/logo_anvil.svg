@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="228" viewBox="0 0 256 228">
+<!-- SVG created with Arrow, by QuiverAI (https://quiver.ai) -->
+  <path d="m255.7 0.41h-255.5v226.8h255.5v-226.8z" fill="#FED631"/>
+  <path d="m241.8 13.37h-228.2v114.6h228.2v-114.6z" fill="#D7B12A" fill-opacity=".85"/>
+  <path d="m227.8 13.79h-200.3v113.7h200.3v-113.7z" fill="#A98D29"/>
+  <path d="m227.8 28.61h-200.3v85.5h200.3v-85.5z" fill="#19191A"/>
+  <path d="m230.3 114.1h-60.14v14.3h71.62v-14.3h-11.48z" fill="#A98D29" fill-opacity=".85"/>
+  <path d="m27.56 114.1v14.3h58v-14.3h-58z" fill="#A98D29" fill-opacity=".85"/>
+  <path d="m212.9 157.7h-28.3v-15.14h-14.47v-14.16h57.67v83.4h-14.9v-54.1z" fill="#FED631" fill-opacity=".85"/>
+  <path d="m42.88 157.7h27.88v-15.14h14.8v-14.16h-58v70.35h15.32v-41.05z" fill="#FED631" fill-opacity=".85"/>
+  <path d="m42.46 199.6h170.1v13.02h-170.1v-13.02z" fill="#A98D29" fill-opacity=".85"/>
+  <path d="m184.6 142.6h-14.47v14.72h14.47v-14.72z" fill="#4A4122"/>
+  <path d="m85.56 142.6h-14.8v14.72h14.8v-14.72z" fill="#4A4122"/>
+  <path d="m184.6 157.3h-14.47v13.02h28.3v28.87h14.05v-41.47h-27.88v-0.42z" fill="#4A4122"/>
+  <path d="m70.76 157.3h-27.88v41.89h14.05v-28.87h28.3v-13.02h-14.47z" fill="#4A4122"/>
+  <path d="m170.2 114.1h-14.05v28.46h14.05v-28.46z" fill="#23211D"/>
+  <path d="m85.98 114.1v28.46h13.63v-28.46h-13.63z" fill="#23211D"/>
+  <path d="m170.2 157.3v-15.13h-14.05v-28.05h-70.14v56.2h-29.14v28.45h141.6v-28.03h-28.3v-13.44z" fill="#19191A"/>
+</svg>

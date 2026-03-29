@@ -5,9 +5,9 @@ export default function Header() {
   return (
     <header className="flex items-center gap-4 mb-8">
       <img
-        src="/foundry-logo.png"
+        src="/logo_wordmark.svg"
         alt="Foundry Company"
-        className="h-16 rounded-lg"
+        className="h-16"
       />
       <div>
         <PretextBlock

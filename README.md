@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/logo_wordmark.svg" alt="Foundry Company" width="280" />
+</p>
+
 # Raw Materials Processor
 
 A client-side web application for the **Foundry Company**, a Minecraft construction company. Engineers paste raw material JSON exports from schematic analysis tools and receive a clean, consolidated materials list ready for the Materials Source Provider (MSP).
@@ -18,7 +22,7 @@ This produces a messy, over-decomposed list that's impractical for material sour
 - **Vite** + **React 18** + **TypeScript**
 - **Tailwind CSS** (brutalist aesthetic with Foundry Company branding)
 - **Framer Motion** (stage transitions and processing animation)
-- **Vitest** (160 unit/integration tests)
+- **Vitest** (176 unit/integration tests)
 - No backend — all processing runs client-side
 - Deploys to **Vercel** as a static site
 
@@ -27,7 +31,7 @@ This produces a messy, over-decomposed list that's impractical for material sour
 ```bash
 npm install
 npm run dev      # Start dev server
-npm test         # Run all 160 tests
+npm test         # Run all 176 tests
 npm run build    # Production build
 ```
 
@@ -372,7 +376,7 @@ Key consolidated items when processing the sample file:
 - **Dark:** `#2D2D2D` (from logo)
 - **Background:** Off-white `#f5f5f0`
 - Brutalist aesthetic: thick 3px borders, sharp corners, heavy sans-serif type
-- Fonts: Inter (headings/UI) + JetBrains Mono (JSON/table data)
+- Fonts: Guton Sans Serif (headings/UI) + IBM Plex Mono (JSON/table data)
 
 ### Downloads
 
@@ -384,7 +388,7 @@ Key consolidated items when processing the sample file:
 ## Testing
 
 ```bash
-npm test              # Run all 160 tests
+npm test              # Run all 176 tests
 npx vitest run        # Run once (no watch)
 ```
 
