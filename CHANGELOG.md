@@ -1,5 +1,54 @@
 # Changelog
 
+## [1.8.0] - 2026-03-29
+
+### Added
+
+#### Diamond Estimate Generator
+- New "GENERATE ESTIMATE" button on the output page fetches diamond pricing from a published Google Sheet and calculates build costs
+- Animated loading sequence mirrors the ProcessingStage pattern: step-by-step reveals with progress bar, coordinated with async data fetch
+- Estimate table displays ITEM | QTY | D/ITEM | TOTAL columns grouped by material category
+- Unmatched items (not in price database) shown with `--` in muted text, valued at 0
+- Grand total footer with total quantities and total diamond cost
+- Summary banner showing matched/unmatched item counts
+- Error handling with retry button for network failures
+- "DOWNLOAD ESTIMATE" button exports formatted TXT report with aligned columns and category groupings
+
+#### New Files
+- `src/utils/pricing.ts` — Fetches and parses Google Sheets CSV, matches items to pricing entries, calculates totals
+- `src/components/EstimateAnimation.tsx` — Animated loading sequence for estimate generation (mirrors ProcessingStage)
+- `src/components/EstimateDisplay.tsx` — Estimate results table with summary, category grouping, and download
+
+#### Estimate Types
+- `PricingEntry` interface: `{ itemId, diamondValue }` for spreadsheet rows
+- `EstimatedItem` interface: extends ProcessedItem with `diamondValue`, `totalDiamonds`, `matched` fields
+
+### Changed
+
+#### Pretext Integration
+- Added `@chenglou/pretext` for responsive text measurement (orphan/widow prevention, layout-shift-free rendering)
+- New infrastructure: `src/lib/pretext.ts` (font helpers), `src/hooks/useContainerWidth.ts` (ResizeObserver), `src/hooks/usePretext.ts` (prepare/layout hook), `src/components/ui/PretextBlock.tsx` (drop-in wrapper)
+- Applied PretextBlock to Header titles and OutputStage summary banner
+- Graceful degradation: if fonts haven't loaded, components render identically to before
+
+#### Vite Configuration
+- Added `optimizeDeps.include: ['@chenglou/pretext']` for pre-bundling raw TypeScript source
+
+#### OutputStage
+- Added estimate state machine (`idle` | `loading` | `done` | `error`) with local state management
+- Integrated EstimateAnimation and EstimateDisplay sub-components
+- AnimatePresence transitions between estimate states
+
+#### Typography
+- Replaced Google Fonts (Inter + JetBrains Mono) with self-hosted licensed fonts
+- **Guton Sans Serif** (Regular through Black) for all UI text, headings, and buttons
+- **IBM Plex Mono** (Regular through Bold) for data tables, code, and monospace content
+- Fonts loaded via `@font-face` in `index.css` with `font-display: swap` for fast rendering
+- Removed Google Fonts CDN dependency — all fonts served from `/public/fonts/`
+
+#### Downloads
+- Added `downloadEstimateTXT()` function for exporting build cost estimates as formatted TXT
+
 ## [1.7.0] - 2026-02-21
 
 ### Changed

@@ -49,7 +49,7 @@ Each stage is a presentational component that communicates via callbacks (`onSub
 
 Brutalist design with Foundry Company branding. Custom colors in `tailwind.config.ts`:
 - `foundry-yellow: #F4D03F`, `foundry-dark: #2D2D2D`
-- Fonts: Inter (UI), JetBrains Mono (data/code)
+- Fonts: Guton Sans Serif (UI), IBM Plex Mono (data/code) — self-hosted in `public/fonts/`
 
 ## Testing
 
