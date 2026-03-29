@@ -27,9 +27,14 @@
 
 #### Pretext Integration
 - Added `@chenglou/pretext` for responsive text measurement (orphan/widow prevention, layout-shift-free rendering)
-- New infrastructure: `src/lib/pretext.ts` (font helpers), `src/hooks/useContainerWidth.ts` (ResizeObserver), `src/hooks/usePretext.ts` (prepare/layout hook), `src/components/ui/PretextBlock.tsx` (drop-in wrapper)
+- New infrastructure: `src/lib/pretext.ts` (font helpers), `src/hooks/useContainerWidth.ts`, `src/hooks/usePretext.ts` (prepare/layout hook), `src/components/ui/PretextBlock.tsx` (drop-in wrapper)
 - Applied PretextBlock to Header titles and OutputStage summary banner
 - Graceful degradation: if fonts haven't loaded, components render identically to before
+- Fixed text vibration bug: replaced ResizeObserver with synchronous `clientWidth` measurement + `window.resize` listener coalesced via `requestAnimationFrame` gate (matches Pretext demo architecture)
+
+#### Branding
+- Replaced PNG logo with SVG (`logo_wordmark.svg` for header, `logo_anvil.svg` for favicon)
+- Added centered logo to README.md
 
 #### Vite Configuration
 - Added `optimizeDeps.include: ['@chenglou/pretext']` for pre-bundling raw TypeScript source
