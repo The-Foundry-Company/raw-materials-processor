@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.9.1] - 2026-03-29
+
+### Changed
+
+#### Logo Wordmark
+- Added internal padding (12px on all sides) between yellow background and logo content
+- Rounded corners on yellow background (`rx="14"`) for a squircle-like shape
+
+---
+
 ## [1.9.0] - 2026-03-29
 
 ### Added

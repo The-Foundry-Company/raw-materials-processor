@@ -9,6 +9,8 @@ npm run dev        # Vite dev server with hot reload
 npm run build      # tsc -b && vite build → dist/
 npm test           # Vitest in watch mode (217 tests)
 npx vitest run     # Run tests once without watch
+npx vitest run src/processor/__tests__/processor.test.ts  # Run a single test file
+npx vitest run -t "test name pattern"                     # Run tests matching a pattern
 ```
 
 ## Architecture
@@ -34,7 +36,17 @@ Classification rules and all mappings live in `rules.ts`. Key concepts:
 - **Single-chain decomposition:** Processed blocks → raw base (planks → logs at 4:1, polished_granite → granite, etc.)
 - **Stripped wood:** `stripped_*` items decompose 1:1 to their non-stripped base form
 
+- **Excluded items:** `dirt` and `grass_block` are silently dropped (not collected by material providers)
+
 Type definitions are in `types.ts`. Namespace helpers `stripNamespace()`/`addNamespace()` handle the `minecraft:` prefix.
+
+### Material Categories (`src/processor/categories.ts`)
+
+Output items are grouped into 13 ordered categories (Wood, Stone, Brick, Terracotta, Concrete, Glass, Wool & Fabric, Copper, Metal, Lighting, Redstone, Functional, Other). `categorizeItem()` assigns a category based on set membership, prefix/suffix patterns, and `isLogType()` from rules. Categories control grouping in the output table and TXT downloads.
+
+### Pretext Integration (`src/lib/pretext.ts`, `src/hooks/usePretext.ts`)
+
+Uses `@chenglou/pretext` for text measurement and layout (orphan/widow prevention via `findTightWidth()`). The `usePretext` hook waits for custom fonts to load, caches `prepare()` calls, and exposes `measureHeight`/`shrinkwrap` helpers. Used by `PretextBlock` component. **Critical:** Never use `ResizeObserver` with Pretext — use sync `clientWidth` + `window.resize` + RAF gate instead.
 
 ### Estimate Engine (`src/utils/`)
 
