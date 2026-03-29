@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
-import type { EstimatedItem } from '../processor/types';
-import { calculateTotalDiamonds, countMatched } from '../utils/pricing';
+import type { ProjectEstimate } from '../processor/types';
+import { countMatched, LABOR_RATE } from '../utils/pricing';
 
 // ── Step types (same as ProcessingStage) ──
 
@@ -27,30 +27,42 @@ const PRE_FETCH_STEPS: Step[] = [
 // ── Component ──
 
 interface Props {
-  estimate: EstimatedItem[] | null;
+  projectEstimate: ProjectEstimate | null;
   totalItems: number;
   onComplete: () => void;
 }
 
-export default function EstimateAnimation({ estimate, totalItems, onComplete }: Props) {
+export default function EstimateAnimation({ projectEstimate, totalItems, onComplete }: Props) {
   const [visibleSteps, setVisibleSteps] = useState(0);
   const [progress, setProgress] = useState(0);
   const completedRef = useRef(false);
 
   // Build full step list once estimate data arrives
   const allSteps = useMemo((): Step[] => {
-    if (!estimate) return PRE_FETCH_STEPS;
+    if (!projectEstimate) return PRE_FETCH_STEPS;
 
-    const { matched } = countMatched(estimate);
-    const total = calculateTotalDiamonds(estimate);
+    const { matched, fuzzy, unmatched: _ } = countMatched(projectEstimate.items);
 
-    return [
+    const steps: Step[] = [
       ...PRE_FETCH_STEPS,
       { text: `${matched} OF ${totalItems} ITEMS MATCHED`, type: 'stat' },
-      { text: 'CALCULATING ESTIMATE...', type: 'action' },
-      { text: `TOTAL: ${total.toLocaleString()} DIAMONDS`, type: 'stat' },
     ];
-  }, [estimate, totalItems]);
+
+    if (fuzzy > 0) {
+      steps.push({ text: `${fuzzy} ITEMS FUZZY-MATCHED`, type: 'stat' });
+    }
+
+    steps.push(
+      { text: 'CALCULATING MATERIALS COST...', type: 'action' },
+      { text: `MATERIALS: ${projectEstimate.materialsCost.toLocaleString()} DIAMONDS`, type: 'stat' },
+      { text: `CALCULATING LABOR (${projectEstimate.totalBlocks.toLocaleString()} BLOCKS × ${LABOR_RATE}D)...`, type: 'action' },
+      { text: `LABOR: ${Math.ceil(projectEstimate.laborCost).toLocaleString()} DIAMONDS`, type: 'stat' },
+      { text: `APPLYING ADMIN FEE (${(projectEstimate.adminFeeRate * 100).toFixed(0)}%)...`, type: 'action' },
+      { text: `PROJECT TOTAL: ${Math.ceil(projectEstimate.projectTotal).toLocaleString()} DIAMONDS`, type: 'stat' },
+    );
+
+    return steps;
+  }, [projectEstimate, totalItems]);
 
   // Compute cumulative delays
   const { cumulativeDelays, totalDuration } = useMemo(() => {
@@ -90,7 +102,7 @@ export default function EstimateAnimation({ estimate, totalItems, onComplete }: 
 
   // Phase 2: When estimate data arrives, reveal remaining steps
   useEffect(() => {
-    if (!estimate || completedRef.current) return;
+    if (!projectEstimate || completedRef.current) return;
 
     const timers: ReturnType<typeof setTimeout>[] = [];
 
@@ -127,7 +139,7 @@ export default function EstimateAnimation({ estimate, totalItems, onComplete }: 
     return () => {
       timers.forEach(clearTimeout);
     };
-  }, [estimate, allSteps, cumulativeDelays, onComplete]);
+  }, [projectEstimate, allSteps, cumulativeDelays, onComplete]);
 
   const steps = allSteps.slice(0, visibleSteps);
 

@@ -1,5 +1,62 @@
 # Changelog
 
+## [1.9.0] - 2026-03-29
+
+### Added
+
+#### Fuzzy Matching for Pricing Database
+- Items with minor misspellings or typos now auto-match to the closest database entry using Levenshtein distance
+- Tiered thresholds prevent false positives: short names (<=6 chars) require distance <=1, medium names (7-15 chars) allow distance <=2, long names (>15 chars) use 85% similarity threshold
+- Fuzzy-matched items display with amber tint and `~ matched_name` annotation in the estimate table
+- Three-way match classification: `exact`, `fuzzy`, `missing` — items truly absent from the database stay at 0 diamonds and are flagged
+- New `MatchType` union type and `fuzzyMatchedTo` field on `EstimatedItem`
+
+#### Project Total Calculation
+- Full project cost breakdown: Materials + Labor + Admin Fee = Project Total
+- Labor cost: 0.05 diamonds per block placed (sum of all item quantities)
+- Admin fee: 2% of subtotal (materials + labor)
+- New "PROJECT COST BREAKDOWN" section in the estimate display with line items for each cost component
+- Summary banner updated from "ESTIMATE" to "PROJECT ESTIMATE" showing the final project total
+- `ProjectEstimate` interface encapsulating all cost components
+
+#### Namespace Normalization
+- CSV parser now strips `minecraft:` prefix from database entries during parsing
+- Database can use either `minecraft:sandstone` or `sandstone` — both match correctly
+
+### Changed
+
+#### Estimate Animation
+- Expanded from 6 to up to 11 data-driven steps: match counts, fuzzy counts (conditional), materials cost, labor calculation, admin fee, and project total
+- Each cost component reveals sequentially with its calculated value
+
+#### Estimate Display
+- Items table footer renamed from "GRAND TOTAL" to "MATERIALS TOTAL"
+- New project cost breakdown section below the items table
+- Fuzzy-matched rows highlighted in amber (`bg-amber-50`) with `~ matched_name` annotation
+- Split status messages: amber for fuzzy matches, grey for missing items
+- Summary footer shows exact + fuzzy match counts
+
+#### Download Estimate TXT
+- Header now includes `Fuzzy: N` count when fuzzy matches exist
+- Fuzzy-matched items annotated with `(~ matched_name)` in the line item
+- New project cost breakdown section after materials total: Materials, Labor, Subtotal, Admin Fee, Project Total
+
+#### Pricing Logic
+- `generateEstimate()` uses three-step cascade: exact match → fuzzy match → missing
+- `countMatched()` now returns `{ matched, fuzzy, unmatched }` (was `{ matched, unmatched }`)
+- New `calculateProjectEstimate()` function computes full project cost breakdown
+- Exported `LABOR_RATE` (0.05) and `ADMIN_FEE_RATE` (0.02) constants
+
+#### New Files
+- `src/utils/fuzzy.ts` — Levenshtein distance, string similarity, and tiered fuzzy matching
+- `src/utils/__tests__/fuzzy.test.ts` — 23 tests for fuzzy matching (distance, similarity, thresholds, Minecraft edge cases)
+- `src/utils/__tests__/pricing.test.ts` — 18 tests for CSV parsing, estimate generation, match counting, and project total calculation
+
+#### Testing
+- 217 total tests across 5 test files (was 160 across 3)
+- New fuzzy matching tests cover Levenshtein correctness, tiered threshold enforcement, transposition rejection, and Minecraft-specific edge cases
+- New pricing tests cover CSV namespace stripping, exact/fuzzy/missing match types, three-way counting, and project total arithmetic
+
 ## [1.8.1] - 2026-03-29
 
 ### Fixed

@@ -40,11 +40,26 @@ export interface PricingEntry {
   diamondValue: number; // Diamonds per item
 }
 
+export type MatchType = 'exact' | 'fuzzy' | 'missing';
+
 export interface EstimatedItem {
   Item: string;           // minecraft:oak_log (from ProcessedItem)
   Quantity: number;       // from ProcessedItem
   Category: string;       // from ProcessedItem
   diamondValue: number;   // per-unit cost (0 if not found)
   totalDiamonds: number;  // Quantity * diamondValue
-  matched: boolean;       // whether pricing entry was found
+  matched: boolean;       // true for exact+fuzzy, false for missing
+  matchType: MatchType;
+  fuzzyMatchedTo?: string; // populated only for fuzzy matches
+}
+
+export interface ProjectEstimate {
+  items: EstimatedItem[];
+  materialsCost: number;
+  totalBlocks: number;
+  laborCost: number;
+  subtotal: number;
+  adminFeeRate: number;
+  adminFee: number;
+  projectTotal: number;
 }

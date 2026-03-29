@@ -1,5 +1,5 @@
-import type { ProcessedItem, EstimatedItem } from '../processor/types';
-import { calculateTotalDiamonds } from './pricing';
+import type { ProcessedItem, ProjectEstimate } from '../processor/types';
+import { calculateTotalDiamonds, countMatched, LABOR_RATE } from './pricing';
 
 function triggerDownload(content: string, filename: string, mimeType: string) {
   const blob = new Blob([content], { type: mimeType });
@@ -56,10 +56,12 @@ export function downloadTXT(items: ProcessedItem[]) {
   triggerDownload(lines.join('\n'), `processed_materials_${date}.txt`, 'text/plain');
 }
 
-export function downloadEstimateTXT(estimate: EstimatedItem[]) {
+export function downloadEstimateTXT(project: ProjectEstimate) {
+  const { items, materialsCost, totalBlocks, laborCost, subtotal, adminFeeRate, adminFee, projectTotal } = project;
   const date = new Date().toISOString().slice(0, 10);
-  const total = calculateTotalDiamonds(estimate);
-  const maxNameLen = Math.max(...estimate.map((i) => i.Item.length));
+  const total = calculateTotalDiamonds(items);
+  const { matched, fuzzy } = countMatched(items);
+  const maxNameLen = Math.max(...items.map((i) => i.Item.length));
 
   const lines = [
     '═══════════════════════════════════════════════════════════════════',
@@ -67,15 +69,22 @@ export function downloadEstimateTXT(estimate: EstimatedItem[]) {
     '═══════════════════════════════════════════════════════════════════',
     '',
     `  Date:     ${date}`,
-    `  Items:    ${estimate.length}`,
-    `  Matched:  ${estimate.filter((i) => i.matched).length}`,
-    `  Total:    ${total.toLocaleString()} Diamonds`,
-    '',
-    '───────────────────────────────────────────────────────────────────',
+    `  Items:    ${items.length}`,
+    `  Matched:  ${matched}`,
   ];
 
+  if (fuzzy > 0) {
+    lines.push(`  Fuzzy:    ${fuzzy}`);
+  }
+
+  lines.push(
+    `  Total:    ${Math.ceil(projectTotal).toLocaleString()} Diamonds`,
+    '',
+    '───────────────────────────────────────────────────────────────────',
+  );
+
   let currentCategory = '';
-  for (const item of estimate) {
+  for (const item of items) {
     if (item.Category !== currentCategory) {
       currentCategory = item.Category;
       lines.push('');
@@ -86,14 +95,24 @@ export function downloadEstimateTXT(estimate: EstimatedItem[]) {
     const dTotal = item.matched
       ? String(item.totalDiamonds.toLocaleString()).padStart(8)
       : '      --';
+    const fuzzyNote = item.matchType === 'fuzzy' ? `  (~ ${item.fuzzyMatchedTo})` : '';
     lines.push(
-      `  ${item.Item.padEnd(maxNameLen + 2)} × ${String(item.Quantity).padStart(5)}  @${dPerItem}D  = ${dTotal}D`,
+      `  ${item.Item.padEnd(maxNameLen + 2)} × ${String(item.Quantity).padStart(5)}  @${dPerItem}D  = ${dTotal}D${fuzzyNote}`,
     );
   }
 
   lines.push('');
   lines.push('───────────────────────────────────────────────────────────────────');
-  lines.push(`  GRAND TOTAL: ${total.toLocaleString()} DIAMONDS`);
+  lines.push(`  MATERIALS TOTAL: ${total.toLocaleString()} DIAMONDS`);
+  lines.push('');
+  lines.push('  ── PROJECT COST BREAKDOWN ──');
+  lines.push('');
+  lines.push(`  Materials Cost:     ${materialsCost.toLocaleString()} Diamonds`);
+  lines.push(`  Labor Cost:         ${Math.ceil(laborCost).toLocaleString()} Diamonds  (${totalBlocks.toLocaleString()} blocks × ${LABOR_RATE}D)`);
+  lines.push(`  Subtotal:           ${Math.ceil(subtotal).toLocaleString()} Diamonds`);
+  lines.push(`  Admin Fee (${(adminFeeRate * 100).toFixed(0)}%):     ${Math.ceil(adminFee).toLocaleString()} Diamonds`);
+  lines.push('═══════════════════════════════════════════════════════════════════');
+  lines.push(`  PROJECT TOTAL: ${Math.ceil(projectTotal).toLocaleString()} DIAMONDS`);
   lines.push('═══════════════════════════════════════════════════════════════════');
   lines.push('');
 

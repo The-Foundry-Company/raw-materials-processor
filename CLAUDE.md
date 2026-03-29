@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm run dev        # Vite dev server with hot reload
 npm run build      # tsc -b && vite build → dist/
-npm test           # Vitest in watch mode (160 tests)
+npm test           # Vitest in watch mode (217 tests)
 npx vitest run     # Run tests once without watch
 ```
 
@@ -36,12 +36,22 @@ Classification rules and all mappings live in `rules.ts`. Key concepts:
 
 Type definitions are in `types.ts`. Namespace helpers `stripNamespace()`/`addNamespace()` handle the `minecraft:` prefix.
 
+### Estimate Engine (`src/utils/`)
+
+The estimate generator in `pricing.ts` fetches live pricing from a published Google Sheets CSV on every estimate request (no caching). Key functions:
+
+- **`fetchPricingData()`** — Fetches CSV, parses with `parseCSV()` (strips `minecraft:` prefix from DB entries)
+- **`generateEstimate()`** — Three-step matching cascade: exact → fuzzy → missing. Fuzzy matching uses Levenshtein distance with tiered thresholds (`src/utils/fuzzy.ts`)
+- **`calculateProjectEstimate()`** — Full project costing: materials + labor (0.05D/block) + 2% admin fee
+
+Types: `MatchType` (`exact` | `fuzzy` | `missing`), `ProjectEstimate` (wraps items + cost breakdown)
+
 ### UI (`src/components/`)
 
 Three-stage state machine managed in `App.tsx`:
 - **InputStage** — JSON textarea + file upload (FileReader API)
 - **ProcessingStage** — Animated progress bar with dynamic, data-driven step reveals
-- **OutputStage** — Results table + JSON/TXT download buttons
+- **OutputStage** — Results table + JSON/TXT download buttons + estimate generator
 
 Each stage is a presentational component that communicates via callbacks (`onSubmit`, `onComplete`, `onReset`). No state management library — just `useState` in App.
 
@@ -53,12 +63,18 @@ Brutalist design with Foundry Company branding. Custom colors in `tailwind.confi
 
 ## Testing
 
-Three test files in `src/processor/__tests__/`:
-- `processor.test.ts` — Core unit tests + integration (39 tests)
-- `extensive.test.ts` — Stress tests, all variant types, edge cases (79 tests)
-- `fake-lists.test.ts` — 5 realistic project material lists (42 tests)
+Five test files across two directories (217 total):
 
-Tests cover classification accuracy, deduplication (MAX behavior), variant ratios, recursive chain resolution, and large-quantity handling.
+`src/processor/__tests__/`:
+- `processor.test.ts` — Core unit tests + integration (59 tests)
+- `extensive.test.ts` — Stress tests, all variant types, edge cases (79 tests)
+- `fake-lists.test.ts` — 5 realistic project material lists (38 tests)
+
+`src/utils/__tests__/`:
+- `fuzzy.test.ts` — Levenshtein distance, similarity, fuzzy matching thresholds (23 tests)
+- `pricing.test.ts` — CSV parsing, estimate generation, match counting, project totals (18 tests)
+
+Tests cover classification accuracy, deduplication (MAX behavior), variant ratios, recursive chain resolution, fuzzy matching edge cases, and project cost arithmetic.
 
 ## Key Design Decisions
 

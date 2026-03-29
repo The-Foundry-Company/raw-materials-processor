@@ -1,8 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { ProcessedItem, EstimatedItem } from '../processor/types';
+import type { ProcessedItem, ProjectEstimate } from '../processor/types';
 import { downloadJSON, downloadTXT } from '../utils/download';
-import { fetchPricingData, generateEstimate } from '../utils/pricing';
+import { fetchPricingData, generateEstimate, calculateProjectEstimate } from '../utils/pricing';
 import PretextBlock from './ui/PretextBlock';
 import { fontShorthand, lineHeightPx } from '../lib/pretext';
 import EstimateAnimation from './EstimateAnimation';
@@ -17,18 +17,19 @@ interface Props {
 
 export default function OutputStage({ items, onReset }: Props) {
   const [estimateState, setEstimateState] = useState<EstimateState>('idle');
-  const [estimate, setEstimate] = useState<EstimatedItem[] | null>(null);
+  const [projectEstimate, setProjectEstimate] = useState<ProjectEstimate | null>(null);
   const [estimateError, setEstimateError] = useState('');
 
   async function handleGenerateEstimate() {
     setEstimateState('loading');
     setEstimateError('');
-    setEstimate(null);
+    setProjectEstimate(null);
 
     try {
       const pricing = await fetchPricingData();
       const result = generateEstimate(items, pricing);
-      setEstimate(result);
+      const project = calculateProjectEstimate(result);
+      setProjectEstimate(project);
     } catch (err) {
       setEstimateError(
         err instanceof Error ? err.message : 'Failed to fetch pricing data.',
@@ -55,7 +56,7 @@ export default function OutputStage({ items, onReset }: Props) {
 
   function handleRetry() {
     setEstimateState('idle');
-    setEstimate(null);
+    setProjectEstimate(null);
     setEstimateError('');
   }
 
@@ -168,21 +169,21 @@ export default function OutputStage({ items, onReset }: Props) {
             exit={{ opacity: 0 }}
           >
             <EstimateAnimation
-              estimate={estimate}
+              projectEstimate={projectEstimate}
               totalItems={items.length}
               onComplete={handleAnimationComplete}
             />
           </motion.div>
         )}
 
-        {estimateState === 'done' && estimate && (
+        {estimateState === 'done' && projectEstimate && (
           <motion.div
             key="estimate-display"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <EstimateDisplay estimate={estimate} />
+            <EstimateDisplay projectEstimate={projectEstimate} />
           </motion.div>
         )}
 
