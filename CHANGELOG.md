@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.9.2] - 2026-03-30
+
+### Changed
+
+#### Build Cleanup
+- Removed `tsconfig.tsbuildinfo` from version control (TypeScript build cache)
+- Added `*.tsbuildinfo` to `.gitignore`
+
+---
+
 ## [1.9.1] - 2026-03-29
 
 ### Changed
