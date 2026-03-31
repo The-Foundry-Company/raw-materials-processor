@@ -221,8 +221,8 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
 
                 return (
                   <Section key={item.Item} delay={rowDelay} animation="fadeIn">
-                    <div className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 font-mono text-xs leading-normal ${rowBg}`}>
-                      <span className="text-foundry-dark truncate">
+                    <div className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 font-mono text-xs leading-normal ${rowBg}`} style={{ minHeight: 28, overflow: 'visible' }}>
+                      <span className="text-foundry-dark whitespace-nowrap" style={{ overflow: 'visible' }}>
                         {item.Item}
                         {isFuzzy && <span className="text-amber-600/60 text-[10px] ml-1">&asymp; {item.fuzzyMatchedTo}</span>}
                       </span>
@@ -248,13 +248,13 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
               return (
                 <div key={category} style={{ breakInside: 'avoid' }}>
                   <Section delay={catDelay} animation="slideLeft">
-                    <div className="px-3 py-2.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] leading-normal tracking-[2px] uppercase border-t border-foundry-dark/10">
+                    <div className="px-3 py-2.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] leading-normal tracking-[2px] uppercase border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
                       {category}
                     </div>
                   </Section>
                   {rows}
                   <Section delay={catDelay + 80 + catItems.length * ROW_STAGGER} animation="fadeIn">
-                    <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-1.5 bg-foundry-dark/5 font-mono text-xs border-t border-foundry-dark/10">
+                    <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 bg-foundry-dark/5 font-mono text-xs leading-normal border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
                       <span className="font-bold text-foundry-dark">{category} Total</span>
                       <span className="font-bold text-foundry-dark tabular-nums text-right">{catQty.toLocaleString()}</span>
                       <span />
@@ -283,25 +283,25 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
 
           <div className="border-[2px] border-foundry-dark mb-5" style={{ breakInside: 'avoid' }}>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2 font-mono text-xs border-b border-foundry-dark/10">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Materials Cost</span>
                 <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(materialsCost)} D</span>
               </div>
             </Section>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER * 2} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2 font-mono text-xs border-b border-foundry-dark/10">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Labor <span className="text-foundry-dark/40">({totalBlocks.toLocaleString()} blocks &times; {laborRate} D/block)</span></span>
                 <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(laborCost)} D</span>
               </div>
             </Section>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER * 3} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2 font-mono text-xs bg-foundry-dark/5 border-b-[2px] border-foundry-dark/20">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal bg-foundry-dark/5 border-b-[2px] border-foundry-dark/20">
                 <span className="text-foundry-dark font-bold">Subtotal</span>
                 <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(subtotal)} D</span>
               </div>
             </Section>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER * 4} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2 font-mono text-xs border-b border-foundry-dark/10">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Administration Fee <span className="text-foundry-dark/40">({(adminFeeRate * 100).toFixed(0)}%)</span></span>
                 <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(adminFee)} D</span>
               </div>

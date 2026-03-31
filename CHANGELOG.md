@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.13.2] - 2026-03-31
+
+### Fixed
+
+#### PDF Text Clipping (Root Cause Fix)
+- Removed `truncate` class (overflow:hidden) from material name spans — html2canvas was using it to clip text vertically
+- Added explicit `minHeight: 28px` and `overflow: visible` on all data rows, category headers, and category totals
+- Added `letterRendering: true` to html2canvas config for better custom font measurement
+- Fixed category total rows still using py-1.5 instead of py-2.5
+- Added leading-normal and consistent padding to cost breakdown rows
+
+---
+
 ## [1.13.1] - 2026-03-31
 
 ### Fixed
