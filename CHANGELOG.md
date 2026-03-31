@@ -1,5 +1,31 @@
 # Changelog
 
+## [1.13.4] - 2026-03-31
+
+### Fixed
+
+#### PDF Cost Breakdown Page Break
+- Cost Breakdown section now always starts on a new page in the PDF via `break-before: page`
+
+---
+
+## [1.13.3] - 2026-03-31
+
+### Fixed
+
+#### Sample JSON Validation
+- Removed `armor_stand` and `item_frame` from sample ResultItems (entities, not blocks — verified via Minecraft Wiki)
+- All 160 ResultItem IDs validated against the 1,135-entry block ID source of truth
+- Added 13 missing tuff 1.21 variants to the source of truth (tuff_bricks, polished_tuff, chiseled_tuff_bricks, slab/stairs/wall variants)
+
+### Added
+
+#### Block ID Source of Truth
+- New `minecraft_block_ids_source_of_truth.txt` in repo root — 1,135 Minecraft Java Edition block IDs cross-referenced from Minecraft Wiki + minecraftitemids.com
+- Referenced in README with link to S3-hosted copy
+
+---
+
 ## [1.13.2] - 2026-03-31
 
 ### Fixed
