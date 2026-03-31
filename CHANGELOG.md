@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.13.1] - 2026-03-31
+
+### Fixed
+
+#### PDF Table Row Text Clipping
+- Increased row padding from `py-1.5` (6px) to `py-2.5` (10px) in PDF builder material rows
+- Added explicit `leading-normal` line-height to all table rows for consistent rendering in html2canvas
+- Removed `overflow-hidden` from table containers which was clipping text at row boundaries
+- Applies to data rows, category headers, and category total rows
+
+---
+
 ## [1.13.0] - 2026-03-31
 
 ### Changed

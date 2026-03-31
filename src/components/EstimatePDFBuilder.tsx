@@ -197,7 +197,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           </Section>
 
           {/* Materials Table */}
-          <div className="border-[2px] border-foundry-dark mb-5 overflow-hidden">
+          <div className="border-[2px] border-foundry-dark mb-5">
             {/* Table header */}
             <Section delay={TABLE_HEADER_DELAY + 50} animation="fadeIn">
               <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-bold text-[10px] tracking-wider">
@@ -221,7 +221,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
 
                 return (
                   <Section key={item.Item} delay={rowDelay} animation="fadeIn">
-                    <div className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-1.5 font-mono text-xs ${rowBg}`}>
+                    <div className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 font-mono text-xs leading-normal ${rowBg}`}>
                       <span className="text-foundry-dark truncate">
                         {item.Item}
                         {isFuzzy && <span className="text-amber-600/60 text-[10px] ml-1">&asymp; {item.fuzzyMatchedTo}</span>}
@@ -248,7 +248,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
               return (
                 <div key={category} style={{ breakInside: 'avoid' }}>
                   <Section delay={catDelay} animation="slideLeft">
-                    <div className="px-3 py-1.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] tracking-[2px] uppercase border-t border-foundry-dark/10">
+                    <div className="px-3 py-2.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] leading-normal tracking-[2px] uppercase border-t border-foundry-dark/10">
                       {category}
                     </div>
                   </Section>
@@ -281,7 +281,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Cost Breakdown</div>
           </Section>
 
-          <div className="border-[2px] border-foundry-dark mb-5 overflow-hidden" style={{ breakInside: 'avoid' }}>
+          <div className="border-[2px] border-foundry-dark mb-5" style={{ breakInside: 'avoid' }}>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER} animation="slideRight">
               <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2 font-mono text-xs border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Materials Cost</span>
