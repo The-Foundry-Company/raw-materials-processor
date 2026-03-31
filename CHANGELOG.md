@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.12.0] - 2026-03-31
+
+### Added
+
+#### Lenis Smooth Scrolling
+- Integrated Lenis smooth scrolling library, synced with Framer Motion's frame loop
+- All animated sequences (ProcessingStage, EstimateAnimation, EstimatePDFBuilder) now auto-scroll to track the latest content as it appears
+- New `useAutoScroll` hook for step-based scroll tracking
+- EstimatePDFBuilder uses interval-based scroll anchor that follows the document as it builds
+
+### Fixed
+
+#### PDF Page Breaks
+- Re-enabled `pagebreak: { mode: ['avoid-all', 'css'] }` in html2pdf.js options
+- Added `break-inside: avoid` CSS to category groups and cost breakdown sections
+- Prevents rows and sections from being cut in half at page boundaries
+
+---
+
 ## [1.11.0] - 2026-03-31
 
 ### Added

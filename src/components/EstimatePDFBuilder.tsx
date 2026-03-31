@@ -94,6 +94,16 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
     const docFooterDelay = notesDelay + FOOTER_OFFSET;
     const totalDuration = docFooterDelay + CAPTURE_WAIT;
 
+    // Auto-scroll to track document assembly
+    const scrollAnchorRef = useRef<HTMLDivElement>(null);
+    useEffect(() => {
+      const interval = setInterval(() => {
+        scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      }, 200);
+      const timeout = setTimeout(() => clearInterval(interval), totalDuration + 500);
+      return () => { clearInterval(interval); clearTimeout(timeout); };
+    }, [totalDuration]);
+
     // Fire onBuilt after all animations complete
     useEffect(() => {
       if (builtFired) return;
@@ -216,7 +226,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
               categoryRowOffset += catItems.length;
 
               return (
-                <div key={category}>
+                <div key={category} style={{ breakInside: 'avoid' }}>
                   <Section delay={catDelay} animation="slideLeft">
                     <div className="px-3 py-1.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] tracking-[2px] uppercase border-t border-foundry-dark/10">
                       {category}
@@ -251,7 +261,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Cost Breakdown</div>
           </Section>
 
-          <div className="border-[2px] border-foundry-dark mb-5 overflow-hidden">
+          <div className="border-[2px] border-foundry-dark mb-5 overflow-hidden" style={{ breakInside: 'avoid' }}>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER} animation="slideRight">
               <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2 font-mono text-xs border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Materials Cost</span>
@@ -313,6 +323,9 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             <span className="text-foundry-dark/40 text-xs font-mono tracking-widest">PREPARING DOWNLOAD...</span>
           </motion.div>
         )}
+
+        {/* Scroll anchor — Lenis scrolls here during build */}
+        <div ref={scrollAnchorRef} />
       </div>
     );
   },

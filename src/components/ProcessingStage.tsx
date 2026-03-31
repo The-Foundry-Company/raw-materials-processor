@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
+import { useAutoScroll } from '../hooks/useAutoScroll';
 import { process, validateInput } from '../processor';
 import { stripNamespace, isFunctional, resolveVariant, GENERIC_WOOD_ITEMS } from '../processor/rules';
 import type { RawInput, ProcessedItem } from '../processor/types';
@@ -123,6 +124,7 @@ export default function ProcessingStage({ rawJson, onComplete, onError }: Props)
 
   const [visibleSteps, setVisibleSteps] = useState(0);
   const [progress, setProgress] = useState(0);
+  const scrollRef = useAutoScroll(visibleSteps);
 
   // Compute cumulative delays (actions take longer, stats appear quickly)
   const { cumulativeDelays, totalDuration } = useMemo(() => {
@@ -192,7 +194,7 @@ export default function ProcessingStage({ rawJson, onComplete, onError }: Props)
       </div>
 
       {/* Steps */}
-      <div className="space-y-2 font-mono text-sm">
+      <div ref={scrollRef} className="space-y-2 font-mono text-sm">
         {steps.slice(0, visibleSteps).map((step, i) => (
           <motion.div
             key={`${i}-${step.text}`}

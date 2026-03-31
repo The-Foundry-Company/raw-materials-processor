@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { useAutoScroll } from '../hooks/useAutoScroll';
 import type { ProjectEstimate } from '../processor/types';
 import { countMatched } from '../utils/pricing';
 
@@ -36,6 +37,7 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
   const [visibleSteps, setVisibleSteps] = useState(0);
   const [progress, setProgress] = useState(0);
   const completedRef = useRef(false);
+  const scrollRef = useAutoScroll(visibleSteps);
 
   // Build full step list once estimate data arrives
   const allSteps = useMemo((): Step[] => {
@@ -159,7 +161,7 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
       </div>
 
       {/* Steps */}
-      <div className="space-y-2 font-mono text-sm">
+      <div ref={scrollRef} className="space-y-2 font-mono text-sm">
         {steps.map((step, i) => (
           <motion.div
             key={`${i}-${step.text}`}

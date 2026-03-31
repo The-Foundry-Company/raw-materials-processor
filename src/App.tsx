@@ -1,5 +1,6 @@
-import { useState, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, cancelFrame, frame } from 'framer-motion';
+import { ReactLenis } from 'lenis/react';
 import Header from './components/Header';
 import InputStage from './components/InputStage';
 import ProcessingStage from './components/ProcessingStage';
@@ -20,6 +21,16 @@ function pickRandom(messages: string[]): string {
 }
 
 export default function App() {
+  const lenisRef = useRef<any>(null);
+
+  useEffect(() => {
+    function update(data: { timestamp: number }) {
+      lenisRef.current?.lenis?.raf(data.timestamp);
+    }
+    frame.update(update, true);
+    return () => cancelFrame(update);
+  }, []);
+
   const [stage, setStage] = useState<Stage>('input');
   const [result, setResult] = useState<ProcessedItem[]>([]);
   const [error, setError] = useState('');
@@ -49,6 +60,7 @@ export default function App() {
   }
 
   return (
+    <ReactLenis root options={{ autoRaf: false }} ref={lenisRef}>
     <div className="min-h-screen bg-[#f5f5f0] px-4 py-8 sm:py-12">
       <div className="max-w-2xl mx-auto">
         <Header />
@@ -81,5 +93,6 @@ export default function App() {
         </AnimatePresence>
       </div>
     </div>
+    </ReactLenis>
   );
 }
