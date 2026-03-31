@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SAMPLE_INPUT } from '../data/sampleInput';
 
 interface Props {
   onSubmit: (json: string) => void;
@@ -69,6 +70,16 @@ export default function InputStage({ onSubmit }: Props) {
       exit={{ opacity: 0, x: -40 }}
       transition={{ duration: 0.3 }}
     >
+      <div className="flex justify-end mb-2">
+        <button
+          onClick={() => { setValue(SAMPLE_INPUT); if (error) setError(''); }}
+          className="text-foundry-dark/40 text-xs font-mono tracking-wide
+            hover:text-foundry-dark transition-colors"
+        >
+          SHOW ME A SAMPLE
+        </button>
+      </div>
+
       <motion.div
         key={shakeKey}
         animate={error ? { x: [0, -6, 6, -4, 4, -2, 2, 0] } : {}}

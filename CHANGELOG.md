@@ -1,5 +1,33 @@
 # Changelog
 
+## [1.11.0] - 2026-03-31
+
+### Added
+
+#### Animated PDF Builder
+- Clicking "Download Estimate" now triggers a full-screen animated document assembly sequence
+- Each section of the estimate (header, metadata, total banner, materials table, cost breakdown, notes, footer) animates in sequentially using Framer Motion
+- Category groups and rows appear with staggered timing for a dynamic assembly feel
+- Once fully visible, the document is captured as a PDF via html2pdf.js (solves blank PDF issue since content is visibly rendered)
+- "PREPARING DOWNLOAD..." indicator shows during capture
+- After download, the builder fades away and the normal estimate view returns
+
+#### "Show Me a Sample" Button
+- Added a subtle "SHOW ME A SAMPLE" button above the JSON textarea on the input page
+- Loads a comprehensive test schematic (26 groups, all 13 categories, all classification paths) for demo purposes
+
+#### Shared Formatters
+- Extracted `formatDiamondValue()` and `formatTotal()` to `src/utils/format.ts` for reuse across components
+
+### Changed
+
+#### Download System
+- Replaced off-screen HTML rendering approach with on-screen animated builder + live capture
+- `downloadEstimatePDF` → `captureElementAsPDF(element)` — now takes a visible DOM element ref
+- Removed all off-screen container creation and HTML string template generation
+
+---
+
 ## [1.10.2] - 2026-03-30
 
 ### Fixed

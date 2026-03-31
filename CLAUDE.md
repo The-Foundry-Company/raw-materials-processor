@@ -59,14 +59,15 @@ The estimate generator in `pricing.ts` fetches live pricing from a published Goo
 
 Types: `PricingMetadata`, `PricingData`, `MatchType` (`exact` | `fuzzy` | `missing`), `ProjectEstimate` (wraps items + cost breakdown + `laborRate` + `adminFeeRate`)
 
-The estimate download renders a styled HTML document and exports it as a PDF via `html2pdf.js` (dynamically imported). The PDF includes the Foundry Company logo, materials breakdown by category with subtotals, cost breakdown, and notes.
+The estimate download uses an animated on-screen PDF builder (`EstimatePDFBuilder.tsx`) that assembles the document element-by-element with Framer Motion, then captures the visible content via `html2pdf.js`. The `captureElementAsPDF(element)` function in `download.ts` takes a live DOM element ref. Shared number formatters live in `src/utils/format.ts`.
 
 ### UI (`src/components/`)
 
 Three-stage state machine managed in `App.tsx`:
-- **InputStage** — JSON textarea + file upload (FileReader API)
+- **InputStage** — JSON textarea + file upload (FileReader API) + "Show Me a Sample" button (loads built-in test schematic from `src/data/sampleInput.ts`)
 - **ProcessingStage** — Animated progress bar with dynamic, data-driven step reveals
-- **OutputStage** — Results table + JSON/TXT download buttons + estimate generator + PDF estimate download
+- **OutputStage** — Results table + JSON/TXT download buttons + estimate generator + animated PDF estimate download
+- **EstimatePDFBuilder** — Full-screen animated document assembly for PDF capture (viewing → building → capturing → restoring state machine in `EstimateDisplay.tsx`)
 
 Each stage is a presentational component that communicates via callbacks (`onSubmit`, `onComplete`, `onReset`). No state management library — just `useState` in App.
 

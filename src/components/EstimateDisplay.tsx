@@ -1,22 +1,14 @@
-import { motion } from 'framer-motion';
+import { useState, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { ProjectEstimate } from '../processor/types';
 import { calculateTotalDiamonds, countMatched } from '../utils/pricing';
-import { downloadEstimatePDF } from '../utils/download';
+import { captureElementAsPDF } from '../utils/download';
+import { formatDiamondValue, formatTotal } from '../utils/format';
 import PretextBlock from './ui/PretextBlock';
 import { fontShorthand, lineHeightPx } from '../lib/pretext';
+import EstimatePDFBuilder from './EstimatePDFBuilder';
 
-function formatDiamondValue(value: number): string {
-  if (value >= 100) return value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-  if (value >= 1) return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  if (value >= 0.01) return value.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
-  return value.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
-}
-
-function formatTotal(value: number): string {
-  // Always round up — this is a price estimator
-  const rounded = Math.ceil(value * 100) / 100;
-  return rounded.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+type PDFState = 'viewing' | 'building' | 'capturing' | 'restoring';
 
 interface Props {
   projectEstimate: ProjectEstimate;
@@ -27,10 +19,46 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
   const total = calculateTotalDiamonds(items);
   const { matched, fuzzy, unmatched } = countMatched(items);
 
+  const [pdfState, setPdfState] = useState<PDFState>('viewing');
+  const builderRef = useRef<import('./EstimatePDFBuilder').PDFBuilderHandle>(null);
+
+  const handleDownload = useCallback(() => {
+    setPdfState('building');
+  }, []);
+
+  const handleBuilt = useCallback(async () => {
+    setPdfState('capturing');
+    const container = builderRef.current?.getContainer();
+    if (container) {
+      await captureElementAsPDF(container);
+    }
+    setPdfState('restoring');
+    setTimeout(() => setPdfState('viewing'), 400);
+  }, []);
+
   return (
+    <div>
+    <AnimatePresence mode="wait">
+    {pdfState === 'building' || pdfState === 'capturing' ? (
+      <motion.div
+        key="pdf-builder"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <EstimatePDFBuilder
+          ref={builderRef}
+          projectEstimate={projectEstimate}
+          onBuilt={handleBuilt}
+        />
+      </motion.div>
+    ) : (
     <motion.div
+      key="estimate-view"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
     >
       {/* Summary banner */}
@@ -197,7 +225,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
 
       {/* Download estimate */}
       <button
-        onClick={() => downloadEstimatePDF(projectEstimate)}
+        onClick={handleDownload}
         className="w-full py-3 bg-foundry-dark text-foundry-yellow font-black tracking-wider
           border-[3px] border-foundry-dark text-sm
           hover:bg-foundry-yellow hover:text-foundry-dark mb-4"
@@ -205,5 +233,8 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
         DOWNLOAD ESTIMATE (PDF)
       </button>
     </motion.div>
+    )}
+    </AnimatePresence>
+    </div>
   );
 }
