@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.13.0] - 2026-03-31
+
+### Changed
+
+#### Client-Facing PDF Estimate Language
+- Added "Thank you for choosing The Foundry Company" intro section
+- Replaced metadata row with structured Project Summary: Date, Estimate ID, Total Estimated Cost, Up-Front Estimated Cost (materials only — the deposit to begin construction)
+- Added disclaimer about estimates being rough, not billing full amount up-front
+- Added "Due Today" section showing up-front materials cost with Monument Bank (HS-7138) and cash delivery (-1423 114 7600) payment options
+- Added "We are looking forward to building with you" closing message
+- Moved technical notes (fuzzy/unmatched items) to small footnotes within the disclaimer
+- New animation sections integrate smoothly into the existing staggered build sequence
+
+---
+
 ## [1.12.2] - 2026-03-31
 
 ### Fixed

@@ -7,15 +7,18 @@ import { formatDiamondValue, formatTotal } from '../utils/format';
 // ── Timing ──
 
 const HEADER_DELAY = 0;
-const META_DELAY = 300;
-const TOTAL_BANNER_DELAY = 600;
-const TABLE_HEADER_DELAY = 900;
-const CATEGORY_BASE_DELAY = 1050;
+const THANK_YOU_DELAY = 250;
+const SUMMARY_DELAY = 500;
+const TOTAL_BANNER_DELAY = 800;
+const TABLE_HEADER_DELAY = 1100;
+const CATEGORY_BASE_DELAY = 1250;
 const CATEGORY_STAGGER = 150;
 const ROW_STAGGER = 30;
 const POST_TABLE_OFFSET = 300;
 const COST_ROW_STAGGER = 100;
-const NOTES_OFFSET = 300;
+const DISCLAIMER_OFFSET = 300;
+const DUE_TODAY_OFFSET = 300;
+const CLOSING_OFFSET = 250;
 const FOOTER_OFFSET = 200;
 const CAPTURE_WAIT = 800;
 
@@ -79,7 +82,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
 
     const { items, materialsCost, totalBlocks, laborRate, laborCost, subtotal, adminFeeRate, adminFee, projectTotal } = projectEstimate;
     const date = new Date().toISOString().slice(0, 10);
-    const { matched, fuzzy, unmatched } = countMatched(items);
+    const { fuzzy, unmatched } = countMatched(items);
     const estimateId = `FC-${date.replace(/-/g, '')}-${items.length}`;
     const categories = useMemo(() => groupByCategory(items), [items]);
 
@@ -88,16 +91,17 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
     const lastCategoryDelay = CATEGORY_BASE_DELAY + (categories.length - 1) * CATEGORY_STAGGER + totalCategoryRows * ROW_STAGGER;
     const footerDelay = lastCategoryDelay + POST_TABLE_OFFSET;
     const costBreakdownStart = footerDelay + 200;
-    const costRows = 5; // materials, labor, subtotal, admin, total
+    const costRows = 5;
     const projectTotalDelay = costBreakdownStart + 200 + (costRows - 1) * COST_ROW_STAGGER;
-    const notesDelay = projectTotalDelay + NOTES_OFFSET;
-    const docFooterDelay = notesDelay + FOOTER_OFFSET;
+    const disclaimerDelay = projectTotalDelay + DISCLAIMER_OFFSET;
+    const dueTodayDelay = disclaimerDelay + DUE_TODAY_OFFSET;
+    const closingDelay = dueTodayDelay + CLOSING_OFFSET;
+    const docFooterDelay = closingDelay + FOOTER_OFFSET;
     const totalDuration = docFooterDelay + CAPTURE_WAIT;
 
     // Auto-scroll: start at top, progressively scroll down as animation progresses
     const scrollAnchorRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
-      // First, scroll to the top of the builder
       containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
       const startTime = Date.now();
@@ -105,14 +109,12 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
         if (!containerRef.current || !scrollAnchorRef.current) return;
         const elapsed = Date.now() - startTime;
         const progress = Math.min(elapsed / totalDuration, 1);
-        // Only start scrolling down after 20% of the animation (header is visible)
-        if (progress < 0.2) return;
-        // Scroll proportionally — lerp between container top and anchor bottom
-        const adjustedProgress = (progress - 0.2) / 0.8; // 0→1 over the remaining 80%
+        if (progress < 0.15) return;
+        const adjustedProgress = (progress - 0.15) / 0.85;
         const containerTop = containerRef.current.getBoundingClientRect().top + window.scrollY;
         const anchorTop = scrollAnchorRef.current.getBoundingClientRect().top + window.scrollY;
         const targetScroll = containerTop + (anchorTop - containerTop) * adjustedProgress;
-        window.scrollTo({ top: targetScroll - 100, behavior: 'smooth' }); // 100px offset to show content above fold
+        window.scrollTo({ top: targetScroll - 100, behavior: 'smooth' });
       }, 250);
       const timeout = setTimeout(() => clearInterval(interval), totalDuration + 500);
       return () => { clearInterval(interval); clearTimeout(timeout); };
@@ -127,15 +129,6 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
       }, totalDuration);
       return () => clearTimeout(timer);
     }, [totalDuration, onBuilt, builtFired]);
-
-    // Build notes
-    const notes: string[] = [
-      `Pricing reflects current Foundry Company rates as of ${date}.`,
-      `Labor is calculated per block placed at the current rate of ${laborRate} D/block.`,
-      'This estimate is subject to change based on final schematic review.',
-    ];
-    if (fuzzy > 0) notes.push(`${fuzzy} item${fuzzy !== 1 ? 's were' : ' was'} approximate-matched to the closest database entry.`);
-    if (unmatched > 0) notes.push(`${unmatched} item${unmatched !== 1 ? 's' : ''} not found in the price database are excluded from the materials cost.`);
 
     // Track row delay offset for categories
     let categoryRowOffset = 0;
@@ -159,20 +152,33 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             </div>
           </Section>
 
-          {/* Metadata row */}
-          <Section delay={META_DELAY} animation="fadeUp">
-            <div className="grid grid-cols-3 gap-4 mb-5">
-              <div>
-                <div className="text-[10px] text-foundry-dark/40 uppercase tracking-widest font-bold">Date</div>
-                <div className="text-sm font-bold text-foundry-dark">{date}</div>
+          {/* Thank You */}
+          <Section delay={THANK_YOU_DELAY} animation="fadeIn">
+            <div className="mb-5">
+              <div className="text-sm font-bold text-foundry-dark mb-1">
+                Thank you for choosing The Foundry Company.
               </div>
-              <div className="text-center">
-                <div className="text-[10px] text-foundry-dark/40 uppercase tracking-widest font-bold">Estimate ID</div>
-                <div className="text-sm font-bold font-mono text-foundry-dark">{estimateId}</div>
+              <div className="text-xs text-foundry-dark/60 leading-relaxed">
+                We have created the following project estimate for you:
               </div>
-              <div className="text-right">
-                <div className="text-[10px] text-foundry-dark/40 uppercase tracking-widest font-bold">Items Priced</div>
-                <div className="text-sm font-bold text-foundry-dark">{matched}{fuzzy > 0 ? ` + ${fuzzy} approx` : ''} of {items.length}</div>
+            </div>
+          </Section>
+
+          {/* Project Summary */}
+          <Section delay={SUMMARY_DELAY} animation="fadeUp">
+            <div className="border-[2px] border-foundry-dark/20 p-4 mb-5" style={{ breakInside: 'avoid' }}>
+              <div className="grid grid-cols-[1fr_auto] gap-y-3 gap-x-8">
+                <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Date</span>
+                <span className="text-foundry-dark font-bold text-sm text-right">{date}</span>
+
+                <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Estimate ID</span>
+                <span className="text-foundry-dark font-bold font-mono text-sm text-right">{estimateId}</span>
+
+                <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Total Estimated Cost (in D)</span>
+                <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(projectTotal).toLocaleString()}</span>
+
+                <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Up-Front Estimated Cost (in D)</span>
+                <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(materialsCost).toLocaleString()}</span>
               </div>
             </div>
           </Section>
@@ -308,14 +314,51 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             </Section>
           </div>
 
-          {/* Notes */}
-          <Section delay={notesDelay} animation="fadeIn">
-            <div className="text-[10px] font-bold tracking-widest uppercase text-foundry-dark/30 mb-1">Notes</div>
-            <ul className="list-disc pl-4 mb-4">
-              {notes.map((note, i) => (
-                <li key={i} className="text-[10px] text-foundry-dark/50 mb-0.5 leading-relaxed">{note}</li>
-              ))}
-            </ul>
+          {/* Disclaimer */}
+          <Section delay={disclaimerDelay} animation="fadeIn">
+            <div className="bg-foundry-dark/5 border-l-[3px] border-foundry-yellow px-4 py-3 mb-5" style={{ breakInside: 'avoid' }}>
+              <p className="text-[10px] text-foundry-dark/60 leading-relaxed">
+                Please note that the shown figures are rough estimates, and may not reflect
+                final project costs. We will keep you regularly updated, and seek your advice
+                regarding actions that may increase costs. To increase your confidence in our
+                services, we do not bill the full amount of the service up-front. We will bill
+                only the portion required to obtain materials to begin construction.
+              </p>
+              {(fuzzy > 0 || unmatched > 0) && (
+                <p className="text-[9px] text-foundry-dark/40 mt-2 leading-relaxed">
+                  {fuzzy > 0 && <>{fuzzy} item{fuzzy !== 1 ? 's were' : ' was'} approximate-matched to the closest database entry. </>}
+                  {unmatched > 0 && <>{unmatched} item{unmatched !== 1 ? 's' : ''} not found in the price database are excluded from the materials cost.</>}
+                </p>
+              )}
+            </div>
+          </Section>
+
+          {/* Due Today */}
+          <Section delay={dueTodayDelay} animation="scaleX">
+            <div className="border-[2px] border-foundry-dark mb-5" style={{ breakInside: 'avoid', transformOrigin: 'left' }}>
+              <div className="bg-foundry-dark px-4 py-2">
+                <span className="text-foundry-yellow font-black text-xs tracking-[2px]">DUE TODAY</span>
+              </div>
+              <div className="px-4 py-3">
+                <div className="text-foundry-dark font-black text-lg mb-3">
+                  {Math.ceil(materialsCost).toLocaleString()} D
+                </div>
+                <div className="text-xs text-foundry-dark/60 mb-2">Please use the most convenient payment option for you:</div>
+                <div className="text-xs text-foundry-dark space-y-1">
+                  <div>Monument Bank: <span className="font-bold font-mono">HS-7138</span></div>
+                  <div>Cash delivery to Foundry Home Office: <span className="font-bold font-mono">-1423 114 7600</span></div>
+                </div>
+              </div>
+            </div>
+          </Section>
+
+          {/* Closing */}
+          <Section delay={closingDelay} animation="fadeIn">
+            <div className="text-center mb-5">
+              <div className="text-sm font-bold text-foundry-dark">
+                We are looking forward to building with you.
+              </div>
+            </div>
           </Section>
 
           {/* Footer */}
