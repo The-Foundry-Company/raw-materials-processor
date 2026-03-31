@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.1] - 2026-03-30
+
+### Fixed
+
+#### PDF Estimate Download
+- Fixed blank PDF output by removing `<!DOCTYPE html>` document wrapper that was stripped by innerHTML parser
+- Replaced all `display:flex` layouts with `<table>` layouts for html2canvas compatibility
+- Changed off-screen positioning from `left:-9999px` to `opacity:0; position:fixed` so html2canvas can capture the rendered content
+- Switched inline SVG logo to `<img>` reference for reliable rendering
+
+---
+
 ## [1.10.0] - 2026-03-30
 
 ### Added
