@@ -21,6 +21,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
 
   const [pdfState, setPdfState] = useState<PDFState>('viewing');
   const builderRef = useRef<import('./EstimatePDFBuilder').PDFBuilderHandle>(null);
+  const bannerRef = useRef<HTMLDivElement>(null);
 
   const handleDownload = useCallback(() => {
     setPdfState('building');
@@ -60,9 +61,12 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
+      onAnimationComplete={() => {
+        bannerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }}
     >
       {/* Summary banner */}
-      <div className="border-[3px] border-foundry-dark bg-foundry-yellow/20 px-4 py-3 mb-2">
+      <div ref={bannerRef} className="border-[3px] border-foundry-dark bg-foundry-yellow/20 px-4 py-3 mb-2 scroll-mt-8">
         <PretextBlock
           as="p"
           text={`PROJECT ESTIMATE: ${Math.ceil(projectTotal).toLocaleString()} DIAMONDS`}

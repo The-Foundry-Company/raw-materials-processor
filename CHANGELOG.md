@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.12.2] - 2026-03-31
+
+### Fixed
+
+#### Estimate View Auto-Scroll
+- When the estimate display appears (after generation or returning from PDF builder), the "PROJECT ESTIMATE" banner auto-scrolls to the top of the viewport with 2rem padding
+- Makes the full pricing estimate section immediately visible without manual scrolling
+
+---
+
 ## [1.12.1] - 2026-03-31
 
 ### Fixed
