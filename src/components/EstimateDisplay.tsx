@@ -5,6 +5,19 @@ import { downloadEstimatePDF } from '../utils/download';
 import PretextBlock from './ui/PretextBlock';
 import { fontShorthand, lineHeightPx } from '../lib/pretext';
 
+function formatDiamondValue(value: number): string {
+  if (value >= 100) return value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  if (value >= 1) return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  if (value >= 0.01) return value.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  return value.toLocaleString(undefined, { minimumFractionDigits: 6, maximumFractionDigits: 6 });
+}
+
+function formatTotal(value: number): string {
+  // Always round up — this is a price estimator
+  const rounded = Math.ceil(value * 100) / 100;
+  return rounded.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
 interface Props {
   projectEstimate: ProjectEstimate;
 }
@@ -49,7 +62,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
 
       {/* Estimate table */}
       <div className="border-[3px] border-foundry-dark bg-white overflow-hidden mb-4">
-        <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 px-4 py-2 bg-foundry-dark text-foundry-yellow font-bold text-sm tracking-wider">
+        <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-4 px-4 py-2 bg-foundry-dark text-foundry-yellow font-bold text-sm tracking-wider">
           <span>ITEM</span>
           <span className="text-right">QTY</span>
           <span className="text-right">D/ITEM</span>
@@ -81,7 +94,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
                   </div>
                 )}
                 <div
-                  className={`grid grid-cols-[1fr_auto_auto_auto] gap-x-4 px-4 py-2 font-mono text-sm ${rowBg}`}
+                  className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-4 px-4 py-2 font-mono text-sm ${rowBg}`}
                 >
                   <span className="text-foundry-dark">
                     {item.Item}
@@ -97,10 +110,10 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
                   {item.matched ? (
                     <>
                       <span className="text-foundry-dark/70 tabular-nums text-right">
-                        {isFuzzy ? '~' : ''}{item.diamondValue}
+                        {isFuzzy ? '~' : ''}{formatDiamondValue(item.diamondValue)}
                       </span>
                       <span className="text-foundry-dark font-bold tabular-nums text-right">
-                        {item.totalDiamonds.toLocaleString()}
+                        {formatTotal(item.totalDiamonds)}
                       </span>
                     </>
                   ) : (
@@ -115,7 +128,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
           })}
 
           {/* Grand total footer */}
-          <div className="grid grid-cols-[1fr_auto_auto_auto] gap-x-4 px-4 py-3 border-t-[3px] border-foundry-dark bg-foundry-dark/5">
+          <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-4 px-4 py-3 border-t-[3px] border-foundry-dark bg-foundry-dark/5">
             <span className="font-black text-foundry-dark text-sm tracking-wider">
               MATERIALS TOTAL
             </span>
@@ -124,7 +137,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
             </span>
             <span />
             <span className="text-foundry-dark font-black tabular-nums text-right text-sm">
-              {total.toLocaleString()}D
+              {formatTotal(total)}D
             </span>
           </div>
         </div>

@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.10.2] - 2026-03-30
+
+### Fixed
+
+#### Estimate Table Number Formatting
+- Added magnitude-aware D/ITEM formatter: 6 decimals for tiny values (<0.01), 4 for small, 2 for moderate, clean for large — values at similar scales now align
+- TOTAL column now uses fixed 2 decimal places with ceil rounding (always rounds up — price estimator rule)
+- Switched grid columns from `auto` to fixed widths (`4.5rem`/`7rem`/`5.5rem`) so columns don't jitter between categories
+- Footer materials total uses same formatting
+
+---
+
 ## [1.10.1] - 2026-03-30
 
 ### Fixed
