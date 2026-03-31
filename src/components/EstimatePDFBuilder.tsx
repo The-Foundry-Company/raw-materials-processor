@@ -276,9 +276,9 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             </Section>
           </div>
 
-          {/* Cost Breakdown */}
+          {/* Cost Breakdown — always starts on a new page in the PDF */}
           <Section delay={costBreakdownStart} animation="fadeIn">
-            <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Cost Breakdown</div>
+            <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2 pt-4" style={{ breakBefore: 'page' }}>Cost Breakdown</div>
           </Section>
 
           <div className="border-[2px] border-foundry-dark mb-5" style={{ breakInside: 'avoid' }}>
