@@ -426,6 +426,14 @@ npx vitest run        # Run once (no watch)
 
 ---
 
+## Block ID Source of Truth
+
+A comprehensive list of all Minecraft Java Edition block IDs (1,135 entries) is maintained as a cross-referenced source of truth, compiled from the Minecraft Wiki and minecraftitemids.com:
+
+**[minecraft_block_ids_source_of_truth.txt](https://shaughv.s3.us-east-1.amazonaws.com/foundry/minecraft_block_ids_source_of_truth.txt)**
+
+---
+
 ## Deployment
 
 Build produces a static `dist/` directory ready for Vercel:
