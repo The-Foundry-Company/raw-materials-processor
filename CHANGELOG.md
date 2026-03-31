@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.12.1] - 2026-03-31
+
+### Fixed
+
+#### PDF Builder Scroll Behavior
+- Scroll now starts at the top of the document and progressively tracks downward as content animates in
+- First 20% of animation plays without scrolling (header visible), then gradually follows the build
+- Fixed issue where clicking "Download Estimate" immediately jumped to the bottom
+
+---
+
 ## [1.12.0] - 2026-03-31
 
 ### Added

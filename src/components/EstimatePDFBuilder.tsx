@@ -94,12 +94,26 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
     const docFooterDelay = notesDelay + FOOTER_OFFSET;
     const totalDuration = docFooterDelay + CAPTURE_WAIT;
 
-    // Auto-scroll to track document assembly
+    // Auto-scroll: start at top, progressively scroll down as animation progresses
     const scrollAnchorRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
+      // First, scroll to the top of the builder
+      containerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      const startTime = Date.now();
       const interval = setInterval(() => {
-        scrollAnchorRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }, 200);
+        if (!containerRef.current || !scrollAnchorRef.current) return;
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / totalDuration, 1);
+        // Only start scrolling down after 20% of the animation (header is visible)
+        if (progress < 0.2) return;
+        // Scroll proportionally — lerp between container top and anchor bottom
+        const adjustedProgress = (progress - 0.2) / 0.8; // 0→1 over the remaining 80%
+        const containerTop = containerRef.current.getBoundingClientRect().top + window.scrollY;
+        const anchorTop = scrollAnchorRef.current.getBoundingClientRect().top + window.scrollY;
+        const targetScroll = containerTop + (anchorTop - containerTop) * adjustedProgress;
+        window.scrollTo({ top: targetScroll - 100, behavior: 'smooth' }); // 100px offset to show content above fold
+      }, 250);
       const timeout = setTimeout(() => clearInterval(interval), totalDuration + 500);
       return () => { clearInterval(interval); clearTimeout(timeout); };
     }, [totalDuration]);
