@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import type { ProjectEstimate } from '../processor/types';
-import { calculateTotalDiamonds, countMatched, LABOR_RATE } from '../utils/pricing';
-import { downloadEstimateTXT } from '../utils/download';
+import { calculateTotalDiamonds, countMatched } from '../utils/pricing';
+import { downloadEstimatePDF } from '../utils/download';
 import PretextBlock from './ui/PretextBlock';
 import { fontShorthand, lineHeightPx } from '../lib/pretext';
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function EstimateDisplay({ projectEstimate }: Props) {
-  const { items, materialsCost, totalBlocks, laborCost, subtotal, adminFeeRate, adminFee, projectTotal } = projectEstimate;
+  const { items, materialsCost, totalBlocks, laborRate, laborCost, subtotal, adminFeeRate, adminFee, projectTotal } = projectEstimate;
   const total = calculateTotalDiamonds(items);
   const { matched, fuzzy, unmatched } = countMatched(items);
 
@@ -144,7 +144,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
           </div>
           <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 font-mono text-sm">
             <span className="text-foundry-dark">
-              LABOR ({totalBlocks.toLocaleString()} blocks × {LABOR_RATE}D)
+              LABOR ({totalBlocks.toLocaleString()} blocks × {laborRate}D)
             </span>
             <span className="text-foundry-dark font-bold tabular-nums text-right">
               {Math.ceil(laborCost).toLocaleString()}D
@@ -184,12 +184,12 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
 
       {/* Download estimate */}
       <button
-        onClick={() => downloadEstimateTXT(projectEstimate)}
+        onClick={() => downloadEstimatePDF(projectEstimate)}
         className="w-full py-3 bg-foundry-dark text-foundry-yellow font-black tracking-wider
           border-[3px] border-foundry-dark text-sm
           hover:bg-foundry-yellow hover:text-foundry-dark mb-4"
       >
-        DOWNLOAD ESTIMATE
+        DOWNLOAD ESTIMATE (PDF)
       </button>
     </motion.div>
   );

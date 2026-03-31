@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.10.0] - 2026-03-30
+
+### Added
+
+#### Live Pricing Metadata from Spreadsheet
+- Labor cost per block and administration fee are now fetched live from the Google Sheets pricing database on every estimate request
+- CSV parser reads all 5 columns: Item ID, Value (D/item), (empty), Labor Cost (d/block), Administration Fee (%)
+- Global metadata extracted from first populated row with sensible fallback defaults
+- Hardcoded `LABOR_RATE` (0.05) and `ADMIN_FEE_RATE` (0.02) constants removed entirely
+
+#### Client-Facing PDF Estimate Download
+- Estimate download now generates a styled PDF instead of plain text
+- Professional layout with Foundry Company logo, estimate ID, and branded color scheme
+- Materials breakdown table grouped by category with per-category subtotals
+- Cost breakdown section showing materials, labor, subtotal, admin fee, and project total
+- Conditional notes section for fuzzy-matched and unpriced items
+- PDF rendering via `html2pdf.js` (dynamically imported, code-split)
+
+### Changed
+
+#### Types
+- Added `PricingMetadata`, `PricingData` interfaces to `types.ts`
+- Added `laborRate` field to `ProjectEstimate` interface
+- `parseCSV()` now returns `PricingData` instead of `PricingEntry[]`
+- `calculateProjectEstimate()` now takes a `PricingMetadata` parameter
+
+#### Tests
+- Updated all pricing tests for new return shapes (24 tests, up from 18)
+- Added metadata extraction tests: 5-column parsing, fallback defaults, first-value-wins
+
+---
+
 ## [1.9.2] - 2026-03-30
 
 ### Changed

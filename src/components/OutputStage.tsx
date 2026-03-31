@@ -26,9 +26,9 @@ export default function OutputStage({ items, onReset }: Props) {
     setProjectEstimate(null);
 
     try {
-      const pricing = await fetchPricingData();
-      const result = generateEstimate(items, pricing);
-      const project = calculateProjectEstimate(result);
+      const { entries, metadata } = await fetchPricingData();
+      const result = generateEstimate(items, entries);
+      const project = calculateProjectEstimate(result, metadata);
       setProjectEstimate(project);
     } catch (err) {
       setEstimateError(

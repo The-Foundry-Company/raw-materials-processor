@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm run dev        # Vite dev server with hot reload
 npm run build      # tsc -b && vite build → dist/
-npm test           # Vitest in watch mode (217 tests)
+npm test           # Vitest in watch mode (223 tests)
 npx vitest run     # Run tests once without watch
 npx vitest run src/processor/__tests__/processor.test.ts  # Run a single test file
 npx vitest run -t "test name pattern"                     # Run tests matching a pattern
@@ -50,20 +50,23 @@ Uses `@chenglou/pretext` for text measurement and layout (orphan/widow preventio
 
 ### Estimate Engine (`src/utils/`)
 
-The estimate generator in `pricing.ts` fetches live pricing from a published Google Sheets CSV on every estimate request (no caching). Key functions:
+The estimate generator in `pricing.ts` fetches live pricing from a published Google Sheets CSV on every estimate request (no caching). The spreadsheet has 5 columns: Item ID, Value (D/item), (empty), Labor Cost (d/block), Administration Fee (%). Key functions:
 
-- **`fetchPricingData()`** — Fetches CSV, parses with `parseCSV()` (strips `minecraft:` prefix from DB entries)
+- **`fetchPricingData()`** — Returns `PricingData` containing `entries: PricingEntry[]` + `metadata: PricingMetadata` (labor rate + admin fee parsed from first populated row)
+- **`parseCSV()`** — Parses all 5 CSV columns; extracts global metadata from columns 4-5 (first non-empty value wins). Falls back to defaults if columns are missing.
 - **`generateEstimate()`** — Three-step matching cascade: exact → fuzzy → missing. Fuzzy matching uses Levenshtein distance with tiered thresholds (`src/utils/fuzzy.ts`)
-- **`calculateProjectEstimate()`** — Full project costing: materials + labor (0.05D/block) + 2% admin fee
+- **`calculateProjectEstimate(estimate, metadata)`** — Full project costing using live rates from the spreadsheet. `PricingMetadata` carries `laborRate` (d/block) and `adminFeeRate` (fractional).
 
-Types: `MatchType` (`exact` | `fuzzy` | `missing`), `ProjectEstimate` (wraps items + cost breakdown)
+Types: `PricingMetadata`, `PricingData`, `MatchType` (`exact` | `fuzzy` | `missing`), `ProjectEstimate` (wraps items + cost breakdown + `laborRate` + `adminFeeRate`)
+
+The estimate download renders a styled HTML document and exports it as a PDF via `html2pdf.js` (dynamically imported). The PDF includes the Foundry Company logo, materials breakdown by category with subtotals, cost breakdown, and notes.
 
 ### UI (`src/components/`)
 
 Three-stage state machine managed in `App.tsx`:
 - **InputStage** — JSON textarea + file upload (FileReader API)
 - **ProcessingStage** — Animated progress bar with dynamic, data-driven step reveals
-- **OutputStage** — Results table + JSON/TXT download buttons + estimate generator
+- **OutputStage** — Results table + JSON/TXT download buttons + estimate generator + PDF estimate download
 
 Each stage is a presentational component that communicates via callbacks (`onSubmit`, `onComplete`, `onReset`). No state management library — just `useState` in App.
 
@@ -75,7 +78,7 @@ Brutalist design with Foundry Company branding. Custom colors in `tailwind.confi
 
 ## Testing
 
-Five test files across two directories (217 total):
+Five test files across two directories (223 total):
 
 `src/processor/__tests__/`:
 - `processor.test.ts` — Core unit tests + integration (59 tests)
@@ -84,7 +87,7 @@ Five test files across two directories (217 total):
 
 `src/utils/__tests__/`:
 - `fuzzy.test.ts` — Levenshtein distance, similarity, fuzzy matching thresholds (23 tests)
-- `pricing.test.ts` — CSV parsing, estimate generation, match counting, project totals (18 tests)
+- `pricing.test.ts` — CSV parsing, metadata extraction, estimate generation, match counting, project totals with dynamic rates (24 tests)
 
 Tests cover classification accuracy, deduplication (MAX behavior), variant ratios, recursive chain resolution, fuzzy matching edge cases, and project cost arithmetic.
 

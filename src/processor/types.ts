@@ -40,6 +40,16 @@ export interface PricingEntry {
   diamondValue: number; // Diamonds per item
 }
 
+export interface PricingMetadata {
+  laborRate: number;      // d/block (from spreadsheet column 4)
+  adminFeeRate: number;   // fractional rate (spreadsheet column 5 value / 100)
+}
+
+export interface PricingData {
+  entries: PricingEntry[];
+  metadata: PricingMetadata;
+}
+
 export type MatchType = 'exact' | 'fuzzy' | 'missing';
 
 export interface EstimatedItem {
@@ -57,6 +67,7 @@ export interface ProjectEstimate {
   items: EstimatedItem[];
   materialsCost: number;
   totalBlocks: number;
+  laborRate: number;
   laborCost: number;
   subtotal: number;
   adminFeeRate: number;

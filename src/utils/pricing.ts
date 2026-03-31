@@ -1,14 +1,14 @@
-import type { ProcessedItem, PricingEntry, EstimatedItem, ProjectEstimate } from '../processor/types';
+import type { ProcessedItem, PricingEntry, PricingMetadata, PricingData, EstimatedItem, ProjectEstimate } from '../processor/types';
 import { stripNamespace } from '../processor/rules';
 import { findBestMatch } from './fuzzy';
 
 const SHEETS_CSV_URL =
   'https://docs.google.com/spreadsheets/d/e/2PACX-1vSpLeqXAPlN4UTFuDxG3FJ55kM5fU7lXps04ZtLT2eyd8Bq2EzY_trSmtRu6eJVIed9AXIIurvKLXWJ/pub?gid=1255677024&single=true&output=csv';
 
-export const LABOR_RATE = 0.05;      // diamonds per block placed
-export const ADMIN_FEE_RATE = 0.02;  // 2% admin fee
+const DEFAULT_LABOR_RATE = 7;        // d/block fallback
+const DEFAULT_ADMIN_FEE_RATE = 0.02; // 2% fallback
 
-export async function fetchPricingData(): Promise<PricingEntry[]> {
+export async function fetchPricingData(): Promise<PricingData> {
   const response = await fetch(SHEETS_CSV_URL);
   if (!response.ok) {
     throw new Error(`Failed to fetch pricing data: ${response.status}`);
@@ -17,29 +17,49 @@ export async function fetchPricingData(): Promise<PricingEntry[]> {
   return parseCSV(text);
 }
 
-export function parseCSV(csv: string): PricingEntry[] {
+export function parseCSV(csv: string): PricingData {
   const lines = csv.trim().split('\n');
-  if (lines.length < 2) return []; // header only or empty
+  const defaultMetadata: PricingMetadata = { laborRate: DEFAULT_LABOR_RATE, adminFeeRate: DEFAULT_ADMIN_FEE_RATE };
+  if (lines.length < 2) return { entries: [], metadata: defaultMetadata };
 
   const entries: PricingEntry[] = [];
+  let laborRate: number | null = null;
+  let adminFeeRate: number | null = null;
+
   // Skip header row (line 0)
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (!line) continue;
 
-    const commaIndex = line.indexOf(',');
-    if (commaIndex === -1) continue;
+    const cols = line.split(',');
+    if (cols.length < 2) continue;
 
-    const rawId = line.slice(0, commaIndex).trim().toLowerCase();
-    const itemId = stripNamespace(rawId); // normalize: "minecraft:sandstone" → "sandstone"
-    const valueStr = line.slice(commaIndex + 1).trim();
-    const diamondValue = parseFloat(valueStr);
+    const rawId = cols[0].trim().toLowerCase();
+    const itemId = stripNamespace(rawId);
+    const diamondValue = parseFloat(cols[1].trim());
 
     if (itemId && !isNaN(diamondValue)) {
       entries.push({ itemId, diamondValue });
     }
+
+    // Extract metadata from columns 4 and 5 (indices 3 and 4) — first non-empty value wins
+    if (laborRate === null && cols.length > 3) {
+      const val = parseFloat(cols[3].trim());
+      if (!isNaN(val)) laborRate = val;
+    }
+    if (adminFeeRate === null && cols.length > 4) {
+      const val = parseFloat(cols[4].trim());
+      if (!isNaN(val)) adminFeeRate = val / 100; // spreadsheet stores "2" meaning 2%
+    }
   }
-  return entries;
+
+  return {
+    entries,
+    metadata: {
+      laborRate: laborRate ?? DEFAULT_LABOR_RATE,
+      adminFeeRate: adminFeeRate ?? DEFAULT_ADMIN_FEE_RATE,
+    },
+  };
 }
 
 export function generateEstimate(
@@ -120,21 +140,25 @@ export function countMatched(estimate: EstimatedItem[]): {
   return { matched, fuzzy, unmatched };
 }
 
-export function calculateProjectEstimate(estimate: EstimatedItem[]): ProjectEstimate {
+export function calculateProjectEstimate(
+  estimate: EstimatedItem[],
+  metadata: PricingMetadata,
+): ProjectEstimate {
   const materialsCost = calculateTotalDiamonds(estimate);
   const totalBlocks = estimate.reduce((sum, item) => sum + item.Quantity, 0);
-  const laborCost = totalBlocks * LABOR_RATE;
+  const laborCost = totalBlocks * metadata.laborRate;
   const subtotal = materialsCost + laborCost;
-  const adminFee = subtotal * ADMIN_FEE_RATE;
+  const adminFee = subtotal * metadata.adminFeeRate;
   const projectTotal = subtotal + adminFee;
 
   return {
     items: estimate,
     materialsCost,
     totalBlocks,
+    laborRate: metadata.laborRate,
     laborCost,
     subtotal,
-    adminFeeRate: ADMIN_FEE_RATE,
+    adminFeeRate: metadata.adminFeeRate,
     adminFee,
     projectTotal,
   };

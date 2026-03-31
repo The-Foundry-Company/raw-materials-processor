@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import type { ProjectEstimate } from '../processor/types';
-import { countMatched, LABOR_RATE } from '../utils/pricing';
+import { countMatched } from '../utils/pricing';
 
 // ── Step types (same as ProcessingStage) ──
 
@@ -55,7 +55,7 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
     steps.push(
       { text: 'CALCULATING MATERIALS COST...', type: 'action' },
       { text: `MATERIALS: ${projectEstimate.materialsCost.toLocaleString()} DIAMONDS`, type: 'stat' },
-      { text: `CALCULATING LABOR (${projectEstimate.totalBlocks.toLocaleString()} BLOCKS × ${LABOR_RATE}D)...`, type: 'action' },
+      { text: `CALCULATING LABOR (${projectEstimate.totalBlocks.toLocaleString()} BLOCKS × ${projectEstimate.laborRate}D)...`, type: 'action' },
       { text: `LABOR: ${Math.ceil(projectEstimate.laborCost).toLocaleString()} DIAMONDS`, type: 'stat' },
       { text: `APPLYING ADMIN FEE (${(projectEstimate.adminFeeRate * 100).toFixed(0)}%)...`, type: 'action' },
       { text: `PROJECT TOTAL: ${Math.ceil(projectEstimate.projectTotal).toLocaleString()} DIAMONDS`, type: 'stat' },

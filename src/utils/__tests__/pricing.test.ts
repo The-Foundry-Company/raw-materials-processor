@@ -5,44 +5,72 @@ import {
   calculateTotalDiamonds,
   countMatched,
   calculateProjectEstimate,
-  LABOR_RATE,
-  ADMIN_FEE_RATE,
 } from '../pricing';
-import type { ProcessedItem, PricingEntry } from '../../processor/types';
+import type { ProcessedItem, PricingEntry, PricingMetadata } from '../../processor/types';
 
 describe('parseCSV', () => {
   it('parses standard CSV with header', () => {
     const csv = 'Item ID,Value in D/item\noak_log,50\nstone,10';
     const result = parseCSV(csv);
-    expect(result).toEqual([
+    expect(result.entries).toEqual([
       { itemId: 'oak_log', diamondValue: 50 },
       { itemId: 'stone', diamondValue: 10 },
     ]);
+    expect(result.metadata).toEqual({ laborRate: 7, adminFeeRate: 0.02 });
   });
 
   it('strips minecraft: prefix from item IDs', () => {
     const csv = 'Item ID,Value\nminecraft:sandstone,100\nsandstone,100';
     const result = parseCSV(csv);
-    expect(result[0].itemId).toBe('sandstone');
-    expect(result[1].itemId).toBe('sandstone');
+    expect(result.entries[0].itemId).toBe('sandstone');
+    expect(result.entries[1].itemId).toBe('sandstone');
   });
 
   it('handles empty lines and malformed entries', () => {
     const csv = 'header\n\noak_log,50\nbadline\n,30\nstone,abc';
     const result = parseCSV(csv);
-    expect(result).toEqual([{ itemId: 'oak_log', diamondValue: 50 }]);
+    expect(result.entries).toEqual([{ itemId: 'oak_log', diamondValue: 50 }]);
   });
 
   it('returns empty array for header-only CSV', () => {
-    expect(parseCSV('header')).toEqual([]);
-    expect(parseCSV('')).toEqual([]);
+    expect(parseCSV('header').entries).toEqual([]);
+    expect(parseCSV('').entries).toEqual([]);
   });
 
   it('lowercases item IDs', () => {
     const csv = 'h\nOAK_LOG,50\nMinecraft:Stone,10';
     const result = parseCSV(csv);
-    expect(result[0].itemId).toBe('oak_log');
-    expect(result[1].itemId).toBe('stone');
+    expect(result.entries[0].itemId).toBe('oak_log');
+    expect(result.entries[1].itemId).toBe('stone');
+  });
+
+  it('extracts labor rate and admin fee from first data row', () => {
+    const csv = 'Item ID,Value,,Labor Cost,Admin Fee\noak_slab,0.000549,,7,2\nspruce_slab,0.000651,,,';
+    const result = parseCSV(csv);
+    expect(result.metadata.laborRate).toBe(7);
+    expect(result.metadata.adminFeeRate).toBe(0.02); // 2 / 100
+    expect(result.entries).toHaveLength(2);
+  });
+
+  it('falls back to defaults when metadata columns are empty', () => {
+    const csv = 'Item ID,Value,,Labor,Admin\noak_log,50,,,\nstone,10,,,';
+    const result = parseCSV(csv);
+    expect(result.metadata.laborRate).toBe(7);
+    expect(result.metadata.adminFeeRate).toBe(0.02);
+  });
+
+  it('falls back to defaults for 2-column CSV', () => {
+    const csv = 'Item ID,Value\noak_log,50';
+    const result = parseCSV(csv);
+    expect(result.metadata.laborRate).toBe(7);
+    expect(result.metadata.adminFeeRate).toBe(0.02);
+  });
+
+  it('takes first non-empty metadata value when multiple rows have data', () => {
+    const csv = 'h,v,,l,a\noak,50,,7,2\nstone,10,,9,5';
+    const result = parseCSV(csv);
+    expect(result.metadata.laborRate).toBe(7);       // first row wins
+    expect(result.metadata.adminFeeRate).toBe(0.02);  // first row wins (2/100)
   });
 });
 
@@ -116,6 +144,8 @@ describe('countMatched', () => {
 });
 
 describe('calculateProjectEstimate', () => {
+  const testMetadata: PricingMetadata = { laborRate: 7, adminFeeRate: 0.02 };
+
   const items = [
     { Item: 'a', Quantity: 100, Category: 'Wood', diamondValue: 50, totalDiamonds: 5000, matched: true, matchType: 'exact' as const },
     { Item: 'b', Quantity: 200, Category: 'Stone', diamondValue: 10, totalDiamonds: 2000, matched: true, matchType: 'exact' as const },
@@ -123,43 +153,58 @@ describe('calculateProjectEstimate', () => {
   ];
 
   it('calculates materialsCost as sum of totalDiamonds', () => {
-    const result = calculateProjectEstimate(items);
+    const result = calculateProjectEstimate(items, testMetadata);
     expect(result.materialsCost).toBe(7000);
   });
 
   it('calculates totalBlocks as sum of Quantity', () => {
-    const result = calculateProjectEstimate(items);
+    const result = calculateProjectEstimate(items, testMetadata);
     expect(result.totalBlocks).toBe(350);
   });
 
   it('calculates laborCost correctly', () => {
-    const result = calculateProjectEstimate(items);
-    expect(result.laborCost).toBe(350 * LABOR_RATE); // 17.5
+    const result = calculateProjectEstimate(items, testMetadata);
+    expect(result.laborCost).toBe(350 * 7); // 2450
   });
 
   it('calculates subtotal as materials + labor', () => {
-    const result = calculateProjectEstimate(items);
-    expect(result.subtotal).toBe(7000 + 350 * LABOR_RATE);
+    const result = calculateProjectEstimate(items, testMetadata);
+    expect(result.subtotal).toBe(7000 + 350 * 7);
   });
 
   it('calculates admin fee at configured rate', () => {
-    const result = calculateProjectEstimate(items);
-    const expectedSubtotal = 7000 + 350 * LABOR_RATE;
-    expect(result.adminFee).toBeCloseTo(expectedSubtotal * ADMIN_FEE_RATE);
+    const result = calculateProjectEstimate(items, testMetadata);
+    const expectedSubtotal = 7000 + 350 * 7;
+    expect(result.adminFee).toBeCloseTo(expectedSubtotal * 0.02);
   });
 
   it('calculates projectTotal as subtotal + adminFee', () => {
-    const result = calculateProjectEstimate(items);
+    const result = calculateProjectEstimate(items, testMetadata);
     expect(result.projectTotal).toBeCloseTo(result.subtotal + result.adminFee);
   });
 
+  it('stores the laborRate', () => {
+    const result = calculateProjectEstimate(items, testMetadata);
+    expect(result.laborRate).toBe(7);
+  });
+
   it('stores the adminFeeRate', () => {
-    const result = calculateProjectEstimate(items);
-    expect(result.adminFeeRate).toBe(ADMIN_FEE_RATE);
+    const result = calculateProjectEstimate(items, testMetadata);
+    expect(result.adminFeeRate).toBe(0.02);
   });
 
   it('includes items array in result', () => {
-    const result = calculateProjectEstimate(items);
+    const result = calculateProjectEstimate(items, testMetadata);
     expect(result.items).toBe(items);
+  });
+
+  it('uses provided metadata rather than hardcoded values', () => {
+    const customMeta: PricingMetadata = { laborRate: 10, adminFeeRate: 0.05 };
+    const result = calculateProjectEstimate(items, customMeta);
+    expect(result.laborRate).toBe(10);
+    expect(result.laborCost).toBe(350 * 10);
+    expect(result.adminFeeRate).toBe(0.05);
+    const expectedSubtotal = 7000 + 3500;
+    expect(result.adminFee).toBeCloseTo(expectedSubtotal * 0.05);
   });
 });
