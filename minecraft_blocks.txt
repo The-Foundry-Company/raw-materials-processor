@@ -1,0 +1,1184 @@
+# Minecraft Java Edition -- Complete Block List
+# Generated: 2026-03-31
+# Total blocks: 1168
+# Source: Minecraft Wiki Block IDs table (https://minecraft.wiki/w/Java_Edition_data_values/Blocks)
+#
+# Format: block_id | Block Name | Item Form Status
+# Item Form Status:
+#   Identical     = Block and item share the same ID
+#   Different:X   = Block has item form with a different ID (X)
+#   Alternate:X   = Alternate placement of block X
+#   Indirect:X    = No direct item, but Pick Block gives X
+#   No item form  = Block has no item form at all
+
+
+block_id                                      | Block Name                               | Item Form Status
+--------------------------------------------- | ---------------------------------------- | ------------------------------
+acacia_button                                 | Acacia Button                            | Identical
+acacia_door                                   | Acacia Door                              | Identical
+acacia_fence                                  | Acacia Fence                             | Identical
+acacia_fence_gate                             | Acacia Fence Gate                        | Identical
+acacia_hanging_sign                           | Acacia Hanging Sign                      | Identical
+acacia_leaves                                 | Acacia Leaves                            | Identical
+acacia_log                                    | Acacia Log                               | Identical
+acacia_planks                                 | Acacia Planks                            | Identical
+acacia_pressure_plate                         | Acacia Pressure Plate                    | Identical
+acacia_sapling                                | Acacia Sapling                           | Identical
+acacia_shelf                                  | Acacia Shelf                             | Identical
+acacia_sign                                   | Acacia Sign                              | Identical
+acacia_slab                                   | Acacia Slab                              | Identical
+acacia_stairs                                 | Acacia Stairs                            | Identical
+acacia_trapdoor                               | Acacia Trapdoor                          | Identical
+acacia_wall_hanging_sign                      | Acacia Wall Hanging Sign                 | Alternate:acacia_hanging_sign
+acacia_wall_sign                              | Acacia Wall Sign                         | Alternate:acacia_sign
+acacia_wood                                   | Acacia Wood                              | Identical
+activator_rail                                | Activator Rail                           | Identical
+air                                           | Air                                      | Identical
+allium                                        | Allium                                   | Identical
+amethyst_block                                | Block of Amethyst                        | Identical
+amethyst_cluster                              | Amethyst Cluster                         | Identical
+ancient_debris                                | Ancient Debris                           | Identical
+andesite                                      | Andesite                                 | Identical
+andesite_slab                                 | Andesite Slab                            | Identical
+andesite_stairs                               | Andesite Stairs                          | Identical
+andesite_wall                                 | Andesite Wall                            | Identical
+anvil                                         | Anvil                                    | Identical
+attached_melon_stem                           | Attached Melon Stem                      | Indirect:melon_seeds
+attached_pumpkin_stem                         | Attached Pumpkin Stem                    | Indirect:pumpkin_seeds
+azalea                                        | Azalea                                   | Identical
+azalea_leaves                                 | Azalea Leaves                            | Identical
+azure_bluet                                   | Azure Bluet                              | Identical
+bamboo                                        | Bamboo                                   | Identical
+bamboo_block                                  | Block of Bamboo                          | Identical
+bamboo_button                                 | Bamboo Button                            | Identical
+bamboo_door                                   | Bamboo Door                              | Identical
+bamboo_fence                                  | Bamboo Fence                             | Identical
+bamboo_fence_gate                             | Bamboo Fence Gate                        | Identical
+bamboo_hanging_sign                           | Bamboo Hanging Sign                      | Identical
+bamboo_mosaic                                 | Bamboo Mosaic                            | Identical
+bamboo_mosaic_slab                            | Bamboo Mosaic Slab                       | Identical
+bamboo_mosaic_stairs                          | Bamboo Mosaic Stairs                     | Identical
+bamboo_planks                                 | Bamboo Planks                            | Identical
+bamboo_pressure_plate                         | Bamboo Pressure Plate                    | Identical
+bamboo_sapling                                | Bamboo Shoot                             | Indirect:bamboo
+bamboo_shelf                                  | Bamboo Shelf                             | Identical
+bamboo_sign                                   | Bamboo Sign                              | Identical
+bamboo_slab                                   | Bamboo Slab                              | Identical
+bamboo_stairs                                 | Bamboo Stairs                            | Identical
+bamboo_trapdoor                               | Bamboo Trapdoor                          | Identical
+bamboo_wall_hanging_sign                      | Bamboo Wall Hanging Sign                 | Alternate:bamboo_hanging_sign
+bamboo_wall_sign                              | Bamboo Wall Sign                         | Alternate:bamboo_sign
+barrel                                        | Barrel                                   | Identical
+barrier                                       | Barrier                                  | Identical
+basalt                                        | Basalt                                   | Identical
+beacon                                        | Beacon                                   | Identical
+bedrock                                       | Bedrock                                  | Identical
+bee_nest                                      | Bee Nest                                 | Identical
+beehive                                       | Beehive                                  | Identical
+beetroots                                     | Beetroots                                | Different:beetroot_seeds
+bell                                          | Bell                                     | Identical
+big_dripleaf                                  | Big Dripleaf                             | Identical
+big_dripleaf_stem                             | Big Dripleaf Stem                        | Indirect:big_dripleaf
+birch_button                                  | Birch Button                             | Identical
+birch_door                                    | Birch Door                               | Identical
+birch_fence                                   | Birch Fence                              | Identical
+birch_fence_gate                              | Birch Fence Gate                         | Identical
+birch_hanging_sign                            | Birch Hanging Sign                       | Identical
+birch_leaves                                  | Birch Leaves                             | Identical
+birch_log                                     | Birch Log                                | Identical
+birch_planks                                  | Birch Planks                             | Identical
+birch_pressure_plate                          | Birch Pressure Plate                     | Identical
+birch_sapling                                 | Birch Sapling                            | Identical
+birch_shelf                                   | Birch Shelf                              | Identical
+birch_sign                                    | Birch Sign                               | Identical
+birch_slab                                    | Birch Slab                               | Identical
+birch_stairs                                  | Birch Stairs                             | Identical
+birch_trapdoor                                | Birch Trapdoor                           | Identical
+birch_wall_hanging_sign                       | Birch Wall Hanging Sign                  | Alternate:birch_hanging_sign
+birch_wall_sign                               | Birch Wall Sign                          | Alternate:birch_sign
+birch_wood                                    | Birch Wood                               | Identical
+black_banner                                  | Black Banner                             | Identical
+black_bed                                     | Black Bed                                | Identical
+black_candle                                  | Black Candle                             | Identical
+black_candle_cake                             | Cake with Black Candle                   | Indirect:cake
+black_carpet                                  | Black Carpet                             | Identical
+black_concrete                                | Black Concrete                           | Identical
+black_concrete_powder                         | Black Concrete Powder                    | Identical
+black_glazed_terracotta                       | Black Glazed Terracotta                  | Identical
+black_shulker_box                             | Black Shulker Box                        | Identical
+black_stained_glass                           | Black Stained Glass                      | Identical
+black_stained_glass_pane                      | Black Stained Glass Pane                 | Identical
+black_terracotta                              | Black Terracotta                         | Identical
+black_wall_banner                             | Black Wall Banner                        | Alternate:black_banner
+black_wool                                    | Black Wool                               | Identical
+blackstone                                    | Blackstone                               | Identical
+blackstone_slab                               | Blackstone Slab                          | Identical
+blackstone_stairs                             | Blackstone Stairs                        | Identical
+blackstone_wall                               | Blackstone Wall                          | Identical
+blast_furnace                                 | Blast Furnace                            | Identical
+blue_banner                                   | Blue Banner                              | Identical
+blue_bed                                      | Blue Bed                                 | Identical
+blue_candle                                   | Blue Candle                              | Identical
+blue_candle_cake                              | Cake with Blue Candle                    | Indirect:cake
+blue_carpet                                   | Blue Carpet                              | Identical
+blue_concrete                                 | Blue Concrete                            | Identical
+blue_concrete_powder                          | Blue Concrete Powder                     | Identical
+blue_glazed_terracotta                        | Blue Glazed Terracotta                   | Identical
+blue_ice                                      | Blue Ice                                 | Identical
+blue_orchid                                   | Blue Orchid                              | Identical
+blue_shulker_box                              | Blue Shulker Box                         | Identical
+blue_stained_glass                            | Blue Stained Glass                       | Identical
+blue_stained_glass_pane                       | Blue Stained Glass Pane                  | Identical
+blue_terracotta                               | Blue Terracotta                          | Identical
+blue_wall_banner                              | Blue Wall Banner                         | Alternate:blue_banner
+blue_wool                                     | Blue Wool                                | Identical
+bone_block                                    | Bone Block                               | Identical
+bookshelf                                     | Bookshelf                                | Identical
+brain_coral                                   | Brain Coral                              | Identical
+brain_coral_block                             | Brain Coral Block                        | Identical
+brain_coral_fan                               | Brain Coral Fan                          | Identical
+brain_coral_wall_fan                          | Brain Coral Wall Fan                     | Alternate:brain_coral_fan
+brewing_stand                                 | Brewing Stand                            | Identical
+brick_slab                                    | Brick Slab                               | Identical
+brick_stairs                                  | Brick Stairs                             | Identical
+brick_wall                                    | Brick Wall                               | Identical
+bricks                                        | Bricks                                   | Identical
+brown_banner                                  | Brown Banner                             | Identical
+brown_bed                                     | Brown Bed                                | Identical
+brown_candle                                  | Brown Candle                             | Identical
+brown_candle_cake                             | Cake with Brown Candle                   | Indirect:cake
+brown_carpet                                  | Brown Carpet                             | Identical
+brown_concrete                                | Brown Concrete                           | Identical
+brown_concrete_powder                         | Brown Concrete Powder                    | Identical
+brown_glazed_terracotta                       | Brown Glazed Terracotta                  | Identical
+brown_mushroom                                | Brown Mushroom                           | Identical
+brown_mushroom_block                          | Brown Mushroom Block                     | Identical
+brown_shulker_box                             | Brown Shulker Box                        | Identical
+brown_stained_glass                           | Brown Stained Glass                      | Identical
+brown_stained_glass_pane                      | Brown Stained Glass Pane                 | Identical
+brown_terracotta                              | Brown Terracotta                         | Identical
+brown_wall_banner                             | Brown Wall Banner                        | Alternate:brown_banner
+brown_wool                                    | Brown Wool                               | Identical
+bubble_column                                 | Bubble Column                            | No item form
+bubble_coral                                  | Bubble Coral                             | Identical
+bubble_coral_block                            | Bubble Coral Block                       | Identical
+bubble_coral_fan                              | Bubble Coral Fan                         | Identical
+bubble_coral_wall_fan                         | Bubble Coral Wall Fan                    | Alternate:bubble_coral_fan
+budding_amethyst                              | Budding Amethyst                         | Identical
+bush                                          | Bush                                     | Identical
+cactus                                        | Cactus                                   | Identical
+cactus_flower                                 | Cactus Flower                            | Identical
+cake                                          | Cake                                     | Identical
+calcite                                       | Calcite                                  | Identical
+calibrated_sculk_sensor                       | Calibrated Sculk Sensor                  | Identical
+campfire                                      | Campfire                                 | Identical
+candle                                        | Candle                                   | Identical
+candle_cake                                   | Cake with Candle                         | Indirect:cake
+carrots                                       | Carrots                                  | Different:carrot
+cartography_table                             | Cartography Table                        | Identical
+carved_pumpkin                                | Carved Pumpkin                           | Identical
+cauldron                                      | Cauldron                                 | Identical
+cave_air                                      | Cave Air                                 | No item form
+cave_vines                                    | Cave Vines                               | Different:glow_berries
+cave_vines_plant                              | Cave Vines Plant                         | Indirect:glow_berries
+chain_command_block                           | Chain Command Block                      | Identical
+cherry_button                                 | Cherry Button                            | Identical
+cherry_door                                   | Cherry Door                              | Identical
+cherry_fence                                  | Cherry Fence                             | Identical
+cherry_fence_gate                             | Cherry Fence Gate                        | Identical
+cherry_hanging_sign                           | Cherry Hanging Sign                      | Identical
+cherry_leaves                                 | Cherry Leaves                            | Identical
+cherry_log                                    | Cherry Log                               | Identical
+cherry_planks                                 | Cherry Planks                            | Identical
+cherry_pressure_plate                         | Cherry Pressure Plate                    | Identical
+cherry_sapling                                | Cherry Sapling                           | Identical
+cherry_shelf                                  | Cherry Shelf                             | Identical
+cherry_sign                                   | Cherry Sign                              | Identical
+cherry_slab                                   | Cherry Slab                              | Identical
+cherry_stairs                                 | Cherry Stairs                            | Identical
+cherry_trapdoor                               | Cherry Trapdoor                          | Identical
+cherry_wall_hanging_sign                      | Cherry Wall Hanging Sign                 | Alternate:cherry_hanging_sign
+cherry_wall_sign                              | Cherry Wall Sign                         | Alternate:cherry_sign
+cherry_wood                                   | Cherry Wood                              | Identical
+chest                                         | Chest                                    | Identical
+chipped_anvil                                 | Chipped Anvil                            | Identical
+chiseled_bookshelf                            | Chiseled Bookshelf                       | Identical
+chiseled_copper                               | Chiseled Copper                          | Identical
+chiseled_deepslate                            | Chiseled Deepslate                       | Identical
+chiseled_nether_bricks                        | Chiseled Nether Bricks                   | Identical
+chiseled_polished_blackstone                  | Chiseled Polished Blackstone             | Identical
+chiseled_quartz_block                         | Chiseled Quartz Block                    | Identical
+chiseled_red_sandstone                        | Chiseled Red Sandstone                   | Identical
+chiseled_resin_bricks                         | Chiseled Resin Bricks                    | Identical
+chiseled_sandstone                            | Chiseled Sandstone                       | Identical
+chiseled_stone_bricks                         | Chiseled Stone Bricks                    | Identical
+chiseled_tuff                                 | Chiseled Tuff                            | Identical
+chiseled_tuff_bricks                          | Chiseled Tuff Bricks                     | Identical
+chorus_flower                                 | Chorus Flower                            | Identical
+chorus_plant                                  | Chorus Plant                             | Identical
+clay                                          | Clay                                     | Identical
+closed_eyeblossom                             | Closed Eyeblossom                        | Identical
+coal_block                                    | Block of Coal                            | Identical
+coal_ore                                      | Coal Ore                                 | Identical
+coarse_dirt                                   | Coarse Dirt                              | Identical
+cobbled_deepslate                             | Cobbled Deepslate                        | Identical
+cobbled_deepslate_slab                        | Cobbled Deepslate Slab                   | Identical
+cobbled_deepslate_stairs                      | Cobbled Deepslate Stairs                 | Identical
+cobbled_deepslate_wall                        | Cobbled Deepslate Wall                   | Identical
+cobblestone                                   | Cobblestone                              | Identical
+cobblestone_slab                              | Cobblestone Slab                         | Identical
+cobblestone_stairs                            | Cobblestone Stairs                       | Identical
+cobblestone_wall                              | Cobblestone Wall                         | Identical
+cobweb                                        | Cobweb                                   | Identical
+cocoa                                         | Cocoa                                    | Different:cocoa_beans
+command_block                                 | Command Block                            | Identical
+comparator                                    | Redstone Comparator                      | Identical
+composter                                     | Composter                                | Identical
+conduit                                       | Conduit                                  | Identical
+copper_bars                                   | Copper Bars                              | Identical
+copper_block                                  | Block of Copper                          | Identical
+copper_bulb                                   | Copper Bulb                              | Identical
+copper_chain                                  | Copper Chain                             | Identical
+copper_chest                                  | Copper Chest                             | Identical
+copper_door                                   | Copper Door                              | Identical
+copper_golem_statue                           | Copper Golem Statue                      | Identical
+copper_grate                                  | Copper Grate                             | Identical
+copper_lantern                                | Copper Lantern                           | Identical
+copper_ore                                    | Copper Ore                               | Identical
+copper_torch                                  | Copper Torch                             | Identical
+copper_trapdoor                               | Copper Trapdoor                          | Identical
+copper_wall_torch                             | Copper Wall Torch                        | Alternate:copper_torch
+cornflower                                    | Cornflower                               | Identical
+cracked_deepslate_bricks                      | Cracked Deepslate Bricks                 | Identical
+cracked_deepslate_tiles                       | Cracked Deepslate Tiles                  | Identical
+cracked_nether_bricks                         | Cracked Nether Bricks                    | Identical
+cracked_polished_blackstone_bricks            | Cracked Polished Blackstone Bricks       | Identical
+cracked_stone_bricks                          | Cracked Stone Bricks                     | Identical
+crafter                                       | Crafter                                  | Identical
+crafting_table                                | Crafting Table                           | Identical
+creaking_heart                                | Creaking Heart                           | Identical
+creeper_head                                  | Creeper Head                             | Identical
+creeper_wall_head                             | Creeper Wall Head                        | Alternate:creeper_head
+crimson_button                                | Crimson Button                           | Identical
+crimson_door                                  | Crimson Door                             | Identical
+crimson_fence                                 | Crimson Fence                            | Identical
+crimson_fence_gate                            | Crimson Fence Gate                       | Identical
+crimson_fungus                                | Crimson Fungus                           | Identical
+crimson_hanging_sign                          | Crimson Hanging Sign                     | Identical
+crimson_hyphae                                | Crimson Hyphae                           | Identical
+crimson_nylium                                | Crimson Nylium                           | Identical
+crimson_planks                                | Crimson Planks                           | Identical
+crimson_pressure_plate                        | Crimson Pressure Plate                   | Identical
+crimson_roots                                 | Crimson Roots                            | Identical
+crimson_shelf                                 | Crimson Shelf                            | Identical
+crimson_sign                                  | Crimson Sign                             | Identical
+crimson_slab                                  | Crimson Slab                             | Identical
+crimson_stairs                                | Crimson Stairs                           | Identical
+crimson_stem                                  | Crimson Stem                             | Identical
+crimson_trapdoor                              | Crimson Trapdoor                         | Identical
+crimson_wall_hanging_sign                     | Crimson Wall Hanging Sign                | Alternate:crimson_hanging_sign
+crimson_wall_sign                             | Crimson Wall Sign                        | Alternate:crimson_sign
+crying_obsidian                               | Crying Obsidian                          | Identical
+cut_copper                                    | Cut Copper                               | Identical
+cut_copper_slab                               | Cut Copper Slab                          | Identical
+cut_copper_stairs                             | Cut Copper Stairs                        | Identical
+cut_red_sandstone                             | Cut Red Sandstone                        | Identical
+cut_red_sandstone_slab                        | Cut Red Sandstone Slab                   | Identical
+cut_sandstone                                 | Cut Sandstone                            | Identical
+cut_sandstone_slab                            | Cut Sandstone Slab                       | Identical
+cyan_banner                                   | Cyan Banner                              | Identical
+cyan_bed                                      | Cyan Bed                                 | Identical
+cyan_candle                                   | Cyan Candle                              | Identical
+cyan_candle_cake                              | Cake with Cyan Candle                    | Indirect:cake
+cyan_carpet                                   | Cyan Carpet                              | Identical
+cyan_concrete                                 | Cyan Concrete                            | Identical
+cyan_concrete_powder                          | Cyan Concrete Powder                     | Identical
+cyan_glazed_terracotta                        | Cyan Glazed Terracotta                   | Identical
+cyan_shulker_box                              | Cyan Shulker Box                         | Identical
+cyan_stained_glass                            | Cyan Stained Glass                       | Identical
+cyan_stained_glass_pane                       | Cyan Stained Glass Pane                  | Identical
+cyan_terracotta                               | Cyan Terracotta                          | Identical
+cyan_wall_banner                              | Cyan Wall Banner                         | Alternate:cyan_banner
+cyan_wool                                     | Cyan Wool                                | Identical
+damaged_anvil                                 | Damaged Anvil                            | Identical
+dandelion                                     | Dandelion                                | Identical
+dark_oak_button                               | Dark Oak Button                          | Identical
+dark_oak_door                                 | Dark Oak Door                            | Identical
+dark_oak_fence                                | Dark Oak Fence                           | Identical
+dark_oak_fence_gate                           | Dark Oak Fence Gate                      | Identical
+dark_oak_hanging_sign                         | Dark Oak Hanging Sign                    | Identical
+dark_oak_leaves                               | Dark Oak Leaves                          | Identical
+dark_oak_log                                  | Dark Oak Log                             | Identical
+dark_oak_planks                               | Dark Oak Planks                          | Identical
+dark_oak_pressure_plate                       | Dark Oak Pressure Plate                  | Identical
+dark_oak_sapling                              | Dark Oak Sapling                         | Identical
+dark_oak_shelf                                | Dark Oak Shelf                           | Identical
+dark_oak_sign                                 | Dark Oak Sign                            | Identical
+dark_oak_slab                                 | Dark Oak Slab                            | Identical
+dark_oak_stairs                               | Dark Oak Stairs                          | Identical
+dark_oak_trapdoor                             | Dark Oak Trapdoor                        | Identical
+dark_oak_wall_hanging_sign                    | Dark Oak Wall Hanging Sign               | Alternate:dark_oak_hanging_sign
+dark_oak_wall_sign                            | Dark Oak Wall Sign                       | Alternate:dark_oak_sign
+dark_oak_wood                                 | Dark Oak Wood                            | Identical
+dark_prismarine                               | Dark Prismarine                          | Identical
+dark_prismarine_slab                          | Dark Prismarine Slab                     | Identical
+dark_prismarine_stairs                        | Dark Prismarine Stairs                   | Identical
+daylight_detector                             | Daylight Detector                        | Identical
+dead_brain_coral                              | Dead Brain Coral                         | Identical
+dead_brain_coral_block                        | Dead Brain Coral Block                   | Identical
+dead_brain_coral_fan                          | Dead Brain Coral Fan                     | Identical
+dead_brain_coral_wall_fan                     | Dead Brain Coral Wall Fan                | Alternate:dead_brain_coral_fan
+dead_bubble_coral                             | Dead Bubble Coral                        | Identical
+dead_bubble_coral_block                       | Dead Bubble Coral Block                  | Identical
+dead_bubble_coral_fan                         | Dead Bubble Coral Fan                    | Identical
+dead_bubble_coral_wall_fan                    | Dead Bubble Coral Wall Fan               | Alternate:dead_bubble_coral_fan
+dead_bush                                     | Dead Bush                                | Identical
+dead_fire_coral                               | Dead Fire Coral                          | Identical
+dead_fire_coral_block                         | Dead Fire Coral Block                    | Identical
+dead_fire_coral_fan                           | Dead Fire Coral Fan                      | Identical
+dead_fire_coral_wall_fan                      | Dead Fire Coral Wall Fan                 | Alternate:dead_fire_coral_fan
+dead_horn_coral                               | Dead Horn Coral                          | Identical
+dead_horn_coral_block                         | Dead Horn Coral Block                    | Identical
+dead_horn_coral_fan                           | Dead Horn Coral Fan                      | Identical
+dead_horn_coral_wall_fan                      | Dead Horn Coral Wall Fan                 | Alternate:dead_horn_coral_fan
+dead_tube_coral                               | Dead Tube Coral                          | Identical
+dead_tube_coral_block                         | Dead Tube Coral Block                    | Identical
+dead_tube_coral_fan                           | Dead Tube Coral Fan                      | Identical
+dead_tube_coral_wall_fan                      | Dead Tube Coral Wall Fan                 | Alternate:dead_tube_coral_fan
+decorated_pot                                 | Decorated Pot                            | Identical
+deepslate                                     | Deepslate                                | Identical
+deepslate_brick_slab                          | Deepslate Brick Slab                     | Identical
+deepslate_brick_stairs                        | Deepslate Brick Stairs                   | Identical
+deepslate_brick_wall                          | Deepslate Brick Wall                     | Identical
+deepslate_bricks                              | Deepslate Bricks                         | Identical
+deepslate_coal_ore                            | Deepslate Coal Ore                       | Identical
+deepslate_copper_ore                          | Deepslate Copper Ore                     | Identical
+deepslate_diamond_ore                         | Deepslate Diamond Ore                    | Identical
+deepslate_emerald_ore                         | Deepslate Emerald Ore                    | Identical
+deepslate_gold_ore                            | Deepslate Gold Ore                       | Identical
+deepslate_iron_ore                            | Deepslate Iron Ore                       | Identical
+deepslate_lapis_ore                           | Deepslate Lapis Lazuli Ore               | Identical
+deepslate_redstone_ore                        | Deepslate Redstone Ore                   | Identical
+deepslate_tile_slab                           | Deepslate Tile Slab                      | Identical
+deepslate_tile_stairs                         | Deepslate Tile Stairs                    | Identical
+deepslate_tile_wall                           | Deepslate Tile Wall                      | Identical
+deepslate_tiles                               | Deepslate Tiles                          | Identical
+detector_rail                                 | Detector Rail                            | Identical
+diamond_block                                 | Block of Diamond                         | Identical
+diamond_ore                                   | Diamond Ore                              | Identical
+diorite                                       | Diorite                                  | Identical
+diorite_slab                                  | Diorite Slab                             | Identical
+diorite_stairs                                | Diorite Stairs                           | Identical
+diorite_wall                                  | Diorite Wall                             | Identical
+dirt                                          | Dirt                                     | Identical
+dirt_path                                     | Dirt Path                                | Identical
+dispenser                                     | Dispenser                                | Identical
+dragon_egg                                    | Dragon Egg                               | Identical
+dragon_head                                   | Dragon Head                              | Identical
+dragon_wall_head                              | Dragon Wall Head                         | Alternate:dragon_head
+dried_ghast                                   | Dried Ghast                              | Identical
+dried_kelp_block                              | Dried Kelp Block                         | Identical
+dripstone_block                               | Dripstone Block                          | Identical
+dropper                                       | Dropper                                  | Identical
+emerald_block                                 | Block of Emerald                         | Identical
+emerald_ore                                   | Emerald Ore                              | Identical
+enchanting_table                              | Enchanting Table                         | Identical
+end_gateway                                   | End Gateway                              | No item form
+end_portal                                    | End Portal                               | No item form
+end_portal_frame                              | End Portal Frame                         | Identical
+end_rod                                       | End Rod                                  | Identical
+end_stone                                     | End Stone                                | Identical
+end_stone_brick_slab                          | End Stone Brick Slab                     | Identical
+end_stone_brick_stairs                        | End Stone Brick Stairs                   | Identical
+end_stone_brick_wall                          | End Stone Brick Wall                     | Identical
+end_stone_bricks                              | End Stone Bricks                         | Identical
+ender_chest                                   | Ender Chest                              | Identical
+exposed_chiseled_copper                       | Exposed Chiseled Copper                  | Identical
+exposed_copper                                | Exposed Copper                           | Identical
+exposed_copper_bars                           | Exposed Copper Bars                      | Identical
+exposed_copper_bulb                           | Exposed Copper Bulb                      | Identical
+exposed_copper_chain                          | Exposed Copper Chain                     | Identical
+exposed_copper_chest                          | Exposed Copper Chest                     | Identical
+exposed_copper_door                           | Exposed Copper Door                      | Identical
+exposed_copper_golem_statue                   | Exposed Copper Golem Statue              | Identical
+exposed_copper_grate                          | Exposed Copper Grate                     | Identical
+exposed_copper_lantern                        | Exposed Copper Lantern                   | Identical
+exposed_copper_trapdoor                       | Exposed Copper Trapdoor                  | Identical
+exposed_cut_copper                            | Exposed Cut Copper                       | Identical
+exposed_cut_copper_slab                       | Exposed Cut Copper Slab                  | Identical
+exposed_cut_copper_stairs                     | Exposed Cut Copper Stairs                | Identical
+exposed_lightning_rod                         | Exposed Lightning Rod                    | Identical
+farmland                                      | Farmland                                 | Identical
+fern                                          | Fern                                     | Identical
+fire                                          | Fire                                     | No item form
+fire_coral                                    | Fire Coral                               | Identical
+fire_coral_block                              | Fire Coral Block                         | Identical
+fire_coral_fan                                | Fire Coral Fan                           | Identical
+fire_coral_wall_fan                           | Fire Coral Wall Fan                      | Alternate:fire_coral_fan
+firefly_bush                                  | Firefly Bush                             | Identical
+fletching_table                               | Fletching Table                          | Identical
+flower_pot                                    | Flower Pot                               | Identical
+flowering_azalea                              | Flowering Azalea                         | Identical
+flowering_azalea_leaves                       | Flowering Azalea Leaves                  | Identical
+frogspawn                                     | Frogspawn                                | Identical
+frosted_ice                                   | Frosted Ice                              | No item form
+furnace                                       | Furnace                                  | Identical
+gilded_blackstone                             | Gilded Blackstone                        | Identical
+glass                                         | Glass                                    | Identical
+glass_pane                                    | Glass Pane                               | Identical
+glow_lichen                                   | Glow Lichen                              | Identical
+glowstone                                     | Glowstone                                | Identical
+gold_block                                    | Block of Gold                            | Identical
+gold_ore                                      | Gold Ore                                 | Identical
+golden_dandelion                              | Golden Dandelion                         | Identical
+granite                                       | Granite                                  | Identical
+granite_slab                                  | Granite Slab                             | Identical
+granite_stairs                                | Granite Stairs                           | Identical
+granite_wall                                  | Granite Wall                             | Identical
+grass_block                                   | Grass Block                              | Identical
+gravel                                        | Gravel                                   | Identical
+gray_banner                                   | Gray Banner                              | Identical
+gray_bed                                      | Gray Bed                                 | Identical
+gray_candle                                   | Gray Candle                              | Identical
+gray_candle_cake                              | Cake with Gray Candle                    | Indirect:cake
+gray_carpet                                   | Gray Carpet                              | Identical
+gray_concrete                                 | Gray Concrete                            | Identical
+gray_concrete_powder                          | Gray Concrete Powder                     | Identical
+gray_glazed_terracotta                        | Gray Glazed Terracotta                   | Identical
+gray_shulker_box                              | Gray Shulker Box                         | Identical
+gray_stained_glass                            | Gray Stained Glass                       | Identical
+gray_stained_glass_pane                       | Gray Stained Glass Pane                  | Identical
+gray_terracotta                               | Gray Terracotta                          | Identical
+gray_wall_banner                              | Gray Wall Banner                         | Alternate:gray_banner
+gray_wool                                     | Gray Wool                                | Identical
+green_banner                                  | Green Banner                             | Identical
+green_bed                                     | Green Bed                                | Identical
+green_candle                                  | Green Candle                             | Identical
+green_candle_cake                             | Cake with Green Candle                   | Indirect:cake
+green_carpet                                  | Green Carpet                             | Identical
+green_concrete                                | Green Concrete                           | Identical
+green_concrete_powder                         | Green Concrete Powder                    | Identical
+green_glazed_terracotta                       | Green Glazed Terracotta                  | Identical
+green_shulker_box                             | Green Shulker Box                        | Identical
+green_stained_glass                           | Green Stained Glass                      | Identical
+green_stained_glass_pane                      | Green Stained Glass Pane                 | Identical
+green_terracotta                              | Green Terracotta                         | Identical
+green_wall_banner                             | Green Wall Banner                        | Alternate:green_banner
+green_wool                                    | Green Wool                               | Identical
+grindstone                                    | Grindstone                               | Identical
+hanging_roots                                 | Hanging Roots                            | Identical
+hay_block                                     | Hay Bale                                 | Identical
+heavy_core                                    | Heavy Core                               | Identical
+heavy_weighted_pressure_plate                 | Heavy Weighted Pressure Plate            | Identical
+honey_block                                   | Honey Block                              | Identical
+honeycomb_block                               | Honeycomb Block                          | Identical
+hopper                                        | Hopper                                   | Identical
+horn_coral                                    | Horn Coral                               | Identical
+horn_coral_block                              | Horn Coral Block                         | Identical
+horn_coral_fan                                | Horn Coral Fan                           | Identical
+horn_coral_wall_fan                           | Horn Coral Wall Fan                      | Alternate:horn_coral_fan
+ice                                           | Ice                                      | Identical
+infested_chiseled_stone_bricks                | Infested Chiseled Stone Bricks           | Identical
+infested_cobblestone                          | Infested Cobblestone                     | Identical
+infested_cracked_stone_bricks                 | Infested Cracked Stone Bricks            | Identical
+infested_deepslate                            | Infested Deepslate                       | Identical
+infested_mossy_stone_bricks                   | Infested Mossy Stone Bricks              | Identical
+infested_stone                                | Infested Stone                           | Identical
+infested_stone_bricks                         | Infested Stone Bricks                    | Identical
+iron_bars                                     | Iron Bars                                | Identical
+iron_block                                    | Block of Iron                            | Identical
+iron_chain                                    | Iron Chain                               | Identical
+iron_door                                     | Iron Door                                | Identical
+iron_ore                                      | Iron Ore                                 | Identical
+iron_trapdoor                                 | Iron Trapdoor                            | Identical
+jack_o_lantern                                | Jack o'Lantern                           | Identical
+jigsaw                                        | Jigsaw Block                             | Identical
+jukebox                                       | Jukebox                                  | Identical
+jungle_button                                 | Jungle Button                            | Identical
+jungle_door                                   | Jungle Door                              | Identical
+jungle_fence                                  | Jungle Fence                             | Identical
+jungle_fence_gate                             | Jungle Fence Gate                        | Identical
+jungle_hanging_sign                           | Jungle Hanging Sign                      | Identical
+jungle_leaves                                 | Jungle Leaves                            | Identical
+jungle_log                                    | Jungle Log                               | Identical
+jungle_planks                                 | Jungle Planks                            | Identical
+jungle_pressure_plate                         | Jungle Pressure Plate                    | Identical
+jungle_sapling                                | Jungle Sapling                           | Identical
+jungle_shelf                                  | Jungle Shelf                             | Identical
+jungle_sign                                   | Jungle Sign                              | Identical
+jungle_slab                                   | Jungle Slab                              | Identical
+jungle_stairs                                 | Jungle Stairs                            | Identical
+jungle_trapdoor                               | Jungle Trapdoor                          | Identical
+jungle_wall_hanging_sign                      | Jungle Wall Hanging Sign                 | Alternate:jungle_hanging_sign
+jungle_wall_sign                              | Jungle Wall Sign                         | Alternate:jungle_sign
+jungle_wood                                   | Jungle Wood                              | Identical
+kelp                                          | Kelp                                     | Identical
+kelp_plant                                    | Kelp Plant                               | Indirect:kelp
+ladder                                        | Ladder                                   | Identical
+lantern                                       | Lantern                                  | Identical
+lapis_block                                   | Block of Lapis Lazuli                    | Identical
+lapis_ore                                     | Lapis Lazuli Ore                         | Identical
+large_amethyst_bud                            | Large Amethyst Bud                       | Identical
+large_fern                                    | Large Fern                               | Identical
+lava                                          | Lava                                     | No item form
+lava_cauldron                                 | Lava Cauldron                            | Alternate:cauldron
+leaf_litter                                   | Leaf Litter                              | Identical
+lectern                                       | Lectern                                  | Identical
+lever                                         | Lever                                    | Identical
+light                                         | Light                                    | Identical
+light_blue_banner                             | Light Blue Banner                        | Identical
+light_blue_bed                                | Light Blue Bed                           | Identical
+light_blue_candle                             | Light Blue Candle                        | Identical
+light_blue_candle_cake                        | Cake with Light Blue Candle              | Indirect:cake
+light_blue_carpet                             | Light Blue Carpet                        | Identical
+light_blue_concrete                           | Light Blue Concrete                      | Identical
+light_blue_concrete_powder                    | Light Blue Concrete Powder               | Identical
+light_blue_glazed_terracotta                  | Light Blue Glazed Terracotta             | Identical
+light_blue_shulker_box                        | Light Blue Shulker Box                   | Identical
+light_blue_stained_glass                      | Light Blue Stained Glass                 | Identical
+light_blue_stained_glass_pane                 | Light Blue Stained Glass Pane            | Identical
+light_blue_terracotta                         | Light Blue Terracotta                    | Identical
+light_blue_wall_banner                        | Light Blue Wall Banner                   | Alternate:light_blue_banner
+light_blue_wool                               | Light Blue Wool                          | Identical
+light_gray_banner                             | Light Gray Banner                        | Identical
+light_gray_bed                                | Light Gray Bed                           | Identical
+light_gray_candle                             | Light Gray Candle                        | Identical
+light_gray_candle_cake                        | Cake with Light Gray Candle              | Indirect:cake
+light_gray_carpet                             | Light Gray Carpet                        | Identical
+light_gray_concrete                           | Light Gray Concrete                      | Identical
+light_gray_concrete_powder                    | Light Gray Concrete Powder               | Identical
+light_gray_glazed_terracotta                  | Light Gray Glazed Terracotta             | Identical
+light_gray_shulker_box                        | Light Gray Shulker Box                   | Identical
+light_gray_stained_glass                      | Light Gray Stained Glass                 | Identical
+light_gray_stained_glass_pane                 | Light Gray Stained Glass Pane            | Identical
+light_gray_terracotta                         | Light Gray Terracotta                    | Identical
+light_gray_wall_banner                        | Light Gray Wall Banner                   | Alternate:light_gray_banner
+light_gray_wool                               | Light Gray Wool                          | Identical
+light_weighted_pressure_plate                 | Light Weighted Pressure Plate            | Identical
+lightning_rod                                 | Lightning Rod                            | Identical
+lilac                                         | Lilac                                    | Identical
+lily_of_the_valley                            | Lily of the Valley                       | Identical
+lily_pad                                      | Lily Pad                                 | Identical
+lime_banner                                   | Lime Banner                              | Identical
+lime_bed                                      | Lime Bed                                 | Identical
+lime_candle                                   | Lime Candle                              | Identical
+lime_candle_cake                              | Cake with Lime Candle                    | Indirect:cake
+lime_carpet                                   | Lime Carpet                              | Identical
+lime_concrete                                 | Lime Concrete                            | Identical
+lime_concrete_powder                          | Lime Concrete Powder                     | Identical
+lime_glazed_terracotta                        | Lime Glazed Terracotta                   | Identical
+lime_shulker_box                              | Lime Shulker Box                         | Identical
+lime_stained_glass                            | Lime Stained Glass                       | Identical
+lime_stained_glass_pane                       | Lime Stained Glass Pane                  | Identical
+lime_terracotta                               | Lime Terracotta                          | Identical
+lime_wall_banner                              | Lime Wall Banner                         | Alternate:lime_banner
+lime_wool                                     | Lime Wool                                | Identical
+lodestone                                     | Lodestone                                | Identical
+loom                                          | Loom                                     | Identical
+magenta_banner                                | Magenta Banner                           | Identical
+magenta_bed                                   | Magenta Bed                              | Identical
+magenta_candle                                | Magenta Candle                           | Identical
+magenta_candle_cake                           | Cake with Magenta Candle                 | Indirect:cake
+magenta_carpet                                | Magenta Carpet                           | Identical
+magenta_concrete                              | Magenta Concrete                         | Identical
+magenta_concrete_powder                       | Magenta Concrete Powder                  | Identical
+magenta_glazed_terracotta                     | Magenta Glazed Terracotta                | Identical
+magenta_shulker_box                           | Magenta Shulker Box                      | Identical
+magenta_stained_glass                         | Magenta Stained Glass                    | Identical
+magenta_stained_glass_pane                    | Magenta Stained Glass Pane               | Identical
+magenta_terracotta                            | Magenta Terracotta                       | Identical
+magenta_wall_banner                           | Magenta Wall Banner                      | Alternate:magenta_banner
+magenta_wool                                  | Magenta Wool                             | Identical
+magma_block                                   | Magma Block                              | Identical
+mangrove_button                               | Mangrove Button                          | Identical
+mangrove_door                                 | Mangrove Door                            | Identical
+mangrove_fence                                | Mangrove Fence                           | Identical
+mangrove_fence_gate                           | Mangrove Fence Gate                      | Identical
+mangrove_hanging_sign                         | Mangrove Hanging Sign                    | Identical
+mangrove_leaves                               | Mangrove Leaves                          | Identical
+mangrove_log                                  | Mangrove Log                             | Identical
+mangrove_planks                               | Mangrove Planks                          | Identical
+mangrove_pressure_plate                       | Mangrove Pressure Plate                  | Identical
+mangrove_propagule                            | Mangrove Propagule                       | Identical
+mangrove_roots                                | Mangrove Roots                           | Identical
+mangrove_shelf                                | Mangrove Shelf                           | Identical
+mangrove_sign                                 | Mangrove Sign                            | Identical
+mangrove_slab                                 | Mangrove Slab                            | Identical
+mangrove_stairs                               | Mangrove Stairs                          | Identical
+mangrove_trapdoor                             | Mangrove Trapdoor                        | Identical
+mangrove_wall_hanging_sign                    | Mangrove Wall Hanging Sign               | Alternate:mangrove_hanging_sign
+mangrove_wall_sign                            | Mangrove Wall Sign                       | Alternate:mangrove_sign
+mangrove_wood                                 | Mangrove Wood                            | Identical
+medium_amethyst_bud                           | Medium Amethyst Bud                      | Identical
+melon                                         | Melon                                    | Identical
+melon_stem                                    | Melon Stem                               | Different:melon_seeds
+moss_block                                    | Moss Block                               | Identical
+moss_carpet                                   | Moss Carpet                              | Identical
+mossy_cobblestone                             | Mossy Cobblestone                        | Identical
+mossy_cobblestone_slab                        | Mossy Cobblestone Slab                   | Identical
+mossy_cobblestone_stairs                      | Mossy Cobblestone Stairs                 | Identical
+mossy_cobblestone_wall                        | Mossy Cobblestone Wall                   | Identical
+mossy_stone_brick_slab                        | Mossy Stone Brick Slab                   | Identical
+mossy_stone_brick_stairs                      | Mossy Stone Brick Stairs                 | Identical
+mossy_stone_brick_wall                        | Mossy Stone Brick Wall                   | Identical
+mossy_stone_bricks                            | Mossy Stone Bricks                       | Identical
+moving_piston                                 | Moving Piston                            | No item form
+mud                                           | Mud                                      | Identical
+mud_brick_slab                                | Mud Brick Slab                           | Identical
+mud_brick_stairs                              | Mud Brick Stairs                         | Identical
+mud_brick_wall                                | Mud Brick Wall                           | Identical
+mud_bricks                                    | Mud Bricks                               | Identical
+muddy_mangrove_roots                          | Muddy Mangrove Roots                     | Identical
+mushroom_stem                                 | Mushroom Stem                            | Identical
+mycelium                                      | Mycelium                                 | Identical
+nether_brick_fence                            | Nether Brick Fence                       | Identical
+nether_brick_slab                             | Nether Brick Slab                        | Identical
+nether_brick_stairs                           | Nether Brick Stairs                      | Identical
+nether_brick_wall                             | Nether Brick Wall                        | Identical
+nether_bricks                                 | Nether Bricks                            | Identical
+nether_gold_ore                               | Nether Gold Ore                          | Identical
+nether_portal                                 | Nether Portal                            | No item form
+nether_quartz_ore                             | Nether Quartz Ore                        | Identical
+nether_sprouts                                | Nether Sprouts                           | Identical
+nether_wart                                   | Nether Wart                              | Identical
+nether_wart_block                             | Nether Wart Block                        | Identical
+netherite_block                               | Block of Netherite                       | Identical
+netherrack                                    | Netherrack                               | Identical
+note_block                                    | Note Block                               | Identical
+oak_button                                    | Oak Button                               | Identical
+oak_door                                      | Oak Door                                 | Identical
+oak_fence                                     | Oak Fence                                | Identical
+oak_fence_gate                                | Oak Fence Gate                           | Identical
+oak_hanging_sign                              | Oak Hanging Sign                         | Identical
+oak_leaves                                    | Oak Leaves                               | Identical
+oak_log                                       | Oak Log                                  | Identical
+oak_planks                                    | Oak Planks                               | Identical
+oak_pressure_plate                            | Oak Pressure Plate                       | Identical
+oak_sapling                                   | Oak Sapling                              | Identical
+oak_shelf                                     | Oak Shelf                                | Identical
+oak_sign                                      | Oak Sign                                 | Identical
+oak_slab                                      | Oak Slab                                 | Identical
+oak_stairs                                    | Oak Stairs                               | Identical
+oak_trapdoor                                  | Oak Trapdoor                             | Identical
+oak_wall_hanging_sign                         | Oak Wall Hanging Sign                    | Alternate:oak_hanging_sign
+oak_wall_sign                                 | Oak Wall Sign                            | Alternate:oak_sign
+oak_wood                                      | Oak Wood                                 | Identical
+observer                                      | Observer                                 | Identical
+obsidian                                      | Obsidian                                 | Identical
+ochre_froglight                               | Ochre Froglight                          | Identical
+open_eyeblossom                               | Open Eyeblossom                          | Identical
+orange_banner                                 | Orange Banner                            | Identical
+orange_bed                                    | Orange Bed                               | Identical
+orange_candle                                 | Orange Candle                            | Identical
+orange_candle_cake                            | Cake with Orange Candle                  | Indirect:cake
+orange_carpet                                 | Orange Carpet                            | Identical
+orange_concrete                               | Orange Concrete                          | Identical
+orange_concrete_powder                        | Orange Concrete Powder                   | Identical
+orange_glazed_terracotta                      | Orange Glazed Terracotta                 | Identical
+orange_shulker_box                            | Orange Shulker Box                       | Identical
+orange_stained_glass                          | Orange Stained Glass                     | Identical
+orange_stained_glass_pane                     | Orange Stained Glass Pane                | Identical
+orange_terracotta                             | Orange Terracotta                        | Identical
+orange_tulip                                  | Orange Tulip                             | Identical
+orange_wall_banner                            | Orange Wall Banner                       | Alternate:orange_banner
+orange_wool                                   | Orange Wool                              | Identical
+oxeye_daisy                                   | Oxeye Daisy                              | Identical
+oxidized_chiseled_copper                      | Oxidized Chiseled Copper                 | Identical
+oxidized_copper                               | Oxidized Copper                          | Identical
+oxidized_copper_bars                          | Oxidized Copper Bars                     | Identical
+oxidized_copper_bulb                          | Oxidized Copper Bulb                     | Identical
+oxidized_copper_chain                         | Oxidized Copper Chain                    | Identical
+oxidized_copper_chest                         | Oxidized Copper Chest                    | Identical
+oxidized_copper_door                          | Oxidized Copper Door                     | Identical
+oxidized_copper_golem_statue                  | Oxidized Copper Golem Statue             | Identical
+oxidized_copper_grate                         | Oxidized Copper Grate                    | Identical
+oxidized_copper_lantern                       | Oxidized Copper Lantern                  | Identical
+oxidized_copper_trapdoor                      | Oxidized Copper Trapdoor                 | Identical
+oxidized_cut_copper                           | Oxidized Cut Copper                      | Identical
+oxidized_cut_copper_slab                      | Oxidized Cut Copper Slab                 | Identical
+oxidized_cut_copper_stairs                    | Oxidized Cut Copper Stairs               | Identical
+oxidized_lightning_rod                        | Oxidized Lightning Rod                   | Identical
+packed_ice                                    | Packed Ice                               | Identical
+packed_mud                                    | Packed Mud                               | Identical
+pale_hanging_moss                             | Pale Hanging Moss                        | Identical
+pale_moss_block                               | Pale Moss Block                          | Identical
+pale_moss_carpet                              | Pale Moss Carpet                         | Identical
+pale_oak_button                               | Pale Oak Button                          | Identical
+pale_oak_door                                 | Pale Oak Door                            | Identical
+pale_oak_fence                                | Pale Oak Fence                           | Identical
+pale_oak_fence_gate                           | Pale Oak Fence Gate                      | Identical
+pale_oak_hanging_sign                         | Pale Oak Hanging Sign                    | Identical
+pale_oak_leaves                               | Pale Oak Leaves                          | Identical
+pale_oak_log                                  | Pale Oak Log                             | Identical
+pale_oak_planks                               | Pale Oak Planks                          | Identical
+pale_oak_pressure_plate                       | Pale Oak Pressure Plate                  | Identical
+pale_oak_sapling                              | Pale Oak Sapling                         | Identical
+pale_oak_shelf                                | Pale Oak Shelf                           | Identical
+pale_oak_sign                                 | Pale Oak Sign                            | Identical
+pale_oak_slab                                 | Pale Oak Slab                            | Identical
+pale_oak_stairs                               | Pale Oak Stairs                          | Identical
+pale_oak_trapdoor                             | Pale Oak Trapdoor                        | Identical
+pale_oak_wall_hanging_sign                    | Pale Oak Wall Hanging Sign               | Alternate:pale_oak_hanging_sign
+pale_oak_wall_sign                            | Pale Oak Wall Sign                       | Alternate:pale_oak_sign
+pale_oak_wood                                 | Pale Oak Wood                            | Identical
+pearlescent_froglight                         | Pearlescent Froglight                    | Identical
+peony                                         | Peony                                    | Identical
+petrified_oak_slab                            | Petrified Oak Slab                       | Identical
+piglin_head                                   | Piglin Head                              | Identical
+piglin_wall_head                              | Piglin Wall Head                         | Alternate:piglin_head
+pink_banner                                   | Pink Banner                              | Identical
+pink_bed                                      | Pink Bed                                 | Identical
+pink_candle                                   | Pink Candle                              | Identical
+pink_candle_cake                              | Cake with Pink Candle                    | Indirect:cake
+pink_carpet                                   | Pink Carpet                              | Identical
+pink_concrete                                 | Pink Concrete                            | Identical
+pink_concrete_powder                          | Pink Concrete Powder                     | Identical
+pink_glazed_terracotta                        | Pink Glazed Terracotta                   | Identical
+pink_petals                                   | Pink Petals                              | Identical
+pink_shulker_box                              | Pink Shulker Box                         | Identical
+pink_stained_glass                            | Pink Stained Glass                       | Identical
+pink_stained_glass_pane                       | Pink Stained Glass Pane                  | Identical
+pink_terracotta                               | Pink Terracotta                          | Identical
+pink_tulip                                    | Pink Tulip                               | Identical
+pink_wall_banner                              | Pink Wall Banner                         | Alternate:pink_banner
+pink_wool                                     | Pink Wool                                | Identical
+piston                                        | Piston                                   | Identical
+piston_head                                   | Piston Head                              | No item form
+pitcher_crop                                  | Pitcher Crop                             | Indirect:pitcher_pod
+pitcher_plant                                 | Pitcher Plant                            | Identical
+player_head                                   | Player Head                              | Identical
+player_wall_head                              | Player Wall Head                         | Alternate:player_head
+podzol                                        | Podzol                                   | Identical
+pointed_dripstone                             | Pointed Dripstone                        | Identical
+polished_andesite                             | Polished Andesite                        | Identical
+polished_andesite_slab                        | Polished Andesite Slab                   | Identical
+polished_andesite_stairs                      | Polished Andesite Stairs                 | Identical
+polished_basalt                               | Polished Basalt                          | Identical
+polished_blackstone                           | Polished Blackstone                      | Identical
+polished_blackstone_brick_slab                | Polished Blackstone Brick Slab           | Identical
+polished_blackstone_brick_stairs              | Polished Blackstone Brick Stairs         | Identical
+polished_blackstone_brick_wall                | Polished Blackstone Brick Wall           | Identical
+polished_blackstone_bricks                    | Polished Blackstone Bricks               | Identical
+polished_blackstone_button                    | Polished Blackstone Button               | Identical
+polished_blackstone_pressure_plate            | Polished Blackstone Pressure Plate       | Identical
+polished_blackstone_slab                      | Polished Blackstone Slab                 | Identical
+polished_blackstone_stairs                    | Polished Blackstone Stairs               | Identical
+polished_blackstone_wall                      | Polished Blackstone Wall                 | Identical
+polished_deepslate                            | Polished Deepslate                       | Identical
+polished_deepslate_slab                       | Polished Deepslate Slab                  | Identical
+polished_deepslate_stairs                     | Polished Deepslate Stairs                | Identical
+polished_deepslate_wall                       | Polished Deepslate Wall                  | Identical
+polished_diorite                              | Polished Diorite                         | Identical
+polished_diorite_slab                         | Polished Diorite Slab                    | Identical
+polished_diorite_stairs                       | Polished Diorite Stairs                  | Identical
+polished_granite                              | Polished Granite                         | Identical
+polished_granite_slab                         | Polished Granite Slab                    | Identical
+polished_granite_stairs                       | Polished Granite Stairs                  | Identical
+polished_tuff                                 | Polished Tuff                            | Identical
+polished_tuff_slab                            | Polished Tuff Slab                       | Identical
+polished_tuff_stairs                          | Polished Tuff Stairs                     | Identical
+polished_tuff_wall                            | Polished Tuff Wall                       | Identical
+poppy                                         | Poppy                                    | Identical
+potatoes                                      | Potatoes                                 | Different:potato
+potted_acacia_sapling                         | Potted Acacia Sapling                    | Indirect:acacia_sapling
+potted_allium                                 | Potted Allium                            | Indirect:allium
+potted_azalea_bush                            | Potted Azalea                            | Indirect:azalea
+potted_azure_bluet                            | Potted Azure Bluet                       | Indirect:azure_bluet
+potted_bamboo                                 | Potted Bamboo                            | Indirect:bamboo
+potted_birch_sapling                          | Potted Birch Sapling                     | Indirect:birch_sapling
+potted_blue_orchid                            | Potted Blue Orchid                       | Indirect:blue_orchid
+potted_brown_mushroom                         | Potted Brown Mushroom                    | Indirect:brown_mushroom
+potted_cactus                                 | Potted Cactus                            | Indirect:cactus
+potted_cherry_sapling                         | Potted Cherry Sapling                    | Indirect:cherry_sapling
+potted_closed_eyeblossom                      | Potted Closed Eyeblossom                 | Indirect:closed_eyeblossom
+potted_cornflower                             | Potted Cornflower                        | Indirect:cornflower
+potted_crimson_fungus                         | Potted Crimson Fungus                    | Indirect:crimson_fungus
+potted_crimson_roots                          | Potted Crimson Roots                     | Indirect:crimson_roots
+potted_dandelion                              | Potted Dandelion                         | Indirect:dandelion
+potted_dark_oak_sapling                       | Potted Dark Oak Sapling                  | Indirect:dark_oak_sapling
+potted_dead_bush                              | Potted Dead Bush                         | Indirect:dead_bush
+potted_fern                                   | Potted Fern                              | Indirect:fern
+potted_flowering_azalea_bush                  | Potted Flowering Azalea                  | Indirect:flowering_azalea
+potted_golden_dandelion                       | Potted Golden Dandelion                  | Indirect:golden_dandelion
+potted_jungle_sapling                         | Potted Jungle Sapling                    | Indirect:jungle_sapling
+potted_lily_of_the_valley                     | Potted Lily of the Valley                | Indirect:lily_of_the_valley
+potted_mangrove_propagule                     | Potted Mangrove Propagule                | Indirect:mangrove_propagule
+potted_oak_sapling                            | Potted Oak Sapling                       | Indirect:oak_sapling
+potted_open_eyeblossom                        | Potted Open Eyeblossom                   | Indirect:open_eyeblossom
+potted_orange_tulip                           | Potted Orange Tulip                      | Indirect:orange_tulip
+potted_oxeye_daisy                            | Potted Oxeye Daisy                       | Indirect:oxeye_daisy
+potted_pale_oak_sapling                       | Potted Pale Oak Sapling                  | Indirect:pale_oak_sapling
+potted_pink_tulip                             | Potted Pink Tulip                        | Indirect:pink_tulip
+potted_poppy                                  | Potted Poppy                             | Indirect:poppy
+potted_red_mushroom                           | Potted Red Mushroom                      | Indirect:red_mushroom
+potted_red_tulip                              | Potted Red Tulip                         | Indirect:red_tulip
+potted_spruce_sapling                         | Potted Spruce Sapling                    | Indirect:spruce_sapling
+potted_torchflower                            | Potted Torchflower                       | Indirect:torchflower
+potted_warped_fungus                          | Potted Warped Fungus                     | Indirect:warped_fungus
+potted_warped_roots                           | Potted Warped Roots                      | Indirect:warped_roots
+potted_white_tulip                            | Potted White Tulip                       | Indirect:white_tulip
+potted_wither_rose                            | Potted Wither Rose                       | Indirect:wither_rose
+powder_snow                                   | Powder Snow                              | Different:powder_snow_bucket
+powder_snow_cauldron                          | Powder Snow Cauldron                     | Alternate:cauldron
+powered_rail                                  | Powered Rail                             | Identical
+prismarine                                    | Prismarine                               | Identical
+prismarine_brick_slab                         | Prismarine Brick Slab                    | Identical
+prismarine_brick_stairs                       | Prismarine Brick Stairs                  | Identical
+prismarine_bricks                             | Prismarine Bricks                        | Identical
+prismarine_slab                               | Prismarine Slab                          | Identical
+prismarine_stairs                             | Prismarine Stairs                        | Identical
+prismarine_wall                               | Prismarine Wall                          | Identical
+pumpkin                                       | Pumpkin                                  | Identical
+pumpkin_stem                                  | Pumpkin Stem                             | Different:pumpkin_seeds
+purple_banner                                 | Purple Banner                            | Identical
+purple_bed                                    | Purple Bed                               | Identical
+purple_candle                                 | Purple Candle                            | Identical
+purple_candle_cake                            | Cake with Purple Candle                  | Indirect:cake
+purple_carpet                                 | Purple Carpet                            | Identical
+purple_concrete                               | Purple Concrete                          | Identical
+purple_concrete_powder                        | Purple Concrete Powder                   | Identical
+purple_glazed_terracotta                      | Purple Glazed Terracotta                 | Identical
+purple_shulker_box                            | Purple Shulker Box                       | Identical
+purple_stained_glass                          | Purple Stained Glass                     | Identical
+purple_stained_glass_pane                     | Purple Stained Glass Pane                | Identical
+purple_terracotta                             | Purple Terracotta                        | Identical
+purple_wall_banner                            | Purple Wall Banner                       | Alternate:purple_banner
+purple_wool                                   | Purple Wool                              | Identical
+purpur_block                                  | Purpur Block                             | Identical
+purpur_pillar                                 | Purpur Pillar                            | Identical
+purpur_slab                                   | Purpur Slab                              | Identical
+purpur_stairs                                 | Purpur Stairs                            | Identical
+quartz_block                                  | Block of Quartz                          | Identical
+quartz_bricks                                 | Quartz Bricks                            | Identical
+quartz_pillar                                 | Quartz Pillar                            | Identical
+quartz_slab                                   | Quartz Slab                              | Identical
+quartz_stairs                                 | Quartz Stairs                            | Identical
+rail                                          | Rail                                     | Identical
+raw_copper_block                              | Block of Raw Copper                      | Identical
+raw_gold_block                                | Block of Raw Gold                        | Identical
+raw_iron_block                                | Block of Raw Iron                        | Identical
+red_banner                                    | Red Banner                               | Identical
+red_bed                                       | Red Bed                                  | Identical
+red_candle                                    | Red Candle                               | Identical
+red_candle_cake                               | Cake with Red Candle                     | Indirect:cake
+red_carpet                                    | Red Carpet                               | Identical
+red_concrete                                  | Red Concrete                             | Identical
+red_concrete_powder                           | Red Concrete Powder                      | Identical
+red_glazed_terracotta                         | Red Glazed Terracotta                    | Identical
+red_mushroom                                  | Red Mushroom                             | Identical
+red_mushroom_block                            | Red Mushroom Block                       | Identical
+red_nether_brick_slab                         | Red Nether Brick Slab                    | Identical
+red_nether_brick_stairs                       | Red Nether Brick Stairs                  | Identical
+red_nether_brick_wall                         | Red Nether Brick Wall                    | Identical
+red_nether_bricks                             | Red Nether Bricks                        | Identical
+red_sand                                      | Red Sand                                 | Identical
+red_sandstone                                 | Red Sandstone                            | Identical
+red_sandstone_slab                            | Red Sandstone Slab                       | Identical
+red_sandstone_stairs                          | Red Sandstone Stairs                     | Identical
+red_sandstone_wall                            | Red Sandstone Wall                       | Identical
+red_shulker_box                               | Red Shulker Box                          | Identical
+red_stained_glass                             | Red Stained Glass                        | Identical
+red_stained_glass_pane                        | Red Stained Glass Pane                   | Identical
+red_terracotta                                | Red Terracotta                           | Identical
+red_tulip                                     | Red Tulip                                | Identical
+red_wall_banner                               | Red Wall Banner                          | Alternate:red_banner
+red_wool                                      | Red Wool                                 | Identical
+resin_block                                   | Block of Resin                           | Identical
+resin_brick_slab                              | Resin Brick Slab                         | Identical
+resin_brick_stairs                            | Resin Brick Stairs                       | Identical
+resin_brick_wall                              | Resin Brick Wall                         | Identical
+resin_bricks                                  | Resin Bricks                             | Identical
+resin_clump                                   | Resin Clump                              | Identical
+redstone_block                                | Block of Redstone                        | Identical
+redstone_lamp                                 | Redstone Lamp                            | Identical
+redstone_ore                                  | Redstone Ore                             | Identical
+redstone_torch                                | Redstone Torch                           | Identical
+redstone_wall_torch                           | Redstone Wall Torch                      | Alternate:redstone_torch
+redstone_wire                                 | Redstone Wire                            | Different:redstone
+reinforced_deepslate                          | Reinforced Deepslate                     | Identical
+repeater                                      | Redstone Repeater                        | Identical
+repeating_command_block                       | Repeating Command Block                  | Identical
+respawn_anchor                                | Respawn Anchor                           | Identical
+rooted_dirt                                   | Rooted Dirt                              | Identical
+rose_bush                                     | Rose Bush                                | Identical
+sand                                          | Sand                                     | Identical
+sandstone                                     | Sandstone                                | Identical
+sandstone_slab                                | Sandstone Slab                           | Identical
+sandstone_stairs                              | Sandstone Stairs                         | Identical
+sandstone_wall                                | Sandstone Wall                           | Identical
+scaffolding                                   | Scaffolding                              | Identical
+sculk                                         | Sculk                                    | Identical
+sculk_catalyst                                | Sculk Catalyst                           | Identical
+sculk_sensor                                  | Sculk Sensor                             | Identical
+sculk_shrieker                                | Sculk Shrieker                           | Identical
+sculk_vein                                    | Sculk Vein                               | Identical
+sea_lantern                                   | Sea Lantern                              | Identical
+sea_pickle                                    | Sea Pickle                               | Identical
+seagrass                                      | Seagrass                                 | Identical
+short_dry_grass                               | Short Dry Grass                          | Identical
+short_grass                                   | Short Grass                              | Identical
+shroomlight                                   | Shroomlight                              | Identical
+shulker_box                                   | Shulker Box                              | Identical
+skeleton_skull                                | Skeleton Skull                           | Identical
+skeleton_wall_skull                           | Skeleton Wall Skull                      | Alternate:skeleton_skull
+slime_block                                   | Slime Block                              | Identical
+small_amethyst_bud                            | Small Amethyst Bud                       | Identical
+small_dripleaf                                | Small Dripleaf                           | Identical
+smithing_table                                | Smithing Table                           | Identical
+smoker                                        | Smoker                                   | Identical
+smooth_basalt                                 | Smooth Basalt                            | Identical
+smooth_quartz                                 | Smooth Quartz Block                      | Identical
+smooth_quartz_slab                            | Smooth Quartz Slab                       | Identical
+smooth_quartz_stairs                          | Smooth Quartz Stairs                     | Identical
+smooth_red_sandstone                          | Smooth Red Sandstone                     | Identical
+smooth_red_sandstone_slab                     | Smooth Red Sandstone Slab                | Identical
+smooth_red_sandstone_stairs                   | Smooth Red Sandstone Stairs              | Identical
+smooth_sandstone                              | Smooth Sandstone                         | Identical
+smooth_sandstone_slab                         | Smooth Sandstone Slab                    | Identical
+smooth_sandstone_stairs                       | Smooth Sandstone Stairs                  | Identical
+smooth_stone                                  | Smooth Stone                             | Identical
+smooth_stone_slab                             | Smooth Stone Slab                        | Identical
+sniffer_egg                                   | Sniffer Egg                              | Identical
+snow                                          | Snow                                     | Identical
+snow_block                                    | Snow Block                               | Identical
+soul_campfire                                 | Soul Campfire                            | Identical
+soul_fire                                     | Soul Fire                                | No item form
+soul_lantern                                  | Soul Lantern                             | Identical
+soul_sand                                     | Soul Sand                                | Identical
+soul_soil                                     | Soul Soil                                | Identical
+soul_torch                                    | Soul Torch                               | Identical
+soul_wall_torch                               | Soul Wall Torch                          | Alternate:soul_torch
+spawner                                       | Monster Spawner                          | Identical
+sponge                                        | Sponge                                   | Identical
+spore_blossom                                 | Spore Blossom                            | Identical
+spruce_button                                 | Spruce Button                            | Identical
+spruce_door                                   | Spruce Door                              | Identical
+spruce_fence                                  | Spruce Fence                             | Identical
+spruce_fence_gate                             | Spruce Fence Gate                        | Identical
+spruce_hanging_sign                           | Spruce Hanging Sign                      | Identical
+spruce_leaves                                 | Spruce Leaves                            | Identical
+spruce_log                                    | Spruce Log                               | Identical
+spruce_planks                                 | Spruce Planks                            | Identical
+spruce_pressure_plate                         | Spruce Pressure Plate                    | Identical
+spruce_sapling                                | Spruce Sapling                           | Identical
+spruce_shelf                                  | Spruce Shelf                             | Identical
+spruce_sign                                   | Spruce Sign                              | Identical
+spruce_slab                                   | Spruce Slab                              | Identical
+spruce_stairs                                 | Spruce Stairs                            | Identical
+spruce_trapdoor                               | Spruce Trapdoor                          | Identical
+spruce_wall_hanging_sign                      | Spruce Wall Hanging Sign                 | Alternate:spruce_hanging_sign
+spruce_wall_sign                              | Spruce Wall Sign                         | Alternate:spruce_sign
+spruce_wood                                   | Spruce Wood                              | Identical
+sticky_piston                                 | Sticky Piston                            | Identical
+stone                                         | Stone                                    | Identical
+stone_brick_slab                              | Stone Brick Slab                         | Identical
+stone_brick_stairs                            | Stone Brick Stairs                       | Identical
+stone_brick_wall                              | Stone Brick Wall                         | Identical
+stone_bricks                                  | Stone Bricks                             | Identical
+stone_button                                  | Stone Button                             | Identical
+stone_pressure_plate                          | Stone Pressure Plate                     | Identical
+stone_slab                                    | Stone Slab                               | Identical
+stone_stairs                                  | Stone Stairs                             | Identical
+stonecutter                                   | Stonecutter                              | Identical
+stripped_acacia_log                           | Stripped Acacia Log                      | Identical
+stripped_acacia_wood                          | Stripped Acacia Wood                     | Identical
+stripped_bamboo_block                         | Block of Stripped Bamboo                 | Identical
+stripped_birch_log                            | Stripped Birch Log                       | Identical
+stripped_birch_wood                           | Stripped Birch Wood                      | Identical
+stripped_cherry_log                           | Stripped Cherry Log                      | Identical
+stripped_cherry_wood                          | Stripped Cherry Wood                     | Identical
+stripped_crimson_hyphae                       | Stripped Crimson Hyphae                  | Identical
+stripped_crimson_stem                         | Stripped Crimson Stem                    | Identical
+stripped_dark_oak_log                         | Stripped Dark Oak Log                    | Identical
+stripped_dark_oak_wood                        | Stripped Dark Oak Wood                   | Identical
+stripped_jungle_log                           | Stripped Jungle Log                      | Identical
+stripped_jungle_wood                          | Stripped Jungle Wood                     | Identical
+stripped_mangrove_log                         | Stripped Mangrove Log                    | Identical
+stripped_mangrove_wood                        | Stripped Mangrove Wood                   | Identical
+stripped_oak_log                              | Stripped Oak Log                         | Identical
+stripped_oak_wood                             | Stripped Oak Wood                        | Identical
+stripped_pale_oak_log                         | Stripped Pale Oak Log                    | Identical
+stripped_pale_oak_wood                        | Stripped Pale Oak Wood                   | Identical
+stripped_spruce_log                           | Stripped Spruce Log                      | Identical
+stripped_spruce_wood                          | Stripped Spruce Wood                     | Identical
+stripped_warped_hyphae                        | Stripped Warped Hyphae                   | Identical
+stripped_warped_stem                          | Stripped Warped Stem                     | Identical
+structure_block                               | Structure Block                          | Identical
+structure_void                                | Structure Void                           | Identical
+sugar_cane                                    | Sugar Cane                               | Identical
+sunflower                                     | Sunflower                                | Identical
+suspicious_gravel                             | Suspicious Gravel                        | Identical
+suspicious_sand                               | Suspicious Sand                          | Identical
+sweet_berry_bush                              | Sweet Berry Bush                         | Different:sweet_berries
+tall_dry_grass                                | Tall Dry Grass                           | Identical
+tall_grass                                    | Tall Grass                               | Identical
+tall_seagrass                                 | Tall Seagrass                            | Indirect:seagrass
+target                                        | Target                                   | Identical
+terracotta                                    | Terracotta                               | Identical
+test_block                                    | Test Block                               | Identical
+test_instance_block                           | Test Instance Block                      | Identical
+tinted_glass                                  | Tinted Glass                             | Identical
+tnt                                           | TNT                                      | Identical
+torch                                         | Torch                                    | Identical
+torchflower                                   | Torchflower                              | Identical
+torchflower_crop                              | Torchflower Crop                         | Indirect:torchflower_seeds
+trapped_chest                                 | Trapped Chest                            | Identical
+trial_spawner                                 | Trial Spawner                            | Identical
+tripwire                                      | Tripwire                                 | Different:string
+tripwire_hook                                 | Tripwire Hook                            | Identical
+tube_coral                                    | Tube Coral                               | Identical
+tube_coral_block                              | Tube Coral Block                         | Identical
+tube_coral_fan                                | Tube Coral Fan                           | Identical
+tube_coral_wall_fan                           | Tube Coral Wall Fan                      | Alternate:tube_coral_fan
+tuff                                          | Tuff                                     | Identical
+tuff_brick_slab                               | Tuff Brick Slab                          | Identical
+tuff_brick_stairs                             | Tuff Brick Stairs                        | Identical
+tuff_brick_wall                               | Tuff Brick Wall                          | Identical
+tuff_bricks                                   | Tuff Bricks                              | Identical
+tuff_slab                                     | Tuff Slab                                | Identical
+tuff_stairs                                   | Tuff Stairs                              | Identical
+tuff_wall                                     | Tuff Wall                                | Identical
+turtle_egg                                    | Turtle Egg                               | Identical
+twisting_vines                                | Twisting Vines                           | Identical
+twisting_vines_plant                          | Twisting Vines Plant                     | Indirect:twisting_vines
+vault                                         | Vault                                    | Identical
+verdant_froglight                             | Verdant Froglight                        | Identical
+vine                                          | Vines                                    | Identical
+void_air                                      | Void Air                                 | No item form
+wall_torch                                    | Wall Torch                               | Alternate:torch
+warped_button                                 | Warped Button                            | Identical
+warped_door                                   | Warped Door                              | Identical
+warped_fence                                  | Warped Fence                             | Identical
+warped_fence_gate                             | Warped Fence Gate                        | Identical
+warped_fungus                                 | Warped Fungus                            | Identical
+warped_hanging_sign                           | Warped Hanging Sign                      | Identical
+warped_hyphae                                 | Warped Hyphae                            | Identical
+warped_nylium                                 | Warped Nylium                            | Identical
+warped_planks                                 | Warped Planks                            | Identical
+warped_pressure_plate                         | Warped Pressure Plate                    | Identical
+warped_roots                                  | Warped Roots                             | Identical
+warped_shelf                                  | Warped Shelf                             | Identical
+warped_sign                                   | Warped Sign                              | Identical
+warped_slab                                   | Warped Slab                              | Identical
+warped_stairs                                 | Warped Stairs                            | Identical
+warped_stem                                   | Warped Stem                              | Identical
+warped_trapdoor                               | Warped Trapdoor                          | Identical
+warped_wall_hanging_sign                      | Warped Wall Hanging Sign                 | Alternate:warped_hanging_sign
+warped_wall_sign                              | Warped Wall Sign                         | Alternate:warped_sign
+warped_wart_block                             | Warped Wart Block                        | Identical
+water                                         | Water                                    | No item form
+water_cauldron                                | Water Cauldron                           | Alternate:cauldron
+waxed_chiseled_copper                         | Waxed Chiseled Copper                    | Identical
+waxed_copper_bars                             | Waxed Copper Bars                        | Identical
+waxed_copper_block                            | Waxed Block of Copper                    | Identical
+waxed_copper_bulb                             | Waxed Copper Bulb                        | Identical
+waxed_copper_chain                            | Waxed Copper Chain                       | Identical
+waxed_copper_chest                            | Waxed Copper Chest                       | Identical
+waxed_copper_door                             | Waxed Copper Door                        | Identical
+waxed_copper_golem_statue                     | Waxed Copper Golem Statue                | Identical
+waxed_copper_grate                            | Waxed Copper Grate                       | Identical
+waxed_copper_lantern                          | Waxed Copper Lantern                     | Identical
+waxed_copper_trapdoor                         | Waxed Copper Trapdoor                    | Identical
+waxed_cut_copper                              | Waxed Cut Copper                         | Identical
+waxed_cut_copper_slab                         | Waxed Cut Copper Slab                    | Identical
+waxed_cut_copper_stairs                       | Waxed Cut Copper Stairs                  | Identical
+waxed_exposed_chiseled_copper                 | Waxed Exposed Chiseled Copper            | Identical
+waxed_exposed_copper                          | Waxed Exposed Copper                     | Identical
+waxed_exposed_copper_bars                     | Waxed Exposed Copper Bars                | Identical
+waxed_exposed_copper_bulb                     | Waxed Exposed Copper Bulb                | Identical
+waxed_exposed_copper_chain                    | Waxed Exposed Copper Chain               | Identical
+waxed_exposed_copper_chest                    | Waxed Exposed Copper Chest               | Identical
+waxed_exposed_copper_door                     | Waxed Exposed Copper Door                | Identical
+waxed_exposed_copper_golem_statue             | Waxed Exposed Copper Golem Statue        | Identical
+waxed_exposed_copper_grate                    | Waxed Exposed Copper Grate               | Identical
+waxed_exposed_copper_lantern                  | Waxed Exposed Copper Lantern             | Identical
+waxed_exposed_copper_trapdoor                 | Waxed Exposed Copper Trapdoor            | Identical
+waxed_exposed_cut_copper                      | Waxed Exposed Cut Copper                 | Identical
+waxed_exposed_cut_copper_slab                 | Waxed Exposed Cut Copper Slab            | Identical
+waxed_exposed_cut_copper_stairs               | Waxed Exposed Cut Copper Stairs          | Identical
+waxed_exposed_lightning_rod                   | Waxed Exposed Lightning Rod              | Identical
+waxed_lightning_rod                           | Waxed Lightning Rod                      | Identical
+waxed_oxidized_chiseled_copper                | Waxed Oxidized Chiseled Copper           | Identical
+waxed_oxidized_copper                         | Waxed Oxidized Copper                    | Identical
+waxed_oxidized_copper_bars                    | Waxed Oxidized Copper Bars               | Identical
+waxed_oxidized_copper_bulb                    | Waxed Oxidized Copper Bulb               | Identical
+waxed_oxidized_copper_chain                   | Waxed Oxidized Copper Chain              | Identical
+waxed_oxidized_copper_chest                   | Waxed Oxidized Copper Chest              | Identical
+waxed_oxidized_copper_door                    | Waxed Oxidized Copper Door               | Identical
+waxed_oxidized_copper_golem_statue            | Waxed Oxidized Copper Golem Statue       | Identical
+waxed_oxidized_copper_grate                   | Waxed Oxidized Copper Grate              | Identical
+waxed_oxidized_copper_lantern                 | Waxed Oxidized Copper Lantern            | Identical
+waxed_oxidized_copper_trapdoor                | Waxed Oxidized Copper Trapdoor           | Identical
+waxed_oxidized_cut_copper                     | Waxed Oxidized Cut Copper                | Identical
+waxed_oxidized_cut_copper_slab                | Waxed Oxidized Cut Copper Slab           | Identical
+waxed_oxidized_cut_copper_stairs              | Waxed Oxidized Cut Copper Stairs         | Identical
+waxed_oxidized_lightning_rod                  | Waxed Oxidized Lightning Rod             | Identical
+waxed_weathered_chiseled_copper               | Waxed Weathered Chiseled Copper          | Identical
+waxed_weathered_copper                        | Waxed Weathered Copper                   | Identical
+waxed_weathered_copper_bars                   | Waxed Weathered Copper Bars              | Identical
+waxed_weathered_copper_bulb                   | Waxed Weathered Copper Bulb              | Identical
+waxed_weathered_copper_chain                  | Waxed Weathered Copper Chain             | Identical
+waxed_weathered_copper_chest                  | Waxed Weathered Copper Chest             | Identical
+waxed_weathered_copper_door                   | Waxed Weathered Copper Door              | Identical
+waxed_weathered_copper_golem_statue           | Waxed Weathered Copper Golem Statue      | Identical
+waxed_weathered_copper_grate                  | Waxed Weathered Copper Grate             | Identical
+waxed_weathered_copper_lantern                | Waxed Weathered Copper Lantern           | Identical
+waxed_weathered_copper_trapdoor               | Waxed Weathered Copper Trapdoor          | Identical
+waxed_weathered_cut_copper                    | Waxed Weathered Cut Copper               | Identical
+waxed_weathered_cut_copper_slab               | Waxed Weathered Cut Copper Slab          | Identical
+waxed_weathered_cut_copper_stairs             | Waxed Weathered Cut Copper Stairs        | Identical
+weathered_lightning_rod                       | Waxed Weathered Lightning Rod            | Identical
+weathered_chiseled_copper                     | Weathered Chiseled Copper                | Identical
+weathered_copper                              | Weathered Copper                         | Identical
+weathered_copper_bars                         | Weathered Copper Bars                    | Identical
+weathered_copper_bulb                         | Weathered Copper Bulb                    | Identical
+weathered_copper_chain                        | Weathered Copper Chain                   | Identical
+weathered_copper_chest                        | Weathered Copper Chest                   | Identical
+weathered_copper_door                         | Weathered Copper Door                    | Identical
+weathered_copper_golem_statue                 | Weathered Copper Golem Statue            | Identical
+weathered_copper_grate                        | Weathered Copper Grate                   | Identical
+weathered_copper_lantern                      | Weathered Copper Lantern                 | Identical
+weathered_copper_trapdoor                     | Weathered Copper Trapdoor                | Identical
+weathered_cut_copper                          | Weathered Cut Copper                     | Identical
+weathered_cut_copper_slab                     | Weathered Cut Copper Slab                | Identical
+weathered_cut_copper_stairs                   | Weathered Cut Copper Stairs              | Identical
+weathered_lightning_rod                       | Weathered Lightning Rod                  | Identical
+weeping_vines                                 | Weeping Vines                            | Identical
+weeping_vines_plant                           | Weeping Vines Plant                      | Indirect:weeping_vines
+wet_sponge                                    | Wet Sponge                               | Identical
+wheat                                         | Wheat Crops                              | Different:wheat_seeds
+white_banner                                  | White Banner                             | Identical
+white_bed                                     | White Bed                                | Identical
+white_candle                                  | White Candle                             | Identical
+white_candle_cake                             | Cake with White Candle                   | Indirect:cake
+white_carpet                                  | White Carpet                             | Identical
+white_concrete                                | White Concrete                           | Identical
+white_concrete_powder                         | White Concrete Powder                    | Identical
+white_glazed_terracotta                       | White Glazed Terracotta                  | Identical
+white_shulker_box                             | White Shulker Box                        | Identical
+white_stained_glass                           | White Stained Glass                      | Identical
+white_stained_glass_pane                      | White Stained Glass Pane                 | Identical
+white_terracotta                              | White Terracotta                         | Identical
+white_tulip                                   | White Tulip                              | Identical
+white_wall_banner                             | White Wall Banner                        | Alternate:white_banner
+white_wool                                    | White Wool                               | Identical
+wildflowers                                   | Wildflowers                              | Identical
+wither_rose                                   | Wither Rose                              | Identical
+wither_skeleton_skull                         | Wither Skeleton Skull                    | Identical
+wither_skeleton_wall_skull                    | Wither Skeleton Wall Skull               | Alternate:wither_skeleton_skull
+yellow_banner                                 | Yellow Banner                            | Identical
+yellow_bed                                    | Yellow Bed                               | Identical
+yellow_candle                                 | Yellow Candle                            | Identical
+yellow_candle_cake                            | Cake with Yellow Candle                  | Indirect:cake
+yellow_carpet                                 | Yellow Carpet                            | Identical
+yellow_concrete                               | Yellow Concrete                          | Identical
+yellow_concrete_powder                        | Yellow Concrete Powder                   | Identical
+yellow_glazed_terracotta                      | Yellow Glazed Terracotta                 | Identical
+yellow_shulker_box                            | Yellow Shulker Box                       | Identical
+yellow_stained_glass                          | Yellow Stained Glass                     | Identical
+yellow_stained_glass_pane                     | Yellow Stained Glass Pane                | Identical
+yellow_terracotta                             | Yellow Terracotta                        | Identical
+yellow_wall_banner                            | Yellow Wall Banner                       | Alternate:yellow_banner
+yellow_wool                                   | Yellow Wool                              | Identical
+zombie_head                                   | Zombie Head                              | Identical
+zombie_wall_head                              | Zombie Wall Head                         | Alternate:zombie_head
