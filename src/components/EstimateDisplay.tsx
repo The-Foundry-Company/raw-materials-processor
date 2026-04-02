@@ -7,6 +7,7 @@ import { formatDiamondValue, formatTotal } from '../utils/format';
 import PretextBlock from './ui/PretextBlock';
 import { fontShorthand, lineHeightPx } from '../lib/pretext';
 import EstimatePDFBuilder from './EstimatePDFBuilder';
+import type { EstimateMode } from './EstimatePDFBuilder';
 
 type PDFState = 'viewing' | 'building' | 'capturing' | 'restoring';
 
@@ -20,10 +21,12 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
   const { matched, fuzzy, unmatched } = countMatched(items);
 
   const [pdfState, setPdfState] = useState<PDFState>('viewing');
+  const [estimateMode, setEstimateMode] = useState<EstimateMode>('full');
   const builderRef = useRef<import('./EstimatePDFBuilder').PDFBuilderHandle>(null);
   const bannerRef = useRef<HTMLDivElement>(null);
 
-  const handleDownload = useCallback(() => {
+  const handleDownload = useCallback((mode: EstimateMode) => {
+    setEstimateMode(mode);
     setPdfState('building');
   }, []);
 
@@ -31,11 +34,15 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
     setPdfState('capturing');
     const container = builderRef.current?.getContainer();
     if (container) {
-      await captureElementAsPDF(container);
+      const date = new Date().toISOString().slice(0, 10);
+      const filename = estimateMode === 'client'
+        ? `foundry_estimate_summary_${date}.pdf`
+        : `foundry_estimate_${date}.pdf`;
+      await captureElementAsPDF(container, filename);
     }
     setPdfState('restoring');
     setTimeout(() => setPdfState('viewing'), 400);
-  }, []);
+  }, [estimateMode]);
 
   return (
     <div>
@@ -51,6 +58,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
         <EstimatePDFBuilder
           ref={builderRef}
           projectEstimate={projectEstimate}
+          mode={estimateMode}
           onBuilt={handleBuilt}
         />
       </motion.div>
@@ -228,14 +236,24 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
       </div>
 
       {/* Download estimate */}
-      <button
-        onClick={handleDownload}
-        className="w-full py-3 bg-foundry-dark text-foundry-yellow font-black tracking-wider
-          border-[3px] border-foundry-dark text-sm
-          hover:bg-foundry-yellow hover:text-foundry-dark mb-4"
-      >
-        DOWNLOAD ESTIMATE (PDF)
-      </button>
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <button
+          onClick={() => handleDownload('full')}
+          className="py-3 bg-foundry-dark text-foundry-yellow font-black tracking-wider
+            border-[3px] border-foundry-dark text-sm
+            hover:bg-foundry-yellow hover:text-foundry-dark"
+        >
+          FULL ITEMIZED ESTIMATE
+        </button>
+        <button
+          onClick={() => handleDownload('client')}
+          className="py-3 bg-foundry-yellow text-foundry-dark font-black tracking-wider
+            border-[3px] border-foundry-dark text-sm
+            hover:bg-foundry-dark hover:text-foundry-yellow"
+        >
+          CLIENT ESTIMATE
+        </button>
+      </div>
     </motion.div>
     )}
     </AnimatePresence>

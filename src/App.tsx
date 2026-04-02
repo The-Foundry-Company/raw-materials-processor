@@ -5,9 +5,10 @@ import Header from './components/Header';
 import InputStage from './components/InputStage';
 import ProcessingStage from './components/ProcessingStage';
 import OutputStage from './components/OutputStage';
-import type { ProcessedItem } from './processor/types';
+import EstimateProcessingStage from './components/EstimateProcessingStage';
+import type { ProcessedItem, ProjectEstimate } from './processor/types';
 
-type Stage = 'input' | 'processing' | 'output';
+type Stage = 'input' | 'processing' | 'output' | 'estimateProcessing';
 
 const FORMAT_ERROR_MESSAGES = [
   "That JSON is valid, but it's not a materials list.",
@@ -35,6 +36,7 @@ export default function App() {
   const [result, setResult] = useState<ProcessedItem[]>([]);
   const [error, setError] = useState('');
   const [rawJson, setRawJson] = useState('');
+  const [projectEstimate, setProjectEstimate] = useState<ProjectEstimate | null>(null);
 
   function handleSubmit(json: string) {
     setRawJson(json);
@@ -52,11 +54,27 @@ export default function App() {
     setStage('input');
   }, []);
 
+  const handleGenerateEstimate = useCallback(() => {
+    setProjectEstimate(null);
+    setStage('estimateProcessing');
+  }, []);
+
+  const handleEstimateComplete = useCallback((project: ProjectEstimate) => {
+    setProjectEstimate(project);
+    setStage('output');
+  }, []);
+
+  const handleEstimateError = useCallback((message: string) => {
+    setError(message);
+    setStage('output');
+  }, []);
+
   function handleReset() {
     setStage('input');
     setResult([]);
     setRawJson('');
     setError('');
+    setProjectEstimate(null);
   }
 
   return (
@@ -87,8 +105,22 @@ export default function App() {
           {stage === 'processing' && (
             <ProcessingStage key="processing" rawJson={rawJson} onComplete={handleProcessingComplete} onError={handleProcessingError} />
           )}
+          {stage === 'estimateProcessing' && (
+            <EstimateProcessingStage
+              key="estimateProcessing"
+              items={result}
+              onComplete={handleEstimateComplete}
+              onError={handleEstimateError}
+            />
+          )}
           {stage === 'output' && (
-            <OutputStage key="output" items={result} onReset={handleReset} />
+            <OutputStage
+              key="output"
+              items={result}
+              projectEstimate={projectEstimate}
+              onGenerateEstimate={handleGenerateEstimate}
+              onReset={handleReset}
+            />
           )}
         </AnimatePresence>
       </div>

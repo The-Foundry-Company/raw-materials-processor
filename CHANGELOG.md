@@ -1,5 +1,25 @@
 # Changelog
 
+## [1.14.0] - 2026-04-02
+
+### Changed
+
+#### Split PDF Download Buttons
+- Replaced single "Download Estimate (PDF)" button with two side-by-side buttons
+- **Full Itemized Estimate** — complete PDF with materials breakdown table, cost breakdown, disclaimers, and payment info (for record-keeping)
+- **Client Estimate** — summary PDF without itemized materials list, shows project total, cost breakdown, disclaimers, and payment info (for client presentation)
+- Each mode triggers its own animated on-screen PDF build before capturing
+- Client PDF skips materials table animation and omits `breakBefore: 'page'` for a shorter single-page document
+- Differentiated filenames: `foundry_estimate_{date}.pdf` vs `foundry_estimate_summary_{date}.pdf`
+
+#### Full-Screen Estimate Loading Animation
+- "Generate Estimate" now clears the entire UI and shows a full-screen processing animation (like the initial ProcessingStage)
+- New `EstimateProcessingStage` component with progress bar, step-by-step reveals, and two-phase animation (pre-fetch + data-dependent)
+- Estimate state lifted from OutputStage to App for proper stage transitions
+- Removed inline `EstimateAnimation` component (replaced by full-screen stage)
+
+---
+
 ## [1.13.4] - 2026-03-31
 
 ### Fixed

@@ -1,10 +1,10 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useAutoScroll } from '../hooks/useAutoScroll';
-import type { ProjectEstimate } from '../processor/types';
-import { countMatched } from '../utils/pricing';
+import type { ProcessedItem, ProjectEstimate } from '../processor/types';
+import { fetchPricingData, generateEstimate, calculateProjectEstimate, countMatched } from '../utils/pricing';
 
-// ── Step types (same as ProcessingStage) ──
+// ── Step types ──
 
 interface Step {
   text: string;
@@ -28,26 +28,45 @@ const PRE_FETCH_STEPS: Step[] = [
 // ── Component ──
 
 interface Props {
-  projectEstimate: ProjectEstimate | null;
-  totalItems: number;
-  onComplete: () => void;
+  items: ProcessedItem[];
+  onComplete: (project: ProjectEstimate) => void;
+  onError: (message: string) => void;
 }
 
-export default function EstimateAnimation({ projectEstimate, totalItems, onComplete }: Props) {
+export default function EstimateProcessingStage({ items, onComplete, onError }: Props) {
   const [visibleSteps, setVisibleSteps] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [projectEstimate, setProjectEstimate] = useState<ProjectEstimate | null>(null);
   const completedRef = useRef(false);
   const scrollRef = useAutoScroll(visibleSteps);
+
+  // Kick off fetch on mount
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { entries, metadata } = await fetchPricingData();
+        const result = generateEstimate(items, entries);
+        const project = calculateProjectEstimate(result, metadata);
+        if (!cancelled) setProjectEstimate(project);
+      } catch (err) {
+        if (!cancelled) {
+          onError(err instanceof Error ? err.message : 'Failed to fetch pricing data.');
+        }
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [items, onError]);
 
   // Build full step list once estimate data arrives
   const allSteps = useMemo((): Step[] => {
     if (!projectEstimate) return PRE_FETCH_STEPS;
 
-    const { matched, fuzzy, unmatched: _ } = countMatched(projectEstimate.items);
+    const { matched, fuzzy } = countMatched(projectEstimate.items);
 
     const steps: Step[] = [
       ...PRE_FETCH_STEPS,
-      { text: `${matched} OF ${totalItems} ITEMS MATCHED`, type: 'stat' },
+      { text: `${matched} OF ${items.length} ITEMS MATCHED`, type: 'stat' },
     ];
 
     if (fuzzy > 0) {
@@ -57,14 +76,14 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
     steps.push(
       { text: 'CALCULATING MATERIALS COST...', type: 'action' },
       { text: `MATERIALS: ${projectEstimate.materialsCost.toLocaleString()} DIAMONDS`, type: 'stat' },
-      { text: `CALCULATING LABOR (${projectEstimate.totalBlocks.toLocaleString()} BLOCKS × ${projectEstimate.laborRate}D)...`, type: 'action' },
+      { text: `CALCULATING LABOR (${projectEstimate.totalBlocks.toLocaleString()} BLOCKS \u00D7 ${projectEstimate.laborRate}D)...`, type: 'action' },
       { text: `LABOR: ${Math.ceil(projectEstimate.laborCost).toLocaleString()} DIAMONDS`, type: 'stat' },
       { text: `APPLYING ADMIN FEE (${(projectEstimate.adminFeeRate * 100).toFixed(0)}%)...`, type: 'action' },
       { text: `PROJECT TOTAL: ${Math.ceil(projectEstimate.projectTotal).toLocaleString()} DIAMONDS`, type: 'stat' },
     );
 
     return steps;
-  }, [projectEstimate, totalItems]);
+  }, [projectEstimate, items.length]);
 
   // Compute cumulative delays
   const { cumulativeDelays, totalDuration } = useMemo(() => {
@@ -78,8 +97,8 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
     return { cumulativeDelays: delays, totalDuration: total };
   }, [allSteps]);
 
+  // Phase 1: Animate pre-fetch steps immediately
   useEffect(() => {
-    // Phase 1: Animate pre-fetch steps immediately
     const startTime = Date.now();
 
     const progressInterval = setInterval(() => {
@@ -89,7 +108,6 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
 
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    // Show pre-fetch steps (0, 1, 2) immediately on their schedule
     for (let i = 0; i < PRE_FETCH_STEPS.length; i++) {
       timers.push(
         setTimeout(() => setVisibleSteps(i + 1), cumulativeDelays[i]),
@@ -108,7 +126,6 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
 
     const timers: ReturnType<typeof setTimeout>[] = [];
 
-    // Ensure we're past the pre-fetch steps before showing data-dependent steps
     const preFetchEnd = cumulativeDelays[PRE_FETCH_STEPS.length - 1] +
       (PRE_FETCH_STEPS[PRE_FETCH_STEPS.length - 1].type === 'stat' ? STAT_DELAY : ACTION_DELAY);
     const now = performance.now();
@@ -134,7 +151,7 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
       setTimeout(() => {
         completedRef.current = true;
         setProgress(100);
-        onComplete();
+        onComplete(projectEstimate);
       }, lastStepDelay),
     );
 
@@ -149,11 +166,12 @@ export default function EstimateAnimation({ projectEstimate, totalItems, onCompl
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.3 }}
-      className="py-6"
+      className="py-8"
     >
       {/* Progress bar */}
-      <div className="w-full h-3 bg-foundry-dark/10 border-[2px] border-foundry-dark mb-6">
+      <div className="w-full h-3 bg-foundry-dark/10 border-[2px] border-foundry-dark mb-8">
         <div
           className="h-full bg-foundry-yellow transition-none"
           style={{ width: `${progress}%` }}

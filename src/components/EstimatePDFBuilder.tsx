@@ -66,13 +66,16 @@ export interface PDFBuilderHandle {
 
 // ── Component ──
 
+export type EstimateMode = 'full' | 'client';
+
 interface Props {
   projectEstimate: ProjectEstimate;
+  mode: EstimateMode;
   onBuilt: () => void;
 }
 
 const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
-  function EstimatePDFBuilder({ projectEstimate, onBuilt }, ref) {
+  function EstimatePDFBuilder({ projectEstimate, mode, onBuilt }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [builtFired, setBuiltFired] = useState(false);
 
@@ -89,8 +92,10 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
     // Calculate total animation duration
     const totalCategoryRows = categories.reduce((s, [, catItems]) => s + catItems.length, 0);
     const lastCategoryDelay = CATEGORY_BASE_DELAY + (categories.length - 1) * CATEGORY_STAGGER + totalCategoryRows * ROW_STAGGER;
-    const footerDelay = lastCategoryDelay + POST_TABLE_OFFSET;
-    const costBreakdownStart = footerDelay + 200;
+    const footerDelay = mode === 'full' ? lastCategoryDelay + POST_TABLE_OFFSET : 0;
+    const costBreakdownStart = mode === 'full'
+      ? footerDelay + 200
+      : TOTAL_BANNER_DELAY + POST_TABLE_OFFSET;
     const costRows = 5;
     const projectTotalDelay = costBreakdownStart + 200 + (costRows - 1) * COST_ROW_STAGGER;
     const disclaimerDelay = projectTotalDelay + DISCLAIMER_OFFSET;
@@ -191,94 +196,97 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             </div>
           </Section>
 
-          {/* Materials Breakdown Header */}
-          <Section delay={TABLE_HEADER_DELAY} animation="fadeIn">
-            <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Materials Breakdown</div>
-          </Section>
+          {/* Materials Breakdown — full mode only */}
+          {mode === 'full' && (
+            <>
+              <Section delay={TABLE_HEADER_DELAY} animation="fadeIn">
+                <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Materials Breakdown</div>
+              </Section>
 
-          {/* Materials Table */}
-          <div className="border-[2px] border-foundry-dark mb-5">
-            {/* Table header */}
-            <Section delay={TABLE_HEADER_DELAY + 50} animation="fadeIn">
-              <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-bold text-[10px] tracking-wider">
-                <span>MATERIAL</span>
-                <span className="text-right">QTY</span>
-                <span className="text-right">RATE (D)</span>
-                <span className="text-right">SUBTOTAL (D)</span>
+              <div className="border-[2px] border-foundry-dark mb-5">
+                {/* Table header */}
+                <Section delay={TABLE_HEADER_DELAY + 50} animation="fadeIn">
+                  <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-bold text-[10px] tracking-wider">
+                    <span>MATERIAL</span>
+                    <span className="text-right">QTY</span>
+                    <span className="text-right">RATE (D)</span>
+                    <span className="text-right">SUBTOTAL (D)</span>
+                  </div>
+                </Section>
+
+                {/* Category groups */}
+                {categories.map(([category, catItems], catIdx) => {
+                  const catDelay = CATEGORY_BASE_DELAY + catIdx * CATEGORY_STAGGER + categoryRowOffset * ROW_STAGGER;
+                  const catQty = catItems.reduce((s, i) => s + i.Quantity, 0);
+                  const catTotal = catItems.reduce((s, i) => s + i.totalDiamonds, 0);
+
+                  const rows = catItems.map((item, rowIdx) => {
+                    const rowDelay = catDelay + 80 + rowIdx * ROW_STAGGER;
+                    const isFuzzy = item.matchType === 'fuzzy';
+                    const rowBg = isFuzzy ? 'bg-amber-50' : rowIdx % 2 === 0 ? 'bg-white' : 'bg-foundry-dark/5';
+
+                    return (
+                      <Section key={item.Item} delay={rowDelay} animation="fadeIn">
+                        <div className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 font-mono text-xs leading-normal ${rowBg}`} style={{ minHeight: 28, overflow: 'visible' }}>
+                          <span className="text-foundry-dark whitespace-nowrap" style={{ overflow: 'visible' }}>
+                            {item.Item}
+                            {isFuzzy && <span className="text-amber-600/60 text-[10px] ml-1">&asymp; {item.fuzzyMatchedTo}</span>}
+                          </span>
+                          <span className="text-foundry-dark font-bold tabular-nums text-right">{item.Quantity.toLocaleString()}</span>
+                          {item.matched ? (
+                            <>
+                              <span className="text-foundry-dark/60 tabular-nums text-right">{isFuzzy ? '~' : ''}{formatDiamondValue(item.diamondValue)}</span>
+                              <span className="text-foundry-dark font-bold tabular-nums text-right">{formatTotal(item.totalDiamonds)}</span>
+                            </>
+                          ) : (
+                            <>
+                              <span className="text-foundry-dark/20 text-right">&mdash;</span>
+                              <span className="text-foundry-dark/20 text-right">&mdash;</span>
+                            </>
+                          )}
+                        </div>
+                      </Section>
+                    );
+                  });
+
+                  categoryRowOffset += catItems.length;
+
+                  return (
+                    <div key={category} style={{ breakInside: 'avoid' }}>
+                      <Section delay={catDelay} animation="slideLeft">
+                        <div className="px-3 py-2.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] leading-normal tracking-[2px] uppercase border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
+                          {category}
+                        </div>
+                      </Section>
+                      {rows}
+                      <Section delay={catDelay + 80 + catItems.length * ROW_STAGGER} animation="fadeIn">
+                        <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 bg-foundry-dark/5 font-mono text-xs leading-normal border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
+                          <span className="font-bold text-foundry-dark">{category} Total</span>
+                          <span className="font-bold text-foundry-dark tabular-nums text-right">{catQty.toLocaleString()}</span>
+                          <span />
+                          <span className="font-bold text-foundry-dark tabular-nums text-right">{formatTotal(catTotal)}</span>
+                        </div>
+                      </Section>
+                    </div>
+                  );
+                })}
+
+                {/* Materials total footer */}
+                <Section delay={footerDelay} animation="fadeUp">
+                  <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-bold text-xs">
+                    <span className="tracking-wider">MATERIALS TOTAL</span>
+                    <span className="tabular-nums text-right">{totalBlocks.toLocaleString()}</span>
+                    <span />
+                    <span className="tabular-nums text-right font-black">{formatTotal(materialsCost)}</span>
+                  </div>
+                </Section>
               </div>
-            </Section>
-
-            {/* Category groups */}
-            {categories.map(([category, catItems], catIdx) => {
-              const catDelay = CATEGORY_BASE_DELAY + catIdx * CATEGORY_STAGGER + categoryRowOffset * ROW_STAGGER;
-              const catQty = catItems.reduce((s, i) => s + i.Quantity, 0);
-              const catTotal = catItems.reduce((s, i) => s + i.totalDiamonds, 0);
-
-              const rows = catItems.map((item, rowIdx) => {
-                const rowDelay = catDelay + 80 + rowIdx * ROW_STAGGER;
-                const isFuzzy = item.matchType === 'fuzzy';
-                const rowBg = isFuzzy ? 'bg-amber-50' : rowIdx % 2 === 0 ? 'bg-white' : 'bg-foundry-dark/5';
-
-                return (
-                  <Section key={item.Item} delay={rowDelay} animation="fadeIn">
-                    <div className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 font-mono text-xs leading-normal ${rowBg}`} style={{ minHeight: 28, overflow: 'visible' }}>
-                      <span className="text-foundry-dark whitespace-nowrap" style={{ overflow: 'visible' }}>
-                        {item.Item}
-                        {isFuzzy && <span className="text-amber-600/60 text-[10px] ml-1">&asymp; {item.fuzzyMatchedTo}</span>}
-                      </span>
-                      <span className="text-foundry-dark font-bold tabular-nums text-right">{item.Quantity.toLocaleString()}</span>
-                      {item.matched ? (
-                        <>
-                          <span className="text-foundry-dark/60 tabular-nums text-right">{isFuzzy ? '~' : ''}{formatDiamondValue(item.diamondValue)}</span>
-                          <span className="text-foundry-dark font-bold tabular-nums text-right">{formatTotal(item.totalDiamonds)}</span>
-                        </>
-                      ) : (
-                        <>
-                          <span className="text-foundry-dark/20 text-right">&mdash;</span>
-                          <span className="text-foundry-dark/20 text-right">&mdash;</span>
-                        </>
-                      )}
-                    </div>
-                  </Section>
-                );
-              });
-
-              categoryRowOffset += catItems.length;
-
-              return (
-                <div key={category} style={{ breakInside: 'avoid' }}>
-                  <Section delay={catDelay} animation="slideLeft">
-                    <div className="px-3 py-2.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] leading-normal tracking-[2px] uppercase border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
-                      {category}
-                    </div>
-                  </Section>
-                  {rows}
-                  <Section delay={catDelay + 80 + catItems.length * ROW_STAGGER} animation="fadeIn">
-                    <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 bg-foundry-dark/5 font-mono text-xs leading-normal border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
-                      <span className="font-bold text-foundry-dark">{category} Total</span>
-                      <span className="font-bold text-foundry-dark tabular-nums text-right">{catQty.toLocaleString()}</span>
-                      <span />
-                      <span className="font-bold text-foundry-dark tabular-nums text-right">{formatTotal(catTotal)}</span>
-                    </div>
-                  </Section>
-                </div>
-              );
-            })}
-
-            {/* Materials total footer */}
-            <Section delay={footerDelay} animation="fadeUp">
-              <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-bold text-xs">
-                <span className="tracking-wider">MATERIALS TOTAL</span>
-                <span className="tabular-nums text-right">{totalBlocks.toLocaleString()}</span>
-                <span />
-                <span className="tabular-nums text-right font-black">{formatTotal(materialsCost)}</span>
-              </div>
-            </Section>
-          </div>
+            </>
+          )}
 
           {/* Cost Breakdown — always starts on a new page in the PDF */}
           <Section delay={costBreakdownStart} animation="fadeIn">
-            <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2 pt-4" style={{ breakBefore: 'page' }}>Cost Breakdown</div>
+            <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2 pt-4" style={mode === 'full' ? { breakBefore: 'page' } : undefined}>Cost Breakdown</div>
           </Section>
 
           <div className="border-[2px] border-foundry-dark mb-5" style={{ breakInside: 'avoid' }}>
