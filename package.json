@@ -1,7 +1,7 @@
 {
   "name": "raw-materials-processor",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.15.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
   "dependencies": {
     "@chenglou/pretext": "^0.0.3",
     "framer-motion": "^11.18.0",
+    "html2canvas": "^1.4.1",
     "html2pdf.js": "^0.14.0",
     "lenis": "^1.3.21",
     "react": "^18.3.1",

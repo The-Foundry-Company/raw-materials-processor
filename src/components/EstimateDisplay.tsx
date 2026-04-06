@@ -2,7 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { ProjectEstimate } from '../processor/types';
 import { calculateTotalDiamonds, countMatched } from '../utils/pricing';
-import { captureElementAsPDF } from '../utils/download';
+import { captureElementAsPDF, captureElementAsImage } from '../utils/download';
 import { formatDiamondValue, formatTotal } from '../utils/format';
 import PretextBlock from './ui/PretextBlock';
 import { fontShorthand, lineHeightPx } from '../lib/pretext';
@@ -33,13 +33,25 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
   const handleBuilt = useCallback(async () => {
     setPdfState('capturing');
     const container = builderRef.current?.getContainer();
+    const summaryContainer = builderRef.current?.getSummaryContainer();
+    const date = new Date().toISOString().slice(0, 10);
+
     if (container) {
-      const date = new Date().toISOString().slice(0, 10);
-      const filename = estimateMode === 'client'
+      const pdfFilename = estimateMode === 'client'
         ? `foundry_estimate_summary_${date}.pdf`
         : `foundry_estimate_${date}.pdf`;
-      await captureElementAsPDF(container, filename);
+      await captureElementAsPDF(container, pdfFilename);
     }
+
+    if (summaryContainer) {
+      // Brief delay so the browser doesn't block the second download
+      await new Promise((r) => setTimeout(r, 1000));
+      const imgFilename = estimateMode === 'client'
+        ? `foundry_estimate_summary_${date}.png`
+        : `foundry_estimate_${date}.png`;
+      await captureElementAsImage(summaryContainer, imgFilename);
+    }
+
     setPdfState('restoring');
     setTimeout(() => setPdfState('viewing'), 400);
   }, [estimateMode]);

@@ -22,7 +22,7 @@ This produces a messy, over-decomposed list that's impractical for material sour
 - **Vite** + **React 18** + **TypeScript**
 - **Tailwind CSS** (brutalist aesthetic with Foundry Company branding)
 - **Framer Motion** (stage transitions and processing animation)
-- **Vitest** (176 unit/integration tests)
+- **Vitest** (223 unit/integration tests)
 - No backend — all processing runs client-side
 - Deploys to **Vercel** as a static site
 
@@ -31,7 +31,7 @@ This produces a messy, over-decomposed list that's impractical for material sour
 ```bash
 npm install
 npm run dev      # Start dev server
-npm test         # Run all 176 tests
+npm test         # Run all 223 tests
 npm run build    # Production build
 ```
 
@@ -43,17 +43,37 @@ src/
     types.ts              # TypeScript interfaces
     rules.ts              # Classification rules, variant mappings, ratios
     index.ts              # process() function — the 4-phase engine
+    categories.ts         # 13 material categories for output grouping
     __tests__/
       processor.test.ts   # Core unit tests + sample data integration test
       extensive.test.ts   # Stress tests, edge cases, all variant types
       fake-lists.test.ts  # 5 realistic fake project lists
   components/
     Header.tsx            # Logo + title
-    InputStage.tsx        # JSON textarea + submit
+    InputStage.tsx        # JSON textarea + file upload
     ProcessingStage.tsx   # Animated loading sequence
-    OutputStage.tsx       # Results table + download buttons
+    OutputStage.tsx       # Results table + download buttons + estimate
+    EstimateDisplay.tsx   # Estimate viewing + PDF trigger state machine
+    EstimatePDFBuilder.tsx # Animated on-screen PDF assembly for capture
+    EstimateProcessingStage.tsx # Full-screen estimate loading animation
+    ui/
+      PretextBlock.tsx    # Text layout component using Pretext
   utils/
-    download.ts           # JSON and TXT download helpers
+    download.ts           # JSON, TXT, and PDF download helpers
+    pricing.ts            # Estimate engine — live Google Sheets pricing
+    fuzzy.ts              # Levenshtein distance + fuzzy matching
+    format.ts             # Shared number formatters
+    __tests__/
+      fuzzy.test.ts       # Fuzzy matching threshold tests
+      pricing.test.ts     # CSV parsing, estimate generation, project costs
+  hooks/
+    usePretext.ts         # Font-aware Pretext measurement hook
+    useContainerWidth.ts  # Sync container width tracking
+    useAutoScroll.ts      # Scroll-to-element utility hook
+  lib/
+    pretext.ts            # @chenglou/pretext integration layer
+  data/
+    sampleInput.ts        # Built-in sample schematic for demo
   App.tsx                 # Stage state management
   main.tsx                # Entry point
   index.css               # Tailwind + global styles
@@ -388,13 +408,13 @@ Key consolidated items when processing the sample file:
 ## Testing
 
 ```bash
-npm test              # Run all 176 tests
+npm test              # Run all 223 tests
 npx vitest run        # Run once (no watch)
 ```
 
 ### Test Coverage
 
-**`processor.test.ts`** (39 tests)
+**`processor.test.ts`** (59 tests)
 - Input validation (valid, invalid, edge cases)
 - Classification accuracy for all categories
 - Deduplication (MAX behavior)
@@ -416,13 +436,23 @@ npx vitest run        # Run once (no watch)
 - 100-group performance test
 - Comprehensive validation edge cases
 
-**`fake-lists.test.ts`** (42 tests)
+**`fake-lists.test.ts`** (38 tests)
 - 5 realistic fake project lists inspired by actual sample data:
   - **Desert Temple Expansion** — Heavy sandstone variants + glazed terracotta
   - **Modern Office Building** — Glass, polished stone, copper, birch wood
   - **Nether Fortress Rebuild** — Nether bricks, blackstone, deepslate
   - **Tuff & Copper Modern House** — 1.21+ tuff bricks, copper oxidation states
   - **Medieval Village** — Mixed wood types, stone brick variants, terracotta roofs
+
+**`fuzzy.test.ts`** (23 tests)
+- Levenshtein distance calculations
+- Similarity scoring and thresholds
+- Fuzzy matching edge cases
+
+**`pricing.test.ts`** (24 tests)
+- CSV parsing and metadata extraction
+- Estimate generation with match cascading (exact → fuzzy → missing)
+- Project cost arithmetic with dynamic rates
 
 ---
 

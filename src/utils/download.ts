@@ -55,6 +55,31 @@ export function downloadTXT(items: ProcessedItem[]) {
   triggerDownload(lines.join('\n'), `processed_materials_${date}.txt`, 'text/plain');
 }
 
+// ── PNG Summary Card (captures a DOM element as an image) ──
+
+export async function captureElementAsImage(element: HTMLElement, filename?: string) {
+  const date = new Date().toISOString().slice(0, 10);
+  const html2canvas = (await import('html2canvas')).default;
+  const canvas = await html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    logging: false,
+    backgroundColor: '#ffffff',
+  });
+  const blob = await new Promise<Blob | null>((resolve) =>
+    canvas.toBlob(resolve, 'image/png'),
+  );
+  if (!blob) return;
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename ?? `foundry_estimate_${date}.png`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 // ── PDF Estimate (captures a visible DOM element) ──
 
 export async function captureElementAsPDF(element: HTMLElement, filename?: string) {

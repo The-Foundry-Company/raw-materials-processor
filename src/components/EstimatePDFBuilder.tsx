@@ -62,6 +62,7 @@ function Section({ delay, children, animation = 'fadeUp' }: {
 
 export interface PDFBuilderHandle {
   getContainer: () => HTMLDivElement | null;
+  getSummaryContainer: () => HTMLDivElement | null;
 }
 
 // ── Component ──
@@ -77,10 +78,12 @@ interface Props {
 const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
   function EstimatePDFBuilder({ projectEstimate, mode, onBuilt }, ref) {
     const containerRef = useRef<HTMLDivElement>(null);
+    const summaryRef = useRef<HTMLDivElement>(null);
     const [builtFired, setBuiltFired] = useState(false);
 
     useImperativeHandle(ref, () => ({
       getContainer: () => containerRef.current,
+      getSummaryContainer: () => summaryRef.current,
     }));
 
     const { items, materialsCost, totalBlocks, laborRate, laborCost, subtotal, adminFeeRate, adminFee, projectTotal } = projectEstimate;
@@ -391,6 +394,75 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
 
         {/* Scroll anchor — Lenis scrolls here during build */}
         <div ref={scrollAnchorRef} />
+
+        {/* Hidden summary card for PNG capture (Discord-friendly) */}
+        <div style={{ overflow: 'hidden', height: 0 }}>
+        <div
+          ref={summaryRef}
+          className="bg-white border-[3px] border-foundry-dark p-6"
+          style={{ width: 794 }}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between border-b-4 border-foundry-dark pb-4 mb-5">
+            <div>
+              <div className="text-2xl font-black tracking-wider text-foundry-dark">BUILD COST ESTIMATE</div>
+              <div className="text-xs text-foundry-dark/50 mt-1 tracking-wide">FOUNDRY COMPANY &mdash; CUSTOM BUILD SERVICES</div>
+            </div>
+            <img src="/logo_wordmark.svg" width={137} height={46} className="rounded-lg" alt="Foundry Company" />
+          </div>
+
+          {/* Project Summary */}
+          <div className="border-[2px] border-foundry-dark/20 p-4 mb-5">
+            <div className="grid grid-cols-[1fr_auto] gap-y-3 gap-x-8">
+              <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Date</span>
+              <span className="text-foundry-dark font-bold text-sm text-right">{date}</span>
+              <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Estimate ID</span>
+              <span className="text-foundry-dark font-bold font-mono text-sm text-right">{estimateId}</span>
+              <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Total Estimated Cost (in D)</span>
+              <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(projectTotal).toLocaleString()}</span>
+              <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Up-Front Estimated Cost (in D)</span>
+              <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(materialsCost).toLocaleString()}</span>
+            </div>
+          </div>
+
+          {/* Project Total Banner */}
+          <div className="bg-foundry-dark flex justify-between items-center px-5 py-4 mb-5">
+            <span className="text-foundry-yellow font-bold text-xs tracking-[3px] uppercase">Project Total</span>
+            <span className="text-foundry-yellow font-black text-xl tracking-wide">{Math.ceil(projectTotal).toLocaleString()} DIAMONDS</span>
+          </div>
+
+          {/* Cost Breakdown */}
+          <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Cost Breakdown</div>
+          <div className="border-[2px] border-foundry-dark mb-5">
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+              <span className="text-foundry-dark">Materials Cost</span>
+              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(materialsCost)} D</span>
+            </div>
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+              <span className="text-foundry-dark">Labor <span className="text-foundry-dark/40">({totalBlocks.toLocaleString()} blocks &times; {laborRate} D/block)</span></span>
+              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(laborCost)} D</span>
+            </div>
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal bg-foundry-dark/5 border-b-[2px] border-foundry-dark/20">
+              <span className="text-foundry-dark font-bold">Subtotal</span>
+              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(subtotal)} D</span>
+            </div>
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+              <span className="text-foundry-dark">Administration Fee <span className="text-foundry-dark/40">({(adminFeeRate * 100).toFixed(0)}%)</span></span>
+              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(adminFee)} D</span>
+            </div>
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-3 bg-foundry-dark text-foundry-yellow">
+              <span className="font-black text-xs tracking-[2px]">PROJECT TOTAL</span>
+              <span className="font-black tabular-nums text-base">{Math.ceil(projectTotal).toLocaleString()} D</span>
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="border-t-[2px] border-foundry-dark/10 pt-3 flex justify-between items-center">
+            <span className="text-[9px] text-foundry-dark/25">Generated by Foundry Company Materials Processor</span>
+            <span className="text-[9px] text-foundry-dark/25 font-mono">{estimateId}</span>
+          </div>
+        </div>
+        </div>
       </div>
     );
   },

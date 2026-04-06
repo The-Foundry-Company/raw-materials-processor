@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.15.0] - 2026-04-06
+
+### Added
+
+#### PNG Summary Card Download
+- Both "Full Itemized Estimate" and "Client Estimate" buttons now download a **PNG summary card** alongside the PDF
+- PNG contains branding header (logo + "BUILD COST ESTIMATE"), project summary (date, estimate ID, total cost, up-front cost), project total banner, full cost breakdown, and footer
+- Designed for quick sharing on Discord — compact, branded, crisp at 2x canvas scale
+- New `captureElementAsImage()` utility in `download.ts` using `html2canvas` for DOM-to-PNG capture
+- Hidden static summary card rendered inside `EstimatePDFBuilder` (no animations, off-screen via overflow wrapper)
+- 1-second delay between PDF and PNG downloads to prevent browser download blocking
+- Filenames match PDF convention: `foundry_estimate_{date}.png` / `foundry_estimate_summary_{date}.png`
+- Added `html2canvas` as a direct dependency
+
+---
+
 ## [1.14.0] - 2026-04-02
 
 ### Changed
