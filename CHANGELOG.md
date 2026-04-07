@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.15.1] - 2026-04-06
+
+### Changed
+
+#### PNG Summary Card — De-duplicated Project Total
+- Removed redundant "PROJECT TOTAL" banner and total/up-front rows from the project info box (project total was displayed 3 times, now once in the cost breakdown)
+- Added a distinct "Up-Front Materials Cost" highlight below the cost breakdown for clearer separation
+
+---
+
 ## [1.15.0] - 2026-04-06
 
 ### Added

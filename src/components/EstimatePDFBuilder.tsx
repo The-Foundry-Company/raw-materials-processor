@@ -411,24 +411,14 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             <img src="/logo_wordmark.svg" width={137} height={46} className="rounded-lg" alt="Foundry Company" />
           </div>
 
-          {/* Project Summary */}
+          {/* Project Info */}
           <div className="border-[2px] border-foundry-dark/20 p-4 mb-5">
             <div className="grid grid-cols-[1fr_auto] gap-y-3 gap-x-8">
               <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Date</span>
               <span className="text-foundry-dark font-bold text-sm text-right">{date}</span>
               <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Estimate ID</span>
               <span className="text-foundry-dark font-bold font-mono text-sm text-right">{estimateId}</span>
-              <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Total Estimated Cost (in D)</span>
-              <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(projectTotal).toLocaleString()}</span>
-              <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Up-Front Estimated Cost (in D)</span>
-              <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(materialsCost).toLocaleString()}</span>
             </div>
-          </div>
-
-          {/* Project Total Banner */}
-          <div className="bg-foundry-dark flex justify-between items-center px-5 py-4 mb-5">
-            <span className="text-foundry-yellow font-bold text-xs tracking-[3px] uppercase">Project Total</span>
-            <span className="text-foundry-yellow font-black text-xl tracking-wide">{Math.ceil(projectTotal).toLocaleString()} DIAMONDS</span>
           </div>
 
           {/* Cost Breakdown */}
@@ -453,6 +443,14 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-3 bg-foundry-dark text-foundry-yellow">
               <span className="font-black text-xs tracking-[2px]">PROJECT TOTAL</span>
               <span className="font-black tabular-nums text-base">{Math.ceil(projectTotal).toLocaleString()} D</span>
+            </div>
+          </div>
+
+          {/* Up-Front Cost */}
+          <div className="border-[2px] border-foundry-yellow bg-foundry-yellow/10 px-4 py-3 mb-5">
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 items-center">
+              <span className="text-foundry-dark font-bold text-xs uppercase tracking-wider">Up-Front Materials Cost</span>
+              <span className="text-foundry-dark font-black text-sm tabular-nums">{Math.ceil(materialsCost).toLocaleString()} D</span>
             </div>
           </div>
 
