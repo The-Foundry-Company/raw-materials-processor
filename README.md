@@ -22,6 +22,7 @@ This produces a messy, over-decomposed list that's impractical for material sour
 - **Vite** + **React 18** + **TypeScript**
 - **Tailwind CSS** (brutalist aesthetic with Foundry Company branding)
 - **Framer Motion** (stage transitions and processing animation)
+- **html2pdf.js** + **html2canvas** (PDF and PNG estimate capture)
 - **Vitest** (223 unit/integration tests)
 - No backend — all processing runs client-side
 - Deploys to **Vercel** as a static site
@@ -59,7 +60,7 @@ src/
     ui/
       PretextBlock.tsx    # Text layout component using Pretext
   utils/
-    download.ts           # JSON, TXT, and PDF download helpers
+    download.ts           # JSON, TXT, PDF, and PNG download helpers
     pricing.ts            # Estimate engine — live Google Sheets pricing
     fuzzy.ts              # Levenshtein distance + fuzzy matching
     format.ts             # Shared number formatters
@@ -402,6 +403,8 @@ Key consolidated items when processing the sample file:
 
 - **JSON** — Pretty-printed array of `{ Item, Quantity }` objects
 - **TXT** — Human-readable report with header, date, item count, and aligned item x quantity lines
+- **Estimate PDF** — Full itemized or client summary estimate with animated on-screen assembly before capture via `html2pdf.js`
+- **Estimate PNG** — Compact branded summary card (branding, cost breakdown, project total) captured via `html2canvas` — designed for Discord sharing
 
 ---
 
