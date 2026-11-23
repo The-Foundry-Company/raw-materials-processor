@@ -15,10 +15,10 @@ export default function Header() {
         </svg>
       </svg>
       <div>
-        <h1 className="text-2xl sm:text-3xl font-black text-foundry-dark tracking-tight leading-none whitespace-nowrap">
+        <h1 className="font-display text-[29px] sm:text-[34px] font-extrabold text-foundry-dark tracking-tight leading-none whitespace-nowrap">
           RAW MATERIALS
         </h1>
-        <h2 className="text-lg sm:text-xl font-bold text-foundry-dark/60 tracking-widest leading-none">
+        <h2 className="mt-1 font-mono text-sm font-medium text-[#595952] tracking-[.14em] leading-[1.4]">
           PROCESSOR
         </h2>
       </div>

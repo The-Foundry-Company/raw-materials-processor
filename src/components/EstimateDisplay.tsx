@@ -90,9 +90,9 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
         <PretextBlock
           as="p"
           text={`PROJECT ESTIMATE: ${Math.ceil(projectTotal).toLocaleString()} DIAMONDS`}
-          font={fontShorthand(18, 'sans', 900)}
+          font={fontShorthand(18, 'display', 800)}
           lineHeight={lineHeightPx(18, 'tight')}
-          className="font-black text-foundry-dark text-lg tracking-wider"
+          className="font-display font-extrabold text-foundry-dark text-lg tracking-[.005em]"
         >
           PROJECT ESTIMATE: {Math.ceil(projectTotal).toLocaleString()} DIAMONDS
         </PretextBlock>
@@ -101,12 +101,12 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
       {/* Match status messages */}
       <div className="px-4 py-2 mb-4 space-y-1">
         {fuzzy > 0 && (
-          <p className="text-amber-600/70 text-xs font-mono tracking-wide">
+          <p className="text-amber-600/70 text-xs tracking-wide">
             {fuzzy} ITEM{fuzzy !== 1 ? 'S' : ''} FUZZY-MATCHED TO CLOSEST DATABASE ENTRY
           </p>
         )}
         {unmatched > 0 && (
-          <p className="text-foundry-dark/40 text-xs font-mono tracking-wide">
+          <p className="text-foundry-dark/40 text-xs tracking-wide">
             {unmatched} OF {items.length} ITEMS NOT IN PRICE DATABASE &mdash; SHOWN AS 0
           </p>
         )}
@@ -114,7 +114,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
 
       {/* Estimate table */}
       <div className="border-[3px] border-foundry-dark bg-white overflow-hidden mb-4">
-        <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-4 px-4 py-2 bg-foundry-dark text-foundry-yellow font-bold text-sm tracking-wider">
+        <div className="estimate-row py-2 bg-foundry-dark text-foundry-yellow font-mono font-medium tracking-[.08em]">
           <span>ITEM</span>
           <span className="text-right">QTY</span>
           <span className="text-right">D/ITEM</span>
@@ -141,12 +141,12 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
             return (
               <div key={item.Item}>
                 {showHeader && (
-                  <div className="px-4 py-2 bg-foundry-yellow/30 font-black text-foundry-dark text-xs tracking-widest border-t-[2px] border-foundry-dark/10 first:border-t-0">
+                  <div className="px-4 py-2 bg-foundry-yellow/30 font-semibold text-foundry-dark text-xs tracking-[.08em] border-t-[2px] border-foundry-dark/10 first:border-t-0">
                     {item.Category.toUpperCase()}
                   </div>
                 )}
                 <div
-                  className={`grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-4 px-4 py-2 font-mono text-sm ${rowBg}`}
+                  className={`estimate-row py-2 font-mono ${rowBg}`}
                 >
                   <span className="text-foundry-dark">
                     {item.Item}
@@ -180,15 +180,15 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
           })}
 
           {/* Grand total footer */}
-          <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-4 px-4 py-3 border-t-[3px] border-foundry-dark bg-foundry-dark/5">
-            <span className="font-black text-foundry-dark text-sm tracking-wider">
+          <div className="estimate-row py-3 border-t-[3px] border-foundry-dark bg-foundry-dark/5">
+            <span className="font-display font-extrabold text-foundry-dark tracking-wide">
               MATERIALS TOTAL
             </span>
-            <span className="text-foundry-dark font-bold tabular-nums text-right text-sm">
+            <span className="text-foundry-dark font-mono font-bold tabular-nums text-right">
               {items.reduce((s, i) => s + i.Quantity, 0).toLocaleString()}
             </span>
             <span />
-            <span className="text-foundry-dark font-black tabular-nums text-right text-sm">
+            <span className="text-foundry-dark font-mono font-bold tabular-nums text-right">
               {formatTotal(total)}D
             </span>
           </div>
@@ -197,43 +197,43 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
 
       {/* Project Cost Breakdown */}
       <div className="border-[3px] border-foundry-dark bg-white overflow-hidden mb-4">
-        <div className="px-4 py-2 bg-foundry-dark text-foundry-yellow font-bold text-sm tracking-wider">
+        <div className="px-4 py-2 bg-foundry-dark text-foundry-yellow font-display font-extrabold text-sm tracking-wide">
           PROJECT COST BREAKDOWN
         </div>
         <div className="divide-y divide-foundry-dark/10">
-          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 font-mono text-sm">
+          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 text-sm">
             <span className="text-foundry-dark">MATERIALS COST</span>
-            <span className="text-foundry-dark font-bold tabular-nums text-right">
+            <span className="text-foundry-dark font-mono font-bold tabular-nums text-right">
               {materialsCost.toLocaleString()}D
             </span>
           </div>
-          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 font-mono text-sm">
+          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 text-sm">
             <span className="text-foundry-dark">
               LABOR ({totalBlocks.toLocaleString()} blocks × {laborRate}D)
             </span>
-            <span className="text-foundry-dark font-bold tabular-nums text-right">
+            <span className="text-foundry-dark font-mono font-bold tabular-nums text-right">
               {Math.ceil(laborCost).toLocaleString()}D
             </span>
           </div>
-          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 font-mono text-sm border-t-[2px] border-foundry-dark/20">
+          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 text-sm border-t-[2px] border-foundry-dark/20">
             <span className="text-foundry-dark font-bold">SUBTOTAL</span>
-            <span className="text-foundry-dark font-bold tabular-nums text-right">
+            <span className="text-foundry-dark font-mono font-bold tabular-nums text-right">
               {Math.ceil(subtotal).toLocaleString()}D
             </span>
           </div>
-          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 font-mono text-sm">
+          <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-2 text-sm">
             <span className="text-foundry-dark">
               ADMIN FEE ({(adminFeeRate * 100).toFixed(0)}%)
             </span>
-            <span className="text-foundry-dark font-bold tabular-nums text-right">
+            <span className="text-foundry-dark font-mono font-bold tabular-nums text-right">
               {Math.ceil(adminFee).toLocaleString()}D
             </span>
           </div>
           <div className="grid grid-cols-[1fr_auto] gap-x-4 px-4 py-3 border-t-[3px] border-foundry-dark bg-foundry-yellow/10">
-            <span className="font-black text-foundry-dark text-sm tracking-wider">
+            <span className="font-display font-extrabold text-foundry-dark text-sm tracking-wide">
               PROJECT TOTAL
             </span>
-            <span className="text-foundry-dark font-black tabular-nums text-right text-sm">
+            <span className="text-foundry-dark font-mono font-bold tabular-nums text-right text-sm">
               {Math.ceil(projectTotal).toLocaleString()}D
             </span>
           </div>
@@ -251,7 +251,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
       <div className="grid grid-cols-2 gap-3 mb-4">
         <button
           onClick={() => handleDownload('full')}
-          className="py-3 bg-foundry-dark text-foundry-yellow font-black tracking-wider
+          className="py-3 bg-foundry-dark text-foundry-yellow font-semibold tracking-wide
             border-[3px] border-foundry-dark text-sm
             hover:bg-foundry-yellow hover:text-foundry-dark"
         >
@@ -259,7 +259,7 @@ export default function EstimateDisplay({ projectEstimate }: Props) {
         </button>
         <button
           onClick={() => handleDownload('client')}
-          className="py-3 bg-foundry-yellow text-foundry-dark font-black tracking-wider
+          className="py-3 bg-foundry-yellow text-foundry-dark font-semibold tracking-wide
             border-[3px] border-foundry-dark text-sm
             hover:bg-foundry-dark hover:text-foundry-yellow"
         >

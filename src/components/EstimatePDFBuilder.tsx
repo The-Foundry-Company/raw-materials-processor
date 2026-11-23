@@ -153,7 +153,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           <Section delay={HEADER_DELAY} animation="slideLeft">
             <div className="flex items-center justify-between border-b-4 border-foundry-dark pb-4 mb-5">
               <div>
-                <div className="text-2xl font-black tracking-wider text-foundry-dark">BUILD COST ESTIMATE</div>
+                <div className="text-2xl font-display font-extrabold tracking-tight text-foundry-dark">BUILD COST ESTIMATE</div>
                 <div className="text-xs text-foundry-dark/50 mt-1 tracking-wide">FOUNDRY COMPANY &mdash; CUSTOM BUILD SERVICES</div>
               </div>
               <img src="/logo_wordmark.svg" width={137} height={46} className="rounded-lg" alt="Foundry Company" />
@@ -177,16 +177,16 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
             <div className="border-[2px] border-foundry-dark/20 p-4 mb-5" style={{ breakInside: 'avoid' }}>
               <div className="grid grid-cols-[1fr_auto] gap-y-3 gap-x-8">
                 <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Date</span>
-                <span className="text-foundry-dark font-bold text-sm text-right">{date}</span>
+                <span className="text-foundry-dark font-mono font-medium text-sm text-right">{date}</span>
 
                 <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Estimate ID</span>
                 <span className="text-foundry-dark font-bold font-mono text-sm text-right">{estimateId}</span>
 
                 <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Total Estimated Cost (in D)</span>
-                <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(projectTotal).toLocaleString()}</span>
+                <span className="text-foundry-dark font-mono font-bold tabular-nums text-sm text-right">{Math.ceil(projectTotal).toLocaleString()}</span>
 
                 <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Up-Front Estimated Cost (in D)</span>
-                <span className="text-foundry-dark font-black text-sm text-right">{Math.ceil(materialsCost).toLocaleString()}</span>
+                <span className="text-foundry-dark font-mono font-bold tabular-nums text-sm text-right">{Math.ceil(materialsCost).toLocaleString()}</span>
               </div>
             </div>
           </Section>
@@ -194,8 +194,8 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           {/* Project Total Banner */}
           <Section delay={TOTAL_BANNER_DELAY} animation="scaleX">
             <div className="bg-foundry-dark flex justify-between items-center px-5 py-4 mb-5" style={{ transformOrigin: 'left' }}>
-              <span className="text-foundry-yellow font-bold text-xs tracking-[3px] uppercase">Project Total</span>
-              <span className="text-foundry-yellow font-black text-xl tracking-wide">{Math.ceil(projectTotal).toLocaleString()} DIAMONDS</span>
+              <span className="text-foundry-yellow font-display font-extrabold text-xs tracking-wide uppercase">Project Total</span>
+              <span className="text-foundry-yellow font-mono font-bold tabular-nums text-xl">{Math.ceil(projectTotal).toLocaleString()} DIAMONDS</span>
             </div>
           </Section>
 
@@ -203,13 +203,13 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           {mode === 'full' && (
             <>
               <Section delay={TABLE_HEADER_DELAY} animation="fadeIn">
-                <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Materials Breakdown</div>
+                <div className="text-xs font-display font-extrabold tracking-wide uppercase text-foundry-dark mb-2">Materials Breakdown</div>
               </Section>
 
               <div className="border-[2px] border-foundry-dark mb-5">
                 {/* Table header */}
                 <Section delay={TABLE_HEADER_DELAY + 50} animation="fadeIn">
-                  <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-bold text-[10px] tracking-wider">
+                  <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-mono font-medium text-[10px] tracking-[.08em]">
                     <span>MATERIAL</span>
                     <span className="text-right">QTY</span>
                     <span className="text-right">RATE (D)</span>
@@ -257,14 +257,14 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
                   return (
                     <div key={category} style={{ breakInside: 'avoid' }}>
                       <Section delay={catDelay} animation="slideLeft">
-                        <div className="px-3 py-2.5 bg-foundry-yellow/30 font-black text-foundry-dark text-[10px] leading-normal tracking-[2px] uppercase border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
+                        <div className="px-3 py-2.5 bg-foundry-yellow/30 font-semibold text-foundry-dark text-[10px] leading-normal tracking-[2px] uppercase border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
                           {category}
                         </div>
                       </Section>
                       {rows}
                       <Section delay={catDelay + 80 + catItems.length * ROW_STAGGER} animation="fadeIn">
                         <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2.5 bg-foundry-dark/5 font-mono text-xs leading-normal border-t border-foundry-dark/10" style={{ minHeight: 28, overflow: 'visible' }}>
-                          <span className="font-bold text-foundry-dark">{category} Total</span>
+                          <span className="font-sans font-semibold text-foundry-dark">{category} Total</span>
                           <span className="font-bold text-foundry-dark tabular-nums text-right">{catQty.toLocaleString()}</span>
                           <span />
                           <span className="font-bold text-foundry-dark tabular-nums text-right">{formatTotal(catTotal)}</span>
@@ -277,10 +277,10 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
                 {/* Materials total footer */}
                 <Section delay={footerDelay} animation="fadeUp">
                   <div className="grid grid-cols-[1fr_4.5rem_7rem_5.5rem] gap-x-3 px-3 py-2 bg-foundry-dark text-foundry-yellow font-bold text-xs">
-                    <span className="tracking-wider">MATERIALS TOTAL</span>
-                    <span className="tabular-nums text-right">{totalBlocks.toLocaleString()}</span>
+                    <span className="font-display font-extrabold tracking-wide">MATERIALS TOTAL</span>
+                    <span className="font-mono tabular-nums text-right">{totalBlocks.toLocaleString()}</span>
                     <span />
-                    <span className="tabular-nums text-right font-black">{formatTotal(materialsCost)}</span>
+                    <span className="font-mono tabular-nums text-right font-bold">{formatTotal(materialsCost)}</span>
                   </div>
                 </Section>
               </div>
@@ -289,38 +289,38 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
 
           {/* Cost Breakdown — always starts on a new page in the PDF */}
           <Section delay={costBreakdownStart} animation="fadeIn">
-            <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2 pt-4" style={mode === 'full' ? { breakBefore: 'page' } : undefined}>Cost Breakdown</div>
+            <div className="text-xs font-display font-extrabold tracking-wide uppercase text-foundry-dark mb-2 pt-4" style={mode === 'full' ? { breakBefore: 'page' } : undefined}>Cost Breakdown</div>
           </Section>
 
           <div className="border-[2px] border-foundry-dark mb-5" style={{ breakInside: 'avoid' }}>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Materials Cost</span>
-                <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(materialsCost)} D</span>
+                <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(materialsCost)} D</span>
               </div>
             </Section>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER * 2} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Labor <span className="text-foundry-dark/40">({totalBlocks.toLocaleString()} blocks &times; {laborRate} D/block)</span></span>
-                <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(laborCost)} D</span>
+                <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(laborCost)} D</span>
               </div>
             </Section>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER * 3} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal bg-foundry-dark/5 border-b-[2px] border-foundry-dark/20">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal bg-foundry-dark/5 border-b-[2px] border-foundry-dark/20">
                 <span className="text-foundry-dark font-bold">Subtotal</span>
-                <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(subtotal)} D</span>
+                <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(subtotal)} D</span>
               </div>
             </Section>
             <Section delay={costBreakdownStart + COST_ROW_STAGGER * 4} animation="slideRight">
-              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+              <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal border-b border-foundry-dark/10">
                 <span className="text-foundry-dark">Administration Fee <span className="text-foundry-dark/40">({(adminFeeRate * 100).toFixed(0)}%)</span></span>
-                <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(adminFee)} D</span>
+                <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(adminFee)} D</span>
               </div>
             </Section>
             <Section delay={projectTotalDelay} animation="scaleY">
               <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-3 bg-foundry-dark text-foundry-yellow" style={{ transformOrigin: 'top' }}>
-                <span className="font-black text-xs tracking-[2px]">PROJECT TOTAL</span>
-                <span className="font-black tabular-nums text-base">{Math.ceil(projectTotal).toLocaleString()} D</span>
+                <span className="font-display font-extrabold text-xs tracking-wide">PROJECT TOTAL</span>
+                <span className="font-mono font-bold tabular-nums text-base">{Math.ceil(projectTotal).toLocaleString()} D</span>
               </div>
             </Section>
           </div>
@@ -348,10 +348,10 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           <Section delay={dueTodayDelay} animation="scaleX">
             <div className="border-[2px] border-foundry-dark mb-5" style={{ breakInside: 'avoid', transformOrigin: 'left' }}>
               <div className="bg-foundry-dark px-4 py-2">
-                <span className="text-foundry-yellow font-black text-xs tracking-[2px]">DUE TODAY</span>
+                <span className="text-foundry-yellow font-display font-extrabold text-xs tracking-wide">DUE TODAY</span>
               </div>
               <div className="px-4 py-3">
-                <div className="text-foundry-dark font-black text-lg mb-3">
+                <div className="text-foundry-dark font-mono font-bold tabular-nums text-lg mb-3">
                   {Math.ceil(materialsCost).toLocaleString()} D
                 </div>
                 <div className="text-xs text-foundry-dark/60 mb-2">Please use the most convenient payment option for you:</div>
@@ -405,7 +405,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           {/* Header */}
           <div className="flex items-center justify-between border-b-4 border-foundry-dark pb-4 mb-5">
             <div>
-              <div className="text-2xl font-black tracking-wider text-foundry-dark">BUILD COST ESTIMATE</div>
+              <div className="text-2xl font-display font-extrabold tracking-tight text-foundry-dark">BUILD COST ESTIMATE</div>
               <div className="text-xs text-foundry-dark/50 mt-1 tracking-wide">FOUNDRY COMPANY &mdash; CUSTOM BUILD SERVICES</div>
             </div>
             <img src="/logo_wordmark.svg" width={137} height={46} className="rounded-lg" alt="Foundry Company" />
@@ -415,34 +415,34 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           <div className="border-[2px] border-foundry-dark/20 p-4 mb-5">
             <div className="grid grid-cols-[1fr_auto] gap-y-3 gap-x-8">
               <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Date</span>
-              <span className="text-foundry-dark font-bold text-sm text-right">{date}</span>
+              <span className="text-foundry-dark font-mono font-medium text-sm text-right">{date}</span>
               <span className="text-foundry-dark/50 font-bold text-xs uppercase tracking-wider">Estimate ID</span>
               <span className="text-foundry-dark font-bold font-mono text-sm text-right">{estimateId}</span>
             </div>
           </div>
 
           {/* Cost Breakdown */}
-          <div className="text-xs font-black tracking-[2px] uppercase text-foundry-dark mb-2">Cost Breakdown</div>
+          <div className="text-xs font-display font-extrabold tracking-wide uppercase text-foundry-dark mb-2">Cost Breakdown</div>
           <div className="border-[2px] border-foundry-dark mb-5">
-            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal border-b border-foundry-dark/10">
               <span className="text-foundry-dark">Materials Cost</span>
-              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(materialsCost)} D</span>
+              <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(materialsCost)} D</span>
             </div>
-            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal border-b border-foundry-dark/10">
               <span className="text-foundry-dark">Labor <span className="text-foundry-dark/40">({totalBlocks.toLocaleString()} blocks &times; {laborRate} D/block)</span></span>
-              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(laborCost)} D</span>
+              <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(laborCost)} D</span>
             </div>
-            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal bg-foundry-dark/5 border-b-[2px] border-foundry-dark/20">
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal bg-foundry-dark/5 border-b-[2px] border-foundry-dark/20">
               <span className="text-foundry-dark font-bold">Subtotal</span>
-              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(subtotal)} D</span>
+              <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(subtotal)} D</span>
             </div>
-            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 font-mono text-xs leading-normal border-b border-foundry-dark/10">
+            <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-2.5 text-xs leading-normal border-b border-foundry-dark/10">
               <span className="text-foundry-dark">Administration Fee <span className="text-foundry-dark/40">({(adminFeeRate * 100).toFixed(0)}%)</span></span>
-              <span className="text-foundry-dark font-bold tabular-nums">{formatTotal(adminFee)} D</span>
+              <span className="text-foundry-dark font-mono font-bold tabular-nums">{formatTotal(adminFee)} D</span>
             </div>
             <div className="grid grid-cols-[1fr_auto] gap-x-4 px-3 py-3 bg-foundry-dark text-foundry-yellow">
-              <span className="font-black text-xs tracking-[2px]">PROJECT TOTAL</span>
-              <span className="font-black tabular-nums text-base">{Math.ceil(projectTotal).toLocaleString()} D</span>
+              <span className="font-display font-extrabold text-xs tracking-wide">PROJECT TOTAL</span>
+              <span className="font-mono font-bold tabular-nums text-base">{Math.ceil(projectTotal).toLocaleString()} D</span>
             </div>
           </div>
 
@@ -450,7 +450,7 @@ const EstimatePDFBuilder = forwardRef<PDFBuilderHandle, Props>(
           <div className="border-[2px] border-foundry-yellow bg-foundry-yellow/10 px-4 py-3 mb-5">
             <div className="grid grid-cols-[1fr_auto] gap-x-4 items-center">
               <span className="text-foundry-dark font-bold text-xs uppercase tracking-wider">Up-Front Materials Cost</span>
-              <span className="text-foundry-dark font-black text-sm tabular-nums">{Math.ceil(materialsCost).toLocaleString()} D</span>
+              <span className="text-foundry-dark font-mono font-bold text-sm tabular-nums">{Math.ceil(materialsCost).toLocaleString()} D</span>
             </div>
           </div>
 

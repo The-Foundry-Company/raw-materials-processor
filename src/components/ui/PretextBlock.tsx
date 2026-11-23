@@ -22,7 +22,7 @@ export default function PretextBlock({
   as: Tag = 'div',
 }: Props) {
   const [containerRef, containerWidth] = useContainerWidth();
-  const { isReady, measureHeight, shrinkwrap } = usePretext();
+  const { isReady, measureHeight, shrinkwrap } = usePretext(font);
 
   const style = useMemo(() => {
     if (!isReady || containerWidth === null || containerWidth <= 0) return undefined;
