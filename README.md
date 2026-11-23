@@ -397,7 +397,7 @@ Key consolidated items when processing the sample file:
 - **Dark:** `#2D2D2D` (from logo)
 - **Background:** Off-white `#f5f5f0`
 - Brutalist aesthetic: thick 3px borders, sharp corners, heavy sans-serif type
-- Fonts: Guton Sans Serif (headings/UI) + IBM Plex Mono (JSON/table data)
+- Fonts: Guton Sans Serif (headings/UI) + Geist Mono from the SHAUGHV CDN (JSON/table data)
 
 ### Downloads
 

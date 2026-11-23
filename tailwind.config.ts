@@ -12,7 +12,7 @@ export default {
       },
       fontFamily: {
         sans: ['Guton', 'system-ui', 'sans-serif'],
-        mono: ['"IBM Plex Mono"', 'monospace'],
+        mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
       },
     },
   },

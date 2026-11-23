@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="274" height="93" viewBox="0 0 274 93">
 <!-- SVG created with Arrow, by QuiverAI (https://quiver.ai) -->
   <rect width="274" height="93" rx="14" fill="#F4D650"/>
-  <g transform="translate(12, 12)">
+  <g id="wordmark" transform="translate(12, 12)">
   <path d="m63.68 5.27h-61.03v31.45h17.63v6.39h-10.19v17.11h46.6v-17.11h-9.87v-6.39h16.86v-31.45z" fill="#2E2E2E" opacity=".2"/>
   <path d="m62.84 8.92h-59.35v25.01h17.82v7.49h-6.28v3.85h-4.94v13.53h45.48v-13.53h-6.39v-3.85h-4.21v-7.49h17.87v-25.01z" fill="#2E2E2E" opacity=".7"/>
   <path d="m5.75 8.92v24.27h15.65v6.55h-3.91v5.04h-5.17v10.38h40.99v-10.38h-5.72v-5.04h-4.5v-6.55h17.29v-24.27h-54.63z" fill="#2E2E2E"/>
