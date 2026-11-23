@@ -38,9 +38,9 @@ export default function OutputStage({ items, projectEstimate, onGenerateEstimate
         <PretextBlock
           as="p"
           text={`${items.length} ITEMS PROCESSED`}
-          font={fontShorthand(18, 'sans', 900)}
+          font={fontShorthand(18, 'display', 800)}
           lineHeight={lineHeightPx(18, 'tight')}
-          className="font-black text-foundry-dark text-lg tracking-wider"
+          className="font-display font-extrabold text-foundry-dark text-lg tracking-[.005em]"
         >
           {items.length} ITEMS PROCESSED
         </PretextBlock>
@@ -48,7 +48,7 @@ export default function OutputStage({ items, projectEstimate, onGenerateEstimate
 
       {/* Results table */}
       <div className="border-[3px] border-foundry-dark bg-white overflow-hidden mb-6">
-        <div className="grid grid-cols-[1fr_auto] px-4 py-2 bg-foundry-dark text-foundry-yellow font-bold text-sm tracking-wider">
+        <div className="grid grid-cols-[1fr_auto] px-4 py-2 bg-foundry-dark text-foundry-yellow font-mono font-medium text-sm tracking-[.08em]">
           <span>ITEM</span>
           <span>QTY</span>
         </div>
@@ -67,7 +67,7 @@ export default function OutputStage({ items, projectEstimate, onGenerateEstimate
             return (
               <div key={item.Item}>
                 {showHeader && (
-                  <div className="px-4 py-2 bg-foundry-yellow/30 font-black text-foundry-dark text-xs tracking-widest border-t-[2px] border-foundry-dark/10 first:border-t-0">
+                  <div className="px-4 py-2 bg-foundry-yellow/30 font-semibold text-foundry-dark text-xs tracking-[.08em] border-t-[2px] border-foundry-dark/10 first:border-t-0">
                     {item.Category.toUpperCase()}
                   </div>
                 )}
@@ -90,7 +90,7 @@ export default function OutputStage({ items, projectEstimate, onGenerateEstimate
       <div className="grid grid-cols-2 gap-3 mb-4">
         <button
           onClick={() => downloadJSON(items)}
-          className="py-3 bg-foundry-yellow text-foundry-dark font-black tracking-wider
+          className="py-3 bg-foundry-yellow text-foundry-dark font-semibold tracking-wide
             border-[3px] border-foundry-dark text-sm
             hover:bg-foundry-dark hover:text-foundry-yellow"
         >
@@ -98,7 +98,7 @@ export default function OutputStage({ items, projectEstimate, onGenerateEstimate
         </button>
         <button
           onClick={() => downloadTXT(items)}
-          className="py-3 bg-foundry-dark text-foundry-yellow font-black tracking-wider
+          className="py-3 bg-foundry-dark text-foundry-yellow font-semibold tracking-wide
             border-[3px] border-foundry-dark text-sm
             hover:bg-foundry-yellow hover:text-foundry-dark"
         >
@@ -110,11 +110,11 @@ export default function OutputStage({ items, projectEstimate, onGenerateEstimate
       {!projectEstimate ? (
         <button
           onClick={onGenerateEstimate}
-          className="w-full py-3 bg-foundry-yellow text-foundry-dark font-black tracking-wider
+          className="w-full py-3 bg-foundry-yellow text-foundry-dark font-display font-extrabold tracking-[.005em]
             border-[3px] border-foundry-dark text-sm mb-4
             hover:bg-foundry-dark hover:text-foundry-yellow"
         >
-          [G] GENERATE ESTIMATE
+          <span className="font-mono font-medium text-[.9em]">[G]</span> GENERATE ESTIMATE
         </button>
       ) : (
         <EstimateDisplay projectEstimate={projectEstimate} />
@@ -123,7 +123,7 @@ export default function OutputStage({ items, projectEstimate, onGenerateEstimate
       {/* Reset */}
       <button
         onClick={onReset}
-        className="w-full py-2 bg-transparent text-foundry-dark/50 font-bold tracking-wider
+        className="w-full py-2 bg-transparent text-[#56564f] font-medium tracking-wide
           border-[2px] border-foundry-dark/20 text-sm
           hover:border-foundry-dark hover:text-foundry-dark"
       >

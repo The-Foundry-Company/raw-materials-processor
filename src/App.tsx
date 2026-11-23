@@ -93,7 +93,7 @@ export default function App() {
               className="border-[3px] border-red-500 bg-red-50 px-4 py-3 mb-4"
             >
               <span className="text-red-500 font-mono font-bold text-lg">!! </span>
-              <p className="text-red-600 font-bold text-sm inline">{error}</p>
+              <p className="text-red-600 font-medium text-sm inline">{error}</p>
             </motion.div>
           )}
         </AnimatePresence>

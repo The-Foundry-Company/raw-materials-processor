@@ -1,28 +1,27 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { FONTS, prepare, layout, fontShorthand, findTightWidth, lineHeightPx } from '../lib/pretext';
+import { prepare, layout, fontShorthand, findTightWidth, lineHeightPx } from '../lib/pretext';
 import type { PreparedText } from '../lib/pretext';
 
-export function usePretext() {
-  const [isReady, setIsReady] = useState(false);
+export function usePretext(font: string) {
+  const [loadedFont, setLoadedFont] = useState<string>();
+  const isReady = loadedFont === font;
   const cacheRef = useRef<Map<string, PreparedText>>(new Map());
 
   useEffect(() => {
     let cancelled = false;
 
-    async function waitForFonts() {
-      await document.fonts.ready;
-      // Check that our required fonts are available
-      const allLoaded = Object.values(FONTS).every((f) =>
-        document.fonts.check(`16px ${f}`),
-      );
-      if (!cancelled) {
-        setIsReady(allLoaded);
+    async function loadFont() {
+      try {
+        const faces = await document.fonts.load(font);
+        if (!cancelled && faces.length) setLoadedFont(font);
+      } catch {
+        // Let the browser wrap the fallback text if the CDN face is unavailable.
       }
     }
 
-    waitForFonts();
+    loadFont();
     return () => { cancelled = true; };
-  }, []);
+  }, [font]);
 
   const getPrepared = useCallback(
     (text: string, font: string): PreparedText | null => {

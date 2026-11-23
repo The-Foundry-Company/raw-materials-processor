@@ -11,7 +11,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Guton', 'system-ui', 'sans-serif'],
+        display: ['Makira', 'system-ui', 'sans-serif'],
+        sans: ['Geist', 'system-ui', 'sans-serif'],
         mono: ['"Geist Mono"', 'ui-monospace', 'monospace'],
       },
     },

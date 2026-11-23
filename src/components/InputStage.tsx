@@ -73,7 +73,7 @@ export default function InputStage({ onSubmit }: Props) {
       <div className="flex justify-end mb-2">
         <button
           onClick={() => { setValue(SAMPLE_INPUT); if (error) setError(''); }}
-          className="text-foundry-dark/40 text-xs font-mono tracking-wide
+          className="text-[#56564f] text-xs font-medium tracking-wide
             hover:text-foundry-dark transition-colors"
         >
           SHOW ME A SAMPLE
@@ -88,7 +88,7 @@ export default function InputStage({ onSubmit }: Props) {
         <textarea
           className={`w-full h-72 sm:h-96 p-4 font-mono text-sm bg-white text-foundry-dark
             border-[3px] resize-none outline-none
-            placeholder:text-foundry-dark/30
+            placeholder:text-[#6b6a63]
             ${error ? 'border-red-500 animate-border-pulse' : 'border-foundry-dark'}
             focus:border-foundry-yellow transition-colors`}
           placeholder="Paste your raw materials JSON here..."
@@ -111,7 +111,7 @@ export default function InputStage({ onSubmit }: Props) {
             className="mt-3 border-[3px] border-red-500 bg-red-50 px-4 py-3"
           >
             <span className="text-red-500 font-mono font-bold text-lg">!! </span>
-            <p className="text-red-600 font-bold text-sm inline">{error}</p>
+            <p className="text-red-600 font-medium text-sm inline">{error}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -119,7 +119,7 @@ export default function InputStage({ onSubmit }: Props) {
       <div className="flex gap-3 mt-4">
         <label
           className="inline-flex items-center justify-center py-3 px-5 bg-foundry-dark text-foundry-yellow
-            font-bold text-sm tracking-wider border-[3px] border-foundry-dark
+            font-semibold text-sm tracking-wide border-[3px] border-foundry-dark
             cursor-pointer select-none
             hover:bg-foundry-yellow hover:text-foundry-dark
             active:scale-[0.98] transition-none
@@ -137,7 +137,7 @@ export default function InputStage({ onSubmit }: Props) {
         <button
           onClick={handleSubmit}
           className="flex-1 py-3 bg-foundry-yellow text-foundry-dark
-            font-black text-lg tracking-wider border-[3px] border-foundry-dark
+            font-display font-extrabold text-lg tracking-[.005em] border-[3px] border-foundry-dark
             hover:bg-foundry-dark hover:text-foundry-yellow
             active:scale-[0.98] transition-none
             hover:transition-none"
