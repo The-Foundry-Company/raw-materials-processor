@@ -4,13 +4,13 @@ export default function Header() {
       <svg
         role="img"
         aria-label="Foundry Company"
-        width="258"
-        height="98"
-        viewBox="0 0 258 98"
+        width="274"
+        height="110"
+        viewBox="0 0 274 110"
         className="shrink-0"
       >
-        <image href="/foundry-header-dither.png" width="258" height="98" imageRendering="pixelated" />
-        <svg x="46" y="14" width="188.55" height="64" viewBox="0 0 274 93">
+        <image href="/foundry-header-dither.png" width="274" height="110" imageRendering="pixelated" />
+        <svg x="54" y="20" width="188.55" height="64" viewBox="0 0 274 93">
           <use href="/logo_wordmark.svg#wordmark" />
         </svg>
       </svg>
