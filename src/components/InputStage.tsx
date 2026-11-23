@@ -118,7 +118,7 @@ export default function InputStage({ onSubmit }: Props) {
 
       <div className="flex gap-3 mt-4">
         <label
-          className="py-3 px-5 bg-foundry-dark text-foundry-yellow
+          className="inline-flex items-center justify-center py-3 px-5 bg-foundry-dark text-foundry-yellow
             font-bold text-sm tracking-wider border-[3px] border-foundry-dark
             cursor-pointer select-none
             hover:bg-foundry-yellow hover:text-foundry-dark

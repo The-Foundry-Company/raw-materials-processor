@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { prepare, layout, fontShorthand, findTightWidth, lineHeightPx } from '../lib/pretext';
+import { FONTS, prepare, layout, fontShorthand, findTightWidth, lineHeightPx } from '../lib/pretext';
 import type { PreparedText } from '../lib/pretext';
-
-const REQUIRED_FONTS = ['Guton', 'IBM Plex Mono'];
 
 export function usePretext() {
   const [isReady, setIsReady] = useState(false);
@@ -14,7 +12,7 @@ export function usePretext() {
     async function waitForFonts() {
       await document.fonts.ready;
       // Check that our required fonts are available
-      const allLoaded = REQUIRED_FONTS.every((f) =>
+      const allLoaded = Object.values(FONTS).every((f) =>
         document.fonts.check(`16px ${f}`),
       );
       if (!cancelled) {

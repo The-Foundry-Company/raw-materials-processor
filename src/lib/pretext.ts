@@ -4,7 +4,7 @@ import type { PreparedText } from '@chenglou/pretext';
 // Font shorthands matching tailwind.config.ts
 export const FONTS = {
   sans: 'Guton, system-ui, sans-serif',
-  mono: '"IBM Plex Mono", monospace',
+  mono: '"Geist Mono", ui-monospace, monospace',
 } as const;
 
 export function fontShorthand(
