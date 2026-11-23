@@ -3,6 +3,91 @@
 @tailwind utilities;
 
 @layer components {
+  .processor-header {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 126px;
+    margin-bottom: 30px;
+    padding: 18px 46px 20px 54px;
+  }
+
+  .processor-header::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+    pointer-events: none;
+    /* Tile the four dithered edges at native size around a solid yellow center. */
+    border: solid transparent;
+    border-width: 26px 34px 36px 64px;
+    border-image: url('/foundry-header-dither.png') 26 34 36 64 fill repeat;
+    image-rendering: pixelated;
+  }
+
+  .processor-title {
+    position: relative;
+    padding-left: 19px;
+    font-size: 34px;
+  }
+
+  .processor-title::before {
+    content: '';
+    position: absolute;
+    inset: 5px auto 3px 0;
+    width: 1px;
+    background: currentColor;
+    opacity: 0.45;
+  }
+
+  .processor-subtitle {
+    font-size: 18px;
+    letter-spacing: 0.1em;
+  }
+
+  @media (max-width: 635px) {
+    .processor-header {
+      gap: 12px;
+      padding-right: 36px;
+    }
+
+    .processor-title {
+      padding-left: 13px;
+      font-size: clamp(24px, calc(10vw - 30px), 34px);
+    }
+  }
+
+  @media (max-width: 535px) {
+    .processor-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      min-height: 0;
+      min-width: min(358px, 100%);
+      padding: 18px 25px 34px 54px;
+    }
+
+    .processor-title {
+      /* Align the title with the ink inside the wordmark's viewBox. */
+      margin-left: 10px;
+      padding-left: 0;
+      font-size: clamp(22px, calc(12vw - 16px), 32px);
+    }
+
+    .processor-title::before {
+      display: none;
+    }
+
+    .processor-subtitle {
+      font-size: 16px;
+      letter-spacing: 0.09em;
+    }
+  }
+
   .estimate-row {
     @apply grid grid-cols-[minmax(0,1fr)_3rem_4rem_4.5rem] gap-x-1 px-2 text-xs
       sm:grid-cols-[minmax(0,1fr)_4.5rem_7rem_5.5rem] sm:gap-x-4 sm:px-4 sm:text-sm;
